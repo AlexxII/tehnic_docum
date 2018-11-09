@@ -5,6 +5,7 @@ https://github.com/creocoder/yii2-nested-sets
 and
 https://github.com/wbraganca/yii2-fancytree-widget
 
+Немного пропатчен для работы с fancyTree
 
 Installation
 ------------
