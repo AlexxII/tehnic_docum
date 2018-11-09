@@ -98,7 +98,7 @@ class EquipmentController extends Controller
   {
     if (($model = Equipment::find()->where(['id_eq' => $id])->limit(1)->all()) !== null) {
       if (!empty($model)) {
-        return $model;
+        return $model[0];
       }
     }
     throw new NotFoundHttpException('The requested page does not exist.');
@@ -123,9 +123,8 @@ class EquipmentController extends Controller
   {
     $table = 'equipment_tbl';
     $primaryKey = 'id';
-
     $columns = array(
-        array('db' => 'id', 'dt' => 0),
+        array('db' => 'id_eq', 'dt' => 0),
         array('db' => 'eq_title', 'dt' => 1),
         array('db' => 'eq_manufact', 'dt' => 2),
         array('db' => 'eq_model', 'dt' => 3),
