@@ -41,7 +41,7 @@ class EquipmentController extends Controller
         } else {
           Yii::$app->session->setFlash('success', 'Оборудование добавлено');
         }
-        return $this->redirect(['view', 'id' => $model->id]);
+        return $this->redirect(['view', 'id' => $model->id_eq]);
       } else {
         Yii::$app->session->setFlash('success', 'Ошибка валидации');
       }
