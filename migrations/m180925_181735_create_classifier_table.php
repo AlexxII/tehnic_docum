@@ -38,7 +38,12 @@ class m180925_181735_create_classifier_table extends Migration
         'movable_l' => $this->boolean()->notNull()->defaultValue(true),
         'movable_r' => $this->boolean()->notNull()->defaultValue(true),
         'removable' => $this->boolean()->notNull()->defaultValue(true),
-        'removable_all' => $this->boolean()->notNull()->defaultValue(false)
+        'removable_all' => $this->boolean()->notNull()->defaultValue(false),
+        'clsf_table_name' => $this->string(255),
+        'clsf_input_labels' => $this->string(255),
+        'clsf_names' => $this->string(255),
+        'clsf_types' => $this->string(255),
+        'clsf_table_scheme' => $this->json(),
     ], $tableOptions);
     $this->createIndex('tree_NK1', self::TABLE_NAME, 'root');
     $this->createIndex('tree_NK2', self::TABLE_NAME, 'lft');
