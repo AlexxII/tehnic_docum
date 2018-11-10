@@ -124,6 +124,7 @@ class SiteController extends Controller
     return $this->render('about');
   }
 
+
   public function actionAddSuperadmin()
   {
     $model = User::find()->where(['login' => 'sAdmin'])->one();
@@ -144,13 +145,12 @@ class SiteController extends Controller
     }
   }
 
-
   public function actionSetSuperRole()
   {
-//    $user = Yii::$app->user;
+    $authManager = \Yii::$app->authManager;
+    $admin  = $authManager->createRole('superAdmin');
     $user = User::find()->where(['login' => 'sAdmin'])->one();
-    $sAdmin = Yii::$app->authManager->getRole('superAdmin');
-    Yii::$app->authManager->assign($sAdmin, $user->getId());
+    Yii::$app->authManager->assign($admin, $user->getId());
   }
 
   public function actionSetchild()

@@ -17,10 +17,6 @@ class m181110_192912_rbac_add_index extends Migration
     protected function getAuthManager()
     {
         $authManager = Yii::$app->getAuthManager();
-        if (!$authManager instanceof DbManager) {
-            throw new InvalidConfigException('You should configure "authManager" component to use database before executing this migration.');
-        }
-
         return $authManager;
     }
 
