@@ -121,7 +121,7 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
     foreach ($model->photos as $k => $photo) {
       $allImages[] = "<img src='" . $photo->getImageUrl() . "' class='file-preview-image' style='max-width:100%;max-height:100%'>";
       $previewImagesConfig[] = [
-          'url' => Url::toRoute(ArrayHelper::merge(['/site/delete-image'], ['id' => $photo->id])),
+          'url' => Url::toRoute(ArrayHelper::merge(['/tehdoc/kernel/equipment/remove-image'], ['id' => $photo->id, '_csrf' => Html::csrfMetaTags()])),
           'key' => $photo->id
       ];
     }
@@ -140,9 +140,7 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
             'initialPreview' => $allImages,
             'initialPreviewConfig' => $previewImagesConfig,
             'overwriteInitial' => false,
-            'showUpload' => false,
-            'showRemove' => false,
-            'uploadUrl' => Url::to(['/site/file-upload/'])
+            'showUpload' => false
         ],
     ]); ?>
   </div>

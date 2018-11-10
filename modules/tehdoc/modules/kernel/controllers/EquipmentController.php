@@ -243,6 +243,7 @@ class EquipmentController extends Controller
       $model = $this->findModel($d);
       $photos = $model->photos;
         foreach ($photos as $photo){
+            $photo->delete();
             unlink(\Yii::$app->params['uploadPath'] . $photo->image_path);
         }
         $report = $model->delete();
@@ -268,5 +269,10 @@ class EquipmentController extends Controller
       return $this->redirect(['index']);
   }
 
+
+  public function actionRemoveImage()
+  {
+      return 1;
+  }
 
 }

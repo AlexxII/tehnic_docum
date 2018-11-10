@@ -171,7 +171,6 @@ class Equipment extends \yii\db\ActiveRecord
 
   public function getClsf($table)
   {
-
     return $this->hasMany(Images::class, ['eq_id' => 'id_eq']);
   }
 
