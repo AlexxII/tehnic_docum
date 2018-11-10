@@ -68,7 +68,7 @@ class EquipmentController extends Controller
         } else {
           Yii::$app->session->setFlash('success', 'Изменения внесены!!');
         }
-        return $this->redirect(['view', 'id' => $model->id]);
+        return $this->redirect(['view', 'id' => $model->id_eq]);
       } else {
         Yii::$app->session->setFlash('error', 'Изменения НЕ внесены');
       }
@@ -248,6 +248,17 @@ class EquipmentController extends Controller
       return true;
     }
     return false;
+  }
+
+  public function actionDeleteSingle($id)
+  {
+      $model = $this->findModel($id);
+      if ($model->delete()) {
+          Yii::$app->session->setFlash('success', 'Оборудование удалено');
+          return $this->redirect(['index']);
+      }
+      Yii::$app->session->setFlash('error', 'Удалить оборудование не удалось');
+      return $this->redirect(['index']);
   }
 
 

@@ -38,8 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="row">
   <div class="">
     <div class="container-fluid " style="margin-bottom: 20px">
-      <?= Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary btn-sm']) ?>
-      <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
+      <?= Html::a('Изменить', ['update', 'id' => $model->id_eq], ['class' => 'btn btn-primary btn-sm']) ?>
+      <?= Html::a('Удалить', ['delete-single', 'id' => $model->id_eq], [
           'class' => 'btn btn-danger btn-sm',
           'data' => [
               'confirm' => 'Вы уверены, что хотите удалить объект?',

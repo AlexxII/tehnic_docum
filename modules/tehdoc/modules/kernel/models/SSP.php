@@ -245,7 +245,7 @@ class SSP {
     // Main query to actually get the data
     $data = self::sql_exec( $db, $bindings,
         "SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
-			 FROM $table RIGHT JOIN $tableTwo ON $table.id = $tableTwo.id_eq 
+			 FROM $table RIGHT JOIN $tableTwo ON $table.id_eq = $tableTwo.eq_id 
 			 $where
 			 $order
 			 $limit"
@@ -253,7 +253,7 @@ class SSP {
     // Data set length after filtering
     $resFilterLength = self::sql_exec( $db, $bindings,
         "SELECT COUNT(`{$primaryKey}`)
-			 FROM   `$table` RIGHT JOIN $tableTwo ON $table.id = $tableTwo.id_eq 
+			 FROM   `$table` RIGHT JOIN $tableTwo ON $table.id_eq = $tableTwo.eq_id 
 			 $where"
     );
     $recordsFiltered = $resFilterLength[0][0];
