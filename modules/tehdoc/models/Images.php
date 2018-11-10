@@ -35,7 +35,7 @@ class Images extends ActiveRecord        // модель для добавлен
     return [
         [['image_path', 'eq_id'], 'safe'],
         [['imageFiles'], 'file',
-            'extensions' => 'jpg, gif, png',
+            'extensions' => 'jpg, gif, png, jpeg',
             'maxFiles' => 10,
         ]
     ];

@@ -236,13 +236,16 @@ class EquipmentController extends Controller
     );
   }
 
-
   public function actionDelete()
   {
     $report = true;
     foreach ($_POST['jsonData'] as $d) {
       $model = $this->findModel($d);
-      $report = $model->delete();
+      $photos = $model->photos;
+        foreach ($photos as $photo){
+            unlink(\Yii::$app->params['uploadPath'] . $photo->image_path);
+        }
+        $report = $model->delete();
     }
     if ($report) {
       return true;
@@ -253,6 +256,10 @@ class EquipmentController extends Controller
   public function actionDeleteSingle($id)
   {
       $model = $this->findModel($id);
+      $photos = $model->photos;
+      foreach ($photos as $photo){
+          unlink(\Yii::$app->params['uploadPath'] . $photo->image_path);
+      }
       if ($model->delete()) {
           Yii::$app->session->setFlash('success', 'Оборудование удалено');
           return $this->redirect(['index']);
