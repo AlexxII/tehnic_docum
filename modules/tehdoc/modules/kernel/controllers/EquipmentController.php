@@ -36,12 +36,15 @@ class EquipmentController extends Controller
           if ($fUpload->uploadImage($model->id_eq)) {
             Yii::$app->session->setFlash('success', 'Оборудование добавлено');
           } else {
-            Yii::$app->session->setFlash('error', 'Оборудование добавлено, но не загружены изображения');
+            Yii::$app->session->setFlash('success', 'Оборудование добавлено, <strong>НО</strong> не загружены изображения');
           }
         } else {
           Yii::$app->session->setFlash('success', 'Оборудование добавлено');
         }
-        return $this->redirect(['view', 'id' => $model->id_eq]);
+        if (isset($_POST['stay'])) {
+            return $this->redirect(['create']);
+        }
+          return $this->redirect(['view', 'id' => $model->id_eq]);
       } else {
         Yii::$app->session->setFlash('success', 'Ошибка валидации');
       }
