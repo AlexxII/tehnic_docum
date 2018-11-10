@@ -163,7 +163,24 @@ class ClassifierController extends Controller
     }
   }
 
-  public function actionGetLeaves()
+    public function actionDeleteFromTable(){
+        if(!empty($_POST)) {
+            $dellArray = array();
+            $dellArray = $_POST['dellArray'];
+            $tableName = $_POST['tableName'];
+            $sql_details = \Yii::$app->params['sql_details'];
+            $db = SSP::sql_connect($sql_details);
+                $sql = 'DELETE FROM ' . $tableName . ' WHERE clsf_id = ?';
+            $stmt = $db->prepare($sql);
+            foreach ($dellArray as $id){
+                $stmt->execute(array($id));
+            }
+            return 1;
+        }
+    }
+
+
+    public function actionGetLeaves()
   {
     $array = array();
     $leaves = Classifier::find()->select('id')->leaves()->orderBy('lft')->asArray()->all();
@@ -237,7 +254,7 @@ class ClassifierController extends Controller
       // TODO try {} catch
       $tbl_name = "clsf_" . rand() . "_tbl";
       $sql = 'CREATE TABLE ' . $tbl_name . ' (
-            id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+            clsf_id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
             eq_id INT(11) NOT NULL' .
           $clmnsArray .
           ' ) ENGINE=INNODB';

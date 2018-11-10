@@ -13,168 +13,168 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
-  public function behaviors()
-  {
-    return [
-        'access' => [
-            'class' => AccessControl::class,
-            'only' => ['logout'],
-            'rules' => [
-                [
-                    'actions' => ['logout'],
-                    'allow' => true,
-                    'roles' => ['@'],
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['logout'],
+                'rules' => [
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
-        ],
-        'verbs' => [
-            'class' => VerbFilter::class,
-            'actions' => [
-                'logout' => ['post'],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
             ],
-        ],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function actions()
-  {
-    return [
-        'error' => [
-            'class' => 'yii\web\ErrorAction',
-        ],
-        'captcha' => [
-            'class' => 'yii\captcha\CaptchaAction',
-            'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-        ],
-    ];
-  }
-
-  /**
-   * Displays homepage.
-   *
-   * @return string
-   */
-  public function actionIndex()
-  {
-    return $this->render('index');
-  }
-
-  /**
-   * Login action.
-   *
-   * @return Response|string
-   */
-  public function actionLogin()
-  {
-    if (!Yii::$app->user->isGuest) {
-      return $this->goHome();
+        ];
     }
 
-    $model = new LoginForm();
-    if ($model->load(Yii::$app->request->post()) && $model->login()) {
-      return $this->goBack();
+    /**
+     * {@inheritdoc}
+     */
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        ];
     }
 
-    $model->password = '';
-    return $this->render('login', [
-        'model' => $model,
-    ]);
-  }
-
-  /**
-   * Logout action.
-   *
-   * @return Response
-   */
-  public function actionLogout()
-  {
-    Yii::$app->user->logout();
-
-    return $this->goHome();
-  }
-
-  /**
-   * Displays contact page.
-   *
-   * @return Response|string
-   */
-  public function actionContact()
-  {
-    $model = new ContactForm();
-    if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-      Yii::$app->session->setFlash('contactFormSubmitted');
-
-      return $this->refresh();
+    /**
+     * Displays homepage.
+     *
+     * @return string
+     */
+    public function actionIndex()
+    {
+        return $this->render('index');
     }
-    return $this->render('contact', [
-        'model' => $model,
-    ]);
-  }
 
-  /**
-   * Displays about page.
-   *
-   * @return string
-   */
-  public function actionAbout()
-  {
-    return $this->render('about');
-  }
+    /**
+     * Login action.
+     *
+     * @return Response|string
+     */
+    public function actionLogin()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
 
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->goBack();
+        }
 
-  public function actionAddSuperadmin()
-  {
-    $model = User::find()->where(['login' => 'sAdmin'])->one();
-    if (empty($model)) {
-      $user = new User();
-      $user->username = 'Суперадмин';
-      $user->login = 'sAdmin';
-      $user->setPassword('vinegar');
-      $user->email = 'super@admin.ru';
-      $user->generateAuthKey();
-      if ($user->save()) {
-        echo 'СуперАдмин создан';
-      } else {
-        echo 'Что-то пошло не так!';
-      }
-    } else {
-      echo 'СуперАдмин уже был создан';
+        $model->password = '';
+        return $this->render('login', [
+            'model' => $model,
+        ]);
     }
-  }
 
-  public function actionSetSuperRole()
-  {
-    $authManager = \Yii::$app->authManager;
-    $admin  = $authManager->createRole('superAdmin');
-    $user = User::find()->where(['login' => 'sAdmin'])->one();
-    Yii::$app->authManager->assign($admin, $user->getId());
-  }
+    /**
+     * Logout action.
+     *
+     * @return Response
+     */
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
 
-  public function actionSetchild()
-  {
-    $roleMilitary = Yii::$app->authManager->getRole('military');
-    $roleCivilian = Yii::$app->authManager->getRole('civilian');
-    Yii::$app->authManager->addChild($roleMilitary, $roleCivilian);
-  }
+        return $this->goHome();
+    }
 
-  public function actionTestt()
-  {
-    $user = User::find()->where(['login' => 'Boss'])->one();
-    $roleCivilian = Yii::$app->authManager->getRole('civilian');
-    Yii::$app->authManager->assign($roleCivilian, $user->getId());
+    /**
+     * Displays contact page.
+     *
+     * @return Response|string
+     */
+    public function actionContact()
+    {
+        $model = new ContactForm();
+        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+            Yii::$app->session->setFlash('contactFormSubmitted');
 
-  }
+            return $this->refresh();
+        }
+        return $this->render('contact', [
+            'model' => $model,
+        ]);
+    }
 
-  public function actionDeleteRole()
-  {
-    $user = User::find()->where(['login' => 'Boss'])->one();
-    $auth = Yii::$app->authManager;
-    $item = $auth->getRole('civilian');
-    $item = $item ? : $auth->getPermission('civilian');
-    $auth->revoke($item, $user->getId());
-  }
+    /**
+     * Displays about page.
+     *
+     * @return string
+     */
+    public function actionAbout()
+    {
+        return $this->render('about');
+    }
+
+
+    public function actionAddSuperadmin()
+    {
+        $model = User::find()->where(['login' => 'sAdmin'])->one();
+        if (empty($model)) {
+            $user = new User();
+            $user->username = 'Суперадмин';
+            $user->login = 'sAdmin';
+            $user->setPassword('vinegar');
+            $user->email = 'super@admin.ru';
+            $user->generateAuthKey();
+            if ($user->save()) {
+                echo 'СуперАдмин создан';
+            } else {
+                echo 'Что-то пошло не так!';
+            }
+        } else {
+            echo 'СуперАдмин уже был создан';
+        }
+    }
+
+    public function actionSetSuperRole()
+    {
+        $authManager = \Yii::$app->authManager;
+        $admin = $authManager->createRole('superAdmin');
+        $authManager->add($admin);
+        $user = User::find()->where(['login' => 'sAdmin'])->one();
+        Yii::$app->authManager->assign($admin, $user->getId());
+    }
+
+    public function actionSetchild()
+    {
+        $roleMilitary = Yii::$app->authManager->getRole('military');
+        $roleCivilian = Yii::$app->authManager->getRole('civilian');
+        Yii::$app->authManager->addChild($roleMilitary, $roleCivilian);
+    }
+
+    public function actionTestt()
+    {
+        $user = User::find()->where(['login' => 'Boss'])->one();
+        $roleCivilian = Yii::$app->authManager->getRole('civilian');
+        Yii::$app->authManager->assign($roleCivilian, $user->getId());
+    }
+
+    public function actionDeleteRole()
+    {
+        $user = User::find()->where(['login' => 'Boss'])->one();
+        $auth = Yii::$app->authManager;
+        $item = $auth->getRole('civilian');
+        $item = $item ?: $auth->getPermission('civilian');
+        $auth->revoke($item, $user->getId());
+    }
 
 }

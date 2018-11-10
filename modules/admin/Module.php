@@ -18,7 +18,7 @@ class Module extends \yii\base\Module
             'rules' => [
                 [
                     'allow' => true,
-                    'roles' => ['superAdmin'],      // доступ только с ролью superAdmin
+//                    'roles' => ['superAdmin'],      // доступ только с ролью superAdmin
                 ],
             ],
         ],

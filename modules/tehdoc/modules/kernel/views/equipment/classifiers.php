@@ -12,7 +12,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $about = "Панель отображения и управления оборудованием, логически поделенного на пользовательские классификаторы. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
 $refresh_hint = 'Перезапустить форму';
-$dell_hint = 'Удалить выделенное оборудование из таблицы классификатора в базе данных.';
+$dell_hint = 'Удалить выделенное оборудование из таблицы классификатора';
+$send_hint = 'Передать выделенные строки в подробную версию таблицы';
 
 ?>
 
@@ -153,6 +154,14 @@ $dell_hint = 'Удалить выделенное оборудование из 
             'data-placement' => "top",
             'title' => $dell_hint,
         ]) ?>
+    <?= Html::a('Передать->',
+        [''], [
+            'class' => 'btn btn-primary btn-sm hiddendel',
+            'style' => ['margin-top' => '5px', 'display' => 'none'],
+            'data-toggle' => "tooltip",
+            'data-placement' => "top",
+            'title' => $send_hint,
+        ]) ?>
     </div>
     <input class="lft" style="display: none">
     <input class="rgt" style="display: none">
@@ -264,6 +273,7 @@ $dell_hint = 'Удалить выделенное оборудование из 
         $('.refresh').click(function (event) {
             event.preventDefault();
             var tree = $(".fancytree-ext-filter").fancytree("getTree");
+            console.log(tree);
             tree.reload();
             $(".about-header").text("");
             $(".about-main").html('');
@@ -435,11 +445,14 @@ $dell_hint = 'Удалить выделенное оборудование из 
         });
     });
 
+    var tableName;
+
     function showTable(id) {
         $.ajax({
             "url": 'display-columns?id=' + id,
             "success": function (json) {
                 var tableHeaders = '';
+                window.tableName = json.tableName;
                 $.each(json.columns, function (i, val) {
                     tableHeaders += "<th>" + val + "</th>";
                 });
@@ -483,7 +496,15 @@ $dell_hint = 'Удалить выделенное оборудование из 
                         "targets": 0,
                         "data": null,
                         "visible": false
-                    }, {
+                    },{
+                        "targets": 0,
+                        "data": null,
+                        "visible": false
+                    },{
+                        "targets": 5,
+                        "visible": false
+                    },
+                        {
                         "targets": 2,
                         "render": function (data, type, row) {
                             return row[2] + " " + row[3];
@@ -540,21 +561,22 @@ $dell_hint = 'Удалить выделенное оборудование из 
     $(document).ready(function () {
         $('.hiddendel').click(function (event) {
             event.preventDefault();
+            console.log(window.tableName);
             var csrf = $('meta[name=csrf-token]').attr("content");
             var table = $('#main-table').DataTable();
             var data = table.rows({selected: true}).data();
             var ar = [];
             var count = data.length;
             for (var i = 0; i < count; i++) {
-                ar[i] = data[i][0];
+                ar[i] = data[i][5];
             }
             if (confirm('Вы действительно хотите удалить выделенное оборудование? Выделено ' + data.length + '!!!  ')) {
                 $(".modal").modal("show");
                 $.ajax({
-                    url: "/tehdoc/kernel/equipment/delete",
+                    url: "/admin/classifier/delete-from-table",
                     type: "post",
                     dataType: "JSON",
-                    data: {jsonData: ar, _csrf: csrf},
+                    data: {dellArray: ar, _csrf: csrf, tableName: window.tableName},
                     success: function (result) {
                         $("#main-table").DataTable().clearPipeline().draw();
                         $(".modal").modal('hide');
