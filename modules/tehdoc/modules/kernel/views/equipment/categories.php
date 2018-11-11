@@ -20,188 +20,198 @@ $classif_hint = 'Присвоить выделенному оборудован�
 ?>
 
 <style>
-  .h-title {
-    font-size: 18px;
-    color: #1e6887;
-  }
+    .h-title {
+        font-size: 18px;
+        color: #1e6887;
+    }
 
-  li {
-    word-wrap: break-word
-  }
+    li {
+        word-wrap: break-word
+    }
 
-  .fa {
-    font-size: 15px;
-  }
+    .fa {
+        font-size: 15px;
+    }
 
-  ul.fancytree-container {
-    font-size: 12px;
-  }
+    ul.fancytree-container {
+        font-size: 12px;
+    }
 
-  input {
-    color: black;
-  }
+    input {
+        color: black;
+    }
 
-  #main-table {
-    font-size: 12px;
-  }
+    #main-table {
+        font-size: 12px;
+    }
 
-  td .fa {
-    font-size: 22px;
-  }
+    td .fa {
+        font-size: 22px;
+    }
 
-  .kv-has-checkbox .kv-selected > .kv-tree-list .kv-node-detail {
-    /*background-color: #fff;*/
-  }
+    .kv-has-checkbox .kv-selected > .kv-tree-list .kv-node-detail {
+        /*background-color: #fff;*/
+    }
 
-  .show-menu-button {
-    position: absolute;
-    background-color: #f5f7f8;
-    top: 0px;
-    left: -20px;
-    width: 15px;
-    height: 100%;
-    cursor: pointer;
-    text-align: center;
-    padding-top: 25px;
-    border-radius: 1px;
-  }
+    .show-menu-button {
+        position: absolute;
+        background-color: #f5f7f8;
+        top: 0px;
+        left: -20px;
+        width: 15px;
+        height: 100%;
+        cursor: pointer;
+        text-align: center;
+        padding-top: 25px;
+        border-radius: 1px;
+    }
 
 </style>
 
 <div class="eq-category-pannel">
-  <h1><?= Html::encode($this->title) ?>
-    <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
-         data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
-  </h1>
+    <h1><?= Html::encode($this->title) ?>
+        <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
+             data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
+    </h1>
 </div>
 
 <div class="row">
-  <div class="col-lg-4 col-md-4 fancy-tree" style="padding-bottom: 5px">
-    <div class="row" style="margin-bottom: 10px;padding-left: 15px">
-      <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
-          'style' => ['margin-top' => '5px'],
-          'title' => $refresh_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
+    <div class="col-lg-4 col-md-4 fancy-tree" style="padding-bottom: 5px">
+        <div class="row" style="margin-bottom: 10px;padding-left: 15px">
+            <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
+                'style' => ['margin-top' => '5px'],
+                'title' => $refresh_hint,
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'top'
+            ]) ?>
+        </div>
+
+        <div style="position: relative">
+            <div class="hideMenu-button hidden-sm hidden-xs" style="position: absolute;top: 5px;right: -20px">
+                <a href="#" class="fa fa-reply-all" data-placement="top" data-toggle="tooltip" title="Свернуть"
+                   aria-hidden="true"></a>
+            </div>
+
+            <div class="container-fuid" style="float:left; width: 100%">
+                <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
+            </div>
+            <div style="padding-top: 8px; right: 10px; position: absolute">
+                <a href="" id="btnResetSearch">
+                    <i class="fa fa-times-circle" aria-hidden="true" style="font-size:20px; color: #9d9d9d"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="row" style="padding: 0 15px">
+            <div style="border-radius:2px;padding-top:40px">
+
+                <?php
+                echo \wbraganca\fancytree\FancytreeWidget::widget([
+                    'options' => [
+                        'source' => [
+                            'url' => '/admin/category/categories',                      //!!!!!!!!!!!!!!***!!!!!!!!!!!!!!!!!
+                        ],
+                        'extensions' => ['filter'],
+                        'quicksearch' => true,
+                        'minExpandLevel' => 2,
+                        'filter' => [
+                            'autoApply' => true,   // Re-apply last filter if lazy data is loaded
+                            'autoExpand' => false, // Expand all branches that contain matches while filtered
+                            'counter' => true,     // Show a badge with number of matching child nodes near parent icons
+                            'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                            'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
+                            'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
+                            'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
+                            'leavesOnly' => true, // Match end nodes only
+                            'nodata' => true,      // Display a 'no data' status node if result is empty
+                            'mode' => "hide"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+                        ],
+                        'activate' => new \yii\web\JsExpression('function(node, data) {
+                            $(\'.hiddendel\').hide();
+                            $(\'.classif\').hide();
+                            var node = data.node;
+                            var table = $("#example").DataTable();
+                            if (node.key == -999){
+                                $(".add-subcategory").hide();
+                                return;
+                            } else {
+                                $(".add-subcategory").show();
+                            }
+                            var title = node.title;
+                            var id = node.data.id;
+                            window.nodeId = id;
+                            $(".lft").text(node.data.lft);                       
+                            $(".rgt").text(node.data.rgt);                       
+                            $("#main-table").DataTable().clearPipeline().draw();
+                    }'),
+                        'renderNode' => new \yii\web\JsExpression('function(node, data) {
+                    }'),
+                    ]
+                ]); ?>
+            </div>
+        </div>
     </div>
 
-    <div style="position: relative">
-      <div class="hideMenu-button hidden-sm hidden-xs" style="position: absolute;top: 5px;right: -20px">
-        <a href="#" class="fa fa-reply-all" data-placement="top" data-toggle="tooltip" title="Свернуть"
-           aria-hidden="true"></a>
-      </div>
 
-      <div class="container-fuid" style="float:left; width: 100%">
-        <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
-      </div>
-      <div style="padding-top: 8px; right: 10px; position: absolute">
-        <a href="" id="btnResetSearch">
-          <i class="fa fa-times-circle" aria-hidden="true" style="font-size:20px; color: #9d9d9d"></i>
-        </a>
-      </div>
+    <div class="col-lg-8 col-md-8 about about-padding" style="position: relative;">
+        <div class="control-buttons-wrap" style="position: absolute;top: 0px;width: 300px">
+            <?= Html::a('Удалить',
+                [''], [
+                    'class' => 'btn btn-danger btn-sm hiddendel',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $dell_hint,
+                ]) ?>
+            <?= Html::a('Классиф-тор',
+                [''], [
+                    'class' => 'btn btn-info btn-sm classif',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $classif_hint,
+                ]) ?>
+        </div>
+        <input class="lft" style="display: none">
+        <input class="rgt" style="display: none">
+        <div class="table-wrapper" style="min-height:40px">
+        </div>
+        <div class="about-header" style="font-size:18px;"></div>
+        <table id="main-table" class="display no-wrap cell-border" style="width:100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th data-priority="1">Наименование</th>
+                <th data-priority="5">Производитель/Модель</th>
+                <th>Модель</th>
+                <th data-priority="6">s/n</th>
+                <th>Дата производства</th>
+                <th data-priority="4" title="Количество">Кол.</th>
+                <th data-priority="2">Action</th>
+                <th data-priority="3"></th>
+            </tr>
+            </thead>
+        </table>
     </div>
-
-    <div class="row" style="padding: 0 15px">
-      <div style="border-radius:2px;padding-top:40px">
-
-        <?php
-        echo \wbraganca\fancytree\FancytreeWidget::widget([
-            'options' => [
-                'source' => [
-                    'url' => '/admin/category/categories',
-                ],
-                'extensions' => ['filter'],
-                'quicksearch' => true,
-                'minExpandLevel' => 2,
-                'filter' => [
-                    'autoApply' => true,   // Re-apply last filter if lazy data is loaded
-                    'autoExpand' => false, // Expand all branches that contain matches while filtered
-                    'counter' => true,     // Show a badge with number of matching child nodes near parent icons
-                    'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
-                    'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
-                    'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
-                    'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
-                    'leavesOnly' => true, // Match end nodes only
-                    'nodata' => true,      // Display a 'no data' status node if result is empty
-                    'mode' => "hide"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-                ],
-                'activate' => new \yii\web\JsExpression('function(node, data) {
-                        var node = data.node;
-                        var table = $("#example").DataTable();
-                        if (node.key == -999){
-                            $(".add-subcategory").hide();
-                            return;
-                        } else {
-                            $(".add-subcategory").show();
-                        }
-                        var title = node.title;
-                        var id = node.data.id;
-                        window.nodeId = id;
-                        console.log(window.nodeId); 
-                        $(".lft").text(node.data.lft);                       
-                        $(".rgt").text(node.data.rgt);                       
-                        $("#main-table").DataTable().clearPipeline().draw();
-        }'),
-                'renderNode' => new \yii\web\JsExpression('function(node, data) {
-            }'),
-            ]
-        ]); ?>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="col-lg-8 col-md-8 about about-padding" style="position: relative;">
-    <div class="control-buttons-wrap" style="position: absolute;top: 0px;width: 300px">
-      <?= Html::a('Удалить',
-          [''], [
-              'class' => 'btn btn-danger btn-sm hiddendel',
-              'style' => ['margin-top' => '5px', 'display' => 'none'],
-              'data-toggle' => "tooltip",
-              'data-placement' => "top",
-              'title' => $dell_hint,
-          ]) ?>
-      <?= Html::a('Классиф-тор',
-          [''], [
-              'class' => 'btn btn-info btn-sm classif',
-              'style' => ['margin-top' => '5px', 'display' => 'none'],
-              'data-toggle' => "tooltip",
-              'data-placement' => "top",
-              'title' => $classif_hint,
-          ]) ?>
-    </div>
-    <input class="lft" style="display: none">
-    <input class="rgt" style="display: none">
-    <div class="table-wrapper" style="min-height:40px">
-    </div>
-    <div class="about-header" style="font-size:18px;"></div>
-    <table id="main-table" class="display no-wrap cell-border" style="width:100%">
-      <thead>
-      <tr>
-        <th></th>
-        <th data-priority="1">Наименование</th>
-        <th data-priority="5">Производитель/Модель</th>
-        <th>Модель</th>
-        <th data-priority="6">s/n</th>
-        <th>Дата производства</th>
-        <th data-priority="4" title="Количество">Кол.</th>
-        <th data-priority="2">Action</th>
-        <th data-priority="3"></th>
-      </tr>
-      </thead>
-    </table>
-  </div>
 </div>
 
 
 <script>
+    // Глобальные переменные
+
+    var nodeid;
+
+
+    //************************ Работа над стилем ****************************
+
     var showMenuBtn =
         '<div class="show-menu-button" data-placement="top" data-toggle="tooltip" title="Развернуть" onclick="onClick()">' +
         '<i class="fa fa-chevron-right" aria-hidden="true"></i>' +
         '</div>';
 
     $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
         $('.hideMenu-button').click(function (e) {
             var indexes;
             e.preventDefault();
@@ -241,7 +251,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 }
             );
         });
-
     });
 
     function rememberSelectedRows() {
@@ -304,10 +313,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
         );
     }
 
-    var nodeid;
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+    //************************* Управление деревом ***************************************
 
     $(document).ready(function () {
         $('.refresh').click(function (event) {
@@ -371,13 +377,10 @@ $classif_hint = 'Присвоить выделенному оборудован�
         })
     });
 
-
-    // ===============================================================================================
+    // ************************* Работа таблицы **************************************
 
     $(document).ready(function () {
         $.fn.dataTable.pipeline = function (opts) {
-            // Configuration options
-
             var conf = $.extend({
                 pages: 5,     // number of pages to cache
                 url: '',      // script url
@@ -385,71 +388,51 @@ $classif_hint = 'Присвоить выделенному оборудован�
                               // matching how `ajax.data` works in DataTables
                 method: 'GET' // Ajax HTTP method
             }, opts);
-
-            // Private variables for storing the cache
             var cacheLower = -1;
             var cacheUpper = null;
             var cacheLastRequest = null;
             var cacheLastJson = null;
-
             return function (request, drawCallback, settings) {
                 var ajax = false;
                 var requestStart = request.start;
                 var drawStart = request.start;
                 var requestLength = request.length;
                 var requestEnd = requestStart + requestLength;
-
                 if (settings.clearCache) {
                     // API requested that the cache be cleared
                     ajax = true;
                     settings.clearCache = false;
                 }
                 else if (cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper) {
-                    // outside cached data - need to make a request
                     ajax = true;
                 }
                 else if (JSON.stringify(request.order) !== JSON.stringify(cacheLastRequest.order) ||
                     JSON.stringify(request.columns) !== JSON.stringify(cacheLastRequest.columns) ||
                     JSON.stringify(request.search) !== JSON.stringify(cacheLastRequest.search)
                 ) {
-                    // properties changed (ordering, columns, searching)
                     ajax = true;
                 }
-
-                // Store the request for checking next time around
                 cacheLastRequest = $.extend(true, {}, request);
-
                 if (ajax) {
-                    // Need data from the server
                     if (requestStart < cacheLower) {
                         requestStart = requestStart - (requestLength * (conf.pages - 1));
-
                         if (requestStart < 0) {
                             requestStart = 0;
                         }
                     }
-
                     cacheLower = requestStart;
                     cacheUpper = requestStart + (requestLength * conf.pages);
-
                     request.start = requestStart;
                     request.length = requestLength * conf.pages;
-
-                    // Provide the same `data` options as DataTables.
                     if (typeof conf.data === 'function') {
-                        // As a function it is executed with the data object as an arg
-                        // for manipulation. If an object is returned, it is used as the
-                        // data object to submit
                         var d = conf.data(request);
                         if (d) {
                             $.extend(request, d);
                         }
                     }
                     else if ($.isPlainObject(conf.data)) {
-                        // As an object, the data given extends the default
                         $.extend(request, conf.data);
                     }
-
                     settings.jqXHR = $.ajax({
                         "type": conf.method,
                         "url": conf.url,
@@ -474,14 +457,10 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     json.draw = request.draw; // Update the echo for each response
                     json.data.splice(0, requestStart - cacheLower);
                     json.data.splice(requestLength, json.data.length);
-
                     drawCallback(json);
                 }
             }
         };
-
-        // Register an API method that will empty the pipelined data, forcing an Ajax
-        // fetch on the next draw (i.e. `table.clearPipeline().draw()`)
         $.fn.dataTable.Api.register('clearPipeline()', function () {
             return this.iterator('table', function (settings) {
                 settings.clearCache = true;
@@ -513,7 +492,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 "targets": -2,
                 "data": null,
                 "defaultContent": "<a href='#' class='fa fa-edit edit' style='padding-right: 5px'></a>" +
-                "<a href='#' class='fa fa-eye view'></a>",
+                    "<a href='#' class='fa fa-eye view'></a>",
                 "orderable": false
             }, {
                 "orderable": false,
@@ -551,7 +530,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
             } else {
                 location.href = "/tehdoc/kernel/equipment/update?id=" + data[0];
             }
-
         });
         $('#main-table tbody').on('click', '.view', function (e) {
             e.preventDefault();
@@ -582,6 +560,8 @@ $classif_hint = 'Присвоить выделенному оборудован�
             }
         });
     });
+
+    //********************** Удаление записей ***********************************
 
     $(document).ready(function () {
         $('.hiddendel').click(function (event) {
@@ -616,8 +596,8 @@ $classif_hint = 'Присвоить выделенному оборудован�
         })
     });
 
+    //************************** Добавление классификатора **********************************
 
-    // добавление классификатора
     $(document).ready(function () {
         $('.classif').click(function (event) {
             event.preventDefault();

@@ -13,180 +13,198 @@ $this->params['breadcrumbs'][] = $this->title;
 $about = "Панель отображения оборудования по местам размещения. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
 $refresh_hint = 'Перезапустить форму';
 $dell_hint = 'Удалить выделенное оборудование из ОСНОВНОЙ таблицы. БУДЬТЕ ВНИМАТЕЛЬНЫ, данные будут удалены безвозвратно.';
+$classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
+
 
 ?>
 
 <style>
-  .h-title {
-    font-size: 18px;
-    color: #1e6887;
-  }
+    .h-title {
+        font-size: 18px;
+        color: #1e6887;
+    }
 
-  li {
-    word-wrap: break-word
-  }
+    li {
+        word-wrap: break-word
+    }
 
-  .fa {
-    font-size: 15px;
-  }
+    .fa {
+        font-size: 15px;
+    }
 
-  ul.fancytree-container {
-    font-size: 12px;
-  }
+    ul.fancytree-container {
+        font-size: 12px;
+    }
 
-  input {
-    color: black;
-  }
+    input {
+        color: black;
+    }
 
-  #main-table {
-    font-size: 12px;
-  }
+    #main-table {
+        font-size: 12px;
+    }
 
-  td .fa {
-    font-size: 22px;
-  }
+    td .fa {
+        font-size: 22px;
+    }
 
-  .about-padding-zero {
-    padding-top: 10px;
-  }
+    .about-padding-zero {
+        padding-top: 10px;
+    }
 
-  .about-padding {
-    padding-top: 0px;
-  }
+    .about-padding {
+        padding-top: 0px;
+    }
 
-  .show-menu-button {
-    position: absolute;
-    background-color: #f5f7f8;
-    top: 0px;
-    left: -20px;
-    width: 15px;
-    height: 100%;
-    cursor: pointer;
-    text-align: center;
-    padding-top: 25px;
-    border-radius: 1px;
-  }
+    .show-menu-button {
+        position: absolute;
+        background-color: #f5f7f8;
+        top: 0px;
+        left: -20px;
+        width: 15px;
+        height: 100%;
+        cursor: pointer;
+        text-align: center;
+        padding-top: 25px;
+        border-radius: 1px;
+    }
 
 </style>
 
 <div class="eq-placement-pannel">
-  <h1><?= Html::encode($this->title) ?>
-    <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
-         data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
-  </h1>
+    <h1><?= Html::encode($this->title) ?>
+        <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
+             data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
+    </h1>
 </div>
 
 <div class="row">
-  <div class="col-lg-4 col-md-4 fancy-tree" style="padding-bottom: 5px">
-    <div class="row" style="margin-bottom: 10px;padding-left: 15px">
-      <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
-          'style' => ['margin-top' => '5px'],
-          'title' => $refresh_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
+    <div class="col-lg-4 col-md-4 fancy-tree" style="padding-bottom: 5px">
+        <div class="row" style="margin-bottom: 10px;padding-left: 15px">
+            <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
+                'style' => ['margin-top' => '5px'],
+                'title' => $refresh_hint,
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'top'
+            ]) ?>
+        </div>
+
+        <div style="position: relative">
+            <div class="hideMenu-button hidden-sm hidden-xs" style="position: absolute;top: 5px;right: -20px">
+                <a href="#" class="fa fa-reply-all" data-placement="top" data-toggle="tooltip" title="Свернуть"
+                   aria-hidden="true"></a>
+            </div>
+
+            <div class="container-fuid" style="float:left; width: 100%">
+                <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
+            </div>
+            <div style="padding-top: 8px; right: 10px; position: absolute">
+                <a href="" id="btnResetSearch">
+                    <i class="fa fa-times-circle" aria-hidden="true" style="font-size:20px; color: #9d9d9d"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="row" style="padding: 0 15px">
+            <div style="border-radius:2px;padding-top:40px">
+
+                <?php
+                echo \wbraganca\fancytree\FancytreeWidget::widget([
+                    'options' => [
+                        'source' => [
+                            'url' => '/admin/placement/placements',
+                        ],
+                        'extensions' => ['filter'],
+                        'quicksearch' => true,
+                        'minExpandLevel' => 2,
+                        'filter' => [
+                            'autoApply' => true,   // Re-apply last filter if lazy data is loaded
+                            'autoExpand' => false, // Expand all branches that contain matches while filtered
+                            'counter' => true,     // Show a badge with number of matching child nodes near parent icons
+                            'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                            'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
+                            'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
+                            'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
+                            'leavesOnly' => true, // Match end nodes only
+                            'nodata' => true,      // Display a 'no data' status node if result is empty
+                            'mode' => "hide"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+                        ],
+                        'activate' => new \yii\web\JsExpression('function(node, data) {
+                            $(\'.hiddendel\').hide();
+                            $(\'.classif\').hide();
+                            var node = data.node;
+                            var table = $("#example").DataTable();
+                            if (node.key == -999){
+                                $(".add-subcategory").hide();
+                                return;
+                            } else {
+                                $(".add-subcategory").show();
+                            }
+                            var title = node.title;
+                            var id = node.data.id;
+                            $(".lft").text(node.data.lft);                       
+                            $(".rgt").text(node.data.rgt);                       
+                            $("#main-table").DataTable().clearPipeline().draw();
+                        }'),
+                        'renderNode' => new \yii\web\JsExpression('function(node, data) {
+                        }'),
+                    ]
+                ]); ?>
+            </div>
+        </div>
     </div>
 
-    <div style="position: relative">
-      <div class="hideMenu-button hidden-sm hidden-xs" style="position: absolute;top: 5px;right: -20px">
-        <a href="#" class="fa fa-reply-all" data-placement="top" data-toggle="tooltip" title="Свернуть"
-           aria-hidden="true"></a>
-      </div>
+    <div class="col-lg-8 col-md-8 about about-padding" style="position: relative;">
+        <div class="control-buttons-wrap" style="position: absolute;top: 0px;width: 300px">
+            <?= Html::a('Удалить',
+                [''], [
+                    'class' => 'btn btn-danger btn-sm hiddendel',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $dell_hint,
+                ]) ?>
+            <?= Html::a('Классиф-тор',
+                [''], [
+                    'class' => 'btn btn-info btn-sm classif',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $classif_hint,
+                ]) ?>
 
-      <div class="container-fuid" style="float:left; width: 100%">
-        <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
-      </div>
-      <div style="padding-top: 8px; right: 10px; position: absolute">
-        <a href="" id="btnResetSearch">
-          <i class="fa fa-times-circle" aria-hidden="true" style="font-size:20px; color: #9d9d9d"></i>
-        </a>
-      </div>
+        </div>
+
+        <input class="lft" style="display: none">
+        <input class="rgt" style="display: none">
+        <div class="table-wrapper" style="min-height:40px">
+        </div>
+        <div class="about-header" style="font-size:18px"></div>
+        <table id="main-table" class="display no-wrap cell-border" style="width:100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th data-priority="1">Наименование</th>
+                <th data-priority="5">Производитель/Модель</th>
+                <th>Модель</th>
+                <th data-priority="6">s/n</th>
+                <th>Дата производства</th>
+                <th data-priority="4" title="Количество">Кол.</th>
+                <th data-priority="2">Action</th>
+                <th data-priority="3"></th>
+            </tr>
+            </thead>
+        </table>
     </div>
-
-    <div class="row" style="padding: 0 15px">
-      <div style="border-radius:2px;padding-top:40px">
-
-        <?php
-        echo \wbraganca\fancytree\FancytreeWidget::widget([
-            'options' => [
-                'source' => [
-                    'url' => '/admin/placement/placements',
-                ],
-                'extensions' => ['filter'],
-                'quicksearch' => true,
-                'minExpandLevel' => 2,
-                'filter' => [
-                    'autoApply' => true,   // Re-apply last filter if lazy data is loaded
-                    'autoExpand' => false, // Expand all branches that contain matches while filtered
-                    'counter' => true,     // Show a badge with number of matching child nodes near parent icons
-                    'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
-                    'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
-                    'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
-                    'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
-                    'leavesOnly' => true, // Match end nodes only
-                    'nodata' => true,      // Display a 'no data' status node if result is empty
-                    'mode' => "hide"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-                ],
-                'activate' => new \yii\web\JsExpression('function(node, data) {
-                        var node = data.node;
-                        var table = $("#example").DataTable();
-                        if (node.key == -999){
-                            $(".add-subcategory").hide();
-                            return;
-                        } else {
-                            $(".add-subcategory").show();
-                        }
-                        var title = node.title;
-                        var id = node.data.id;
-                        $(".lft").text(node.data.lft);                       
-                        $(".rgt").text(node.data.rgt);                       
-                        $("#main-table").DataTable().clearPipeline().draw();
-        }'),
-                'renderNode' => new \yii\web\JsExpression('function(node, data) {
-            }'),
-            ]
-        ]); ?>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-8 col-md-8 about about-padding" style="position: relative;">
-    <div class="control-buttons-wrap" style="position: absolute;top: 0px;width: 300px">
-      <?= Html::a('Удалить',
-          [''], [
-              'class' => 'btn btn-danger btn-sm hiddendel',
-              'style' => ['margin-top' => '5px', 'display' => 'none'],
-              'data-toggle' => "tooltip",
-              'data-placement' => "top",
-              'title' => $dell_hint,
-          ]) ?>
-    </div>
-
-    <input class="lft" style="display: none">
-    <input class="rgt" style="display: none">
-    <div class="table-wrapper" style="min-height:40px">
-    </div>
-    <div class="about-header" style="font-size:18px"></div>
-    <table id="main-table" class="display no-wrap cell-border" style="width:100%">
-      <thead>
-      <tr>
-        <th></th>
-        <th data-priority="1">Наименование</th>
-        <th data-priority="5">Производитель/Модель</th>
-        <th>Модель</th>
-        <th data-priority="6">s/n</th>
-        <th>Дата производства</th>
-        <th data-priority="4" title="Количество">Кол.</th>
-        <th data-priority="2">Action</th>
-        <th data-priority="3"></th>
-      </tr>
-      </thead>
-    </table>
-  </div>
 </div>
 
 
 <script>
+    // Глобальные переменные
+
+    var nodeid;
+
+    //************************ Работа над стилем ****************************
 
     var showMenuBtn =
         '<div class="show-menu-button" data-placement="top" data-toggle="tooltip" title="Развернуть" onclick="onClick()">' +
@@ -194,18 +212,23 @@ $dell_hint = 'Удалить выделенное оборудование из 
         '</div>';
 
     $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
         $('.hideMenu-button').click(function (e) {
+            var indexes;
             e.preventDefault();
             $('.fancy-tree').animate({
                     width: "0%"
                 },
                 {
                     duration: 1000,
+                    start: indexes = rememberSelectedRows(),
                     complete: function () {
                         $('#main-table_wrapper').css('margin-left', '20px');
                         $('.about').css('width', '');
                         $('.about').removeClass('col-lg-9 col-md-9').addClass('col-lg-12 col-md-12');
-                        redrawTable()
+                        redrawTable();
+                        restoreSelectedRows(indexes);
                         $('.fancy-tree').hide();
                         $('[data-toggle="tooltip"]').tooltip();
                         if ($('.show-menu-button').length === 0) {
@@ -216,13 +239,11 @@ $dell_hint = 'Удалить выделенное оборудование из 
                     step: function (now, fx) {
                         if (now <= 25) {
                             $('.about').removeClass('col-lg-8 col-md-8').addClass('col-lg-9 col-md-9');
-                            redrawTable()
                         }
                         if (now <= 11 && now >= 5) {
                             $('.fancy-tree').hide();
                             $('#main-table_wrapper').css('position', 'relative');
                             $('[data-toggle="tooltip"]').tooltip();
-                            console.log($('.show-menu-button').length);
                             if ($('.show-menu-button').length === 0) {
                                 $('#main-table_wrapper').append(showMenuBtn);
                             }
@@ -234,20 +255,35 @@ $dell_hint = 'Удалить выделенное оборудование из 
         });
     });
 
+    function rememberSelectedRows() {
+        var table = $('#main-table').DataTable();
+        var indexes = table.rows({selected: true}).indexes();
+        return indexes;
+    }
+
+    $('#main-table').on('length.dt', function (e, settings, len) {
+        $('.hiddendel').hide();
+        $('.classif').hide();
+        $('.classifier-add').fadeOut('slow');
+    });
+
+    function restoreSelectedRows(indexes) {
+        var table = $('#main-table').DataTable();
+        var count = indexes.count();
+        for (var i = 0; i < count; i++) {
+            table.rows(indexes[i]).select();
+        }
+    }
+
     function redrawTable() {
         var table = $('#main-table').DataTable();
-
         table.draw();
         return true;
     }
 
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-
     function onClick() {
-        var table = $('#main-table').DataTable();
         var width = '33%';
+        var indexes;
         if ($(document).width() < 600) {
             width = '100%';
         }
@@ -257,11 +293,13 @@ $dell_hint = 'Удалить выделенное оборудование из 
             },
             {
                 duration: 1000,
+                start: indexes = rememberSelectedRows(),
                 complete: function () {
                     $('.about').css('width', '');
                     $('#main-table_wrapper').css('margin-left', '0px');
                     $('#main-table_wrapper').css('position', 'inherit');
-                    table.draw();
+                    redrawTable();
+                    restoreSelectedRows(indexes);
                     $('[data-toggle="tooltip"]').tooltip();
                     $('.fancy-tree').css('width', '');
                 },
@@ -269,7 +307,6 @@ $dell_hint = 'Удалить выделенное оборудование из 
                     if (now > 5 && now < 14) {
                         $('.fancy-tree').show();
                         $('.about').removeClass('col-lg-12 col-md-12').addClass('col-lg-10 col-md-10');
-                        table.draw();
                     } else if (now > 16) {
                         $('.about').removeClass('col-lg-10 col-md-10').addClass('col-lg-8 col-md-8');
                     }
@@ -277,6 +314,8 @@ $dell_hint = 'Удалить выделенное оборудование из 
             }
         );
     }
+
+    //************************* Управление деревом ***************************************
 
     $(document).ready(function () {
         $('.refresh').click(function (event) {
@@ -340,9 +379,10 @@ $dell_hint = 'Удалить выделенное оборудование из 
         })
     });
 
+    // ************************* Работа таблицы **************************************
+
     $(document).ready(function () {
         $.fn.dataTable.pipeline = function (opts) {
-            // Configuration options
             var conf = $.extend({
                 pages: 5,     // number of pages to cache
                 url: '',      // script url
@@ -350,71 +390,50 @@ $dell_hint = 'Удалить выделенное оборудование из 
                               // matching how `ajax.data` works in DataTables
                 method: 'GET' // Ajax HTTP method
             }, opts);
-
-            // Private variables for storing the cache
             var cacheLower = -1;
             var cacheUpper = null;
             var cacheLastRequest = null;
             var cacheLastJson = null;
-
             return function (request, drawCallback, settings) {
                 var ajax = false;
                 var requestStart = request.start;
                 var drawStart = request.start;
                 var requestLength = request.length;
                 var requestEnd = requestStart + requestLength;
-
                 if (settings.clearCache) {
-                    // API requested that the cache be cleared
                     ajax = true;
                     settings.clearCache = false;
                 }
                 else if (cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper) {
-                    // outside cached data - need to make a request
                     ajax = true;
                 }
                 else if (JSON.stringify(request.order) !== JSON.stringify(cacheLastRequest.order) ||
                     JSON.stringify(request.columns) !== JSON.stringify(cacheLastRequest.columns) ||
                     JSON.stringify(request.search) !== JSON.stringify(cacheLastRequest.search)
                 ) {
-                    // properties changed (ordering, columns, searching)
                     ajax = true;
                 }
-
-                // Store the request for checking next time around
                 cacheLastRequest = $.extend(true, {}, request);
-
                 if (ajax) {
-                    // Need data from the server
                     if (requestStart < cacheLower) {
                         requestStart = requestStart - (requestLength * (conf.pages - 1));
-
                         if (requestStart < 0) {
                             requestStart = 0;
                         }
                     }
-
                     cacheLower = requestStart;
                     cacheUpper = requestStart + (requestLength * conf.pages);
-
                     request.start = requestStart;
                     request.length = requestLength * conf.pages;
-
-                    // Provide the same `data` options as DataTables.
                     if (typeof conf.data === 'function') {
-                        // As a function it is executed with the data object as an arg
-                        // for manipulation. If an object is returned, it is used as the
-                        // data object to submit
                         var d = conf.data(request);
                         if (d) {
                             $.extend(request, d);
                         }
                     }
                     else if ($.isPlainObject(conf.data)) {
-                        // As an object, the data given extends the default
                         $.extend(request, conf.data);
                     }
-
                     settings.jqXHR = $.ajax({
                         "type": conf.method,
                         "url": conf.url,
@@ -439,14 +458,10 @@ $dell_hint = 'Удалить выделенное оборудование из 
                     json.draw = request.draw; // Update the echo for each response
                     json.data.splice(0, requestStart - cacheLower);
                     json.data.splice(requestLength, json.data.length);
-
                     drawCallback(json);
                 }
             }
         };
-
-        // Register an API method that will empty the pipelined data, forcing an Ajax
-        // fetch on the next draw (i.e. `table.clearPipeline().draw()`)
         $.fn.dataTable.Api.register('clearPipeline()', function () {
             return this.iterator('table', function (settings) {
                 settings.clearCache = true;
@@ -459,6 +474,7 @@ $dell_hint = 'Удалить выделенное оборудование из 
             "processing": true,
             "serverSide": true,
             "responsive": true,
+            "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
             "ajax": $.fn.dataTable.pipeline({
                 url: 'server-side',
                 pages: 2, // number of pages to cache
@@ -477,7 +493,7 @@ $dell_hint = 'Удалить выделенное оборудование из 
                 "targets": -2,
                 "data": null,
                 "defaultContent": "<a href='#' class='fa fa-edit edit' style='padding-right: 5px'></a>" +
-                "<a href='#' class='fa fa-eye view'></a>",
+                    "<a href='#' class='fa fa-eye view'></a>",
                 "orderable": false
             }, {
                 "orderable": false,
@@ -538,17 +554,23 @@ $dell_hint = 'Удалить выделенное оборудование из 
 
     $(document).ready(function () {
         var table = $('#main-table').DataTable();
-        table.on('select', function (e, dt, type, indexes) {
+        table.on('select', function (e, dt, type) {
             if (type === 'row') {
                 $('.hiddendel').show();
+                $('.classif').show();
             }
         });
-        table.on('deselect', function (e, dt, type, indexes) {
-            if (type === 'row') {
+        table.on('deselect', function (e, dt, type) {
+            var i = table.rows({selected: true}).indexes();
+            if (type === 'row' && i.count() == 0) {
                 $('.hiddendel').hide();
+                $('.classif').hide();
+                $('.classifier-add').fadeOut('slow');
             }
         });
     });
+
+    //********************** Удаление записей ***********************************
 
     $(document).ready(function () {
         $('.hiddendel').click(function (event) {
@@ -579,6 +601,66 @@ $dell_hint = 'Удалить выделенное оборудование из 
                     }
                 });
             }
+        })
+    });
+
+    //************************** Добавление классификатора **********************************
+
+    $(document).ready(function () {
+        $('.classif').click(function (event) {
+            event.preventDefault();
+            var csrf = $("meta[name=csrf-token]").attr("content");
+            var table = $("#main-table").DataTable();
+            var data = table.rows({selected: true}).data();
+            var ar = [];
+            var count = data.length;
+            for (var i = 0; i < count; i++) {
+                ar[i] = data[i][0];
+            }
+            $("#classifier-modal").modal("show");
+            $('#classifier').off('change').on('change', function () {
+                var val = $(this).val();
+                console.log(val);
+                if (val != '') {
+                    var el = $('#kv-tree-dropdown-container').find('.kv-selected');
+                    $.ajax({
+                        url: "/admin/classifier/extended-data-form?id=" + val,
+                        type: "GET",
+                        success: function (result) {
+                            $("#classifier-body").html(result);
+                            $("#assign-classifier-btn").removeAttr('disabled');
+                            $("#assign-classifier-btn").off('click').on("click", function (e) {
+                                e.preventDefault();
+                                var data = $('#form-classifier').serializeArray();
+                                var sendData = data.filter(function (item, i, arr) {
+                                    return arr[i]['value'] != 0;
+                                });
+                                $.ajax({
+                                    url: "/admin/classifier/assign-classifier",
+                                    type: "post",
+                                    data: {id: ar, _csrf: csrf, data: sendData},
+                                    success: function (result) {
+                                        $("#form-classifier")[0].reset();
+                                        $("#classifier-modal").modal("hide");
+
+                                    },
+                                    error: function () {
+                                        console.log("Ошибка cat_1! Обратитесь к разработчику.");
+                                        $("#classifier-modal").modal("hide");
+                                    }
+                                });
+                            })
+                        },
+                        error: function () {
+                            console.log("Ошибка cat_2! Обратитесь к разработчику.");
+                            $("#classifier-modal").modal("hide");
+                        }
+                    });
+                } else {
+                    $("#classifier-body").html('');
+                    $("#assign-classifier-btn").attr("disabled", "disabled");
+                }
+            });
         })
     });
 

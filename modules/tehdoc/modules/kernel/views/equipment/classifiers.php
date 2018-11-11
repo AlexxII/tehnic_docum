@@ -18,183 +18,196 @@ $send_hint = 'Передать выделенные строки в подроб
 ?>
 
 <style>
-  .h-title {
-    font-size: 18px;
-    color: #1e6887;
-  }
+    .h-title {
+        font-size: 18px;
+        color: #1e6887;
+    }
 
-  li {
-    word-wrap: break-word
-  }
+    li {
+        word-wrap: break-word
+    }
 
-  .fa {
-    font-size: 15px;
-  }
+    .fa {
+        font-size: 15px;
+    }
 
-  ul.fancytree-container {
-    font-size: 12px;
-  }
+    ul.fancytree-container {
+        font-size: 12px;
+    }
 
-  input {
-    color: black;
-  }
+    input {
+        color: black;
+    }
 
-  #main-table {
-    font-size: 12px;
-  }
+    #main-table {
+        font-size: 12px;
+    }
 
-  td .fa {
-    font-size: 22px;
-  }
+    td .fa {
+        font-size: 22px;
+    }
 
-  .show-menu-button {
-    position: absolute;
-    background-color: #f5f7f8;
-    top: 0px;
-    left: -20px;
-    width: 15px;
-    height: 100%;
-    cursor: pointer;
-    text-align: center;
-    padding-top: 25px;
-    border-radius: 1px;
-  }
+    .show-menu-button {
+        position: absolute;
+        background-color: #f5f7f8;
+        top: 0px;
+        left: -20px;
+        width: 15px;
+        height: 100%;
+        cursor: pointer;
+        text-align: center;
+        padding-top: 25px;
+        border-radius: 1px;
+    }
 
 </style>
 
 <div class="eq-classifiers-pannel">
-  <h1><?= Html::encode($this->title) ?>
-    <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
-         data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
-  </h1>
+    <h1><?= Html::encode($this->title) ?>
+        <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
+             data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
+    </h1>
 </div>
 
 <div class="row">
-  <div class="col-lg-4 col-md-4 fancy-tree" style="padding-bottom: 5px">
-    <div class="row" style="margin-bottom: 10px;padding-left: 15px">
-      <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
-          'style' => ['margin-top' => '5px'],
-          'title' => $refresh_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
+    <div class="col-lg-4 col-md-4 fancy-tree" style="padding-bottom: 5px">
+        <div class="row" style="margin-bottom: 10px;padding-left: 15px">
+            <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
+                'style' => ['margin-top' => '5px'],
+                'title' => $refresh_hint,
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'top'
+            ]) ?>
+        </div>
+
+        <div style="position: relative">
+            <div class="hideMenu-button hidden-sm hidden-xs" style="position: absolute;top: 5px;right: -20px">
+                <a href="#" class="fa fa-reply-all" data-placement="top" data-toggle="tooltip" title="Свернуть"
+                   aria-hidden="true"></a>
+            </div>
+
+            <div class="container-fuid" style="float:left; width: 100%">
+                <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
+            </div>
+            <div style="padding-top: 8px; right: 10px; position: absolute">
+                <a href="" id="btnResetSearch">
+                    <i class="fa fa-times-circle" aria-hidden="true" style="font-size:20px; color: #9d9d9d"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="row" style="padding: 0 15px">
+            <div style="border-radius:2px;padding-top:40px">
+
+                <?php
+                echo \wbraganca\fancytree\FancytreeWidget::widget([
+                    'options' => [
+                        'source' => [
+                            'url' => '/admin/classifier/classifiers',                       //!!!!!!!!!!!!!*********!!!!!!!!!!!
+                        ],
+                        'extensions' => ['filter'],
+                        'quicksearch' => true,
+                        'minExpandLevel' => 2,
+                        'filter' => [
+                            'autoApply' => true,   // Re-apply last filter if lazy data is loaded
+                            'autoExpand' => false, // Expand all branches that contain matches while filtered
+                            'counter' => true,     // Show a badge with number of matching child nodes near parent icons
+                            'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                            'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
+                            'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
+                            'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
+                            'leavesOnly' => true, // Match end nodes only
+                            'nodata' => true,      // Display a 'no data' status node if result is empty
+                            'mode' => "hide"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+                        ],
+                        'activate' => new \yii\web\JsExpression('function(node, data) {
+                            $(\'.hiddendel\').hide();
+                            $(\'.classif\').hide();
+                            var node = data.node;
+                            var table = $("#example").DataTable();
+                            if (node.key == -999){
+                                $(".add-subcategory").hide();
+                                return;
+                            } else {
+                                $(".add-subcategory").show();
+                            }
+                            var title = node.title;
+                            var id = node.data.id;
+                            showTable(id);                        
+                            $(".lft").text(node.data.lft);                       
+                            $(".rgt").text(node.data.rgt);      
+                            $("#main-table").DataTable().clearPipeline().draw();
+                        }'),
+                        'renderNode' => new \yii\web\JsExpression('function(node, data) {
+                        }'),
+                    ]
+                ]); ?>
+            </div>
+        </div>
     </div>
 
-    <div style="position: relative">
-      <div class="hideMenu-button hidden-sm hidden-xs" style="position: absolute;top: 5px;right: -20px">
-        <a href="#" class="fa fa-reply-all" data-placement="top" data-toggle="tooltip" title="Свернуть"
-           aria-hidden="true"></a>
-      </div>
 
-      <div class="container-fuid" style="float:left; width: 100%">
-        <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
-      </div>
-      <div style="padding-top: 8px; right: 10px; position: absolute">
-        <a href="" id="btnResetSearch">
-          <i class="fa fa-times-circle" aria-hidden="true" style="font-size:20px; color: #9d9d9d"></i>
-        </a>
-      </div>
+    <div class="col-lg-8 col-md-8 about about-padding" style="position: relative;">
+        <div class="control-buttons-wrap" style="position: absolute;top: 0px;">
+            <?= Html::a('Удалить',
+                [''], [
+                    'class' => 'btn btn-danger btn-sm hiddendel',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $dell_hint,
+                ]) ?>
+            <?= Html::a('Передать->',
+                [''], [
+                    'class' => 'btn btn-primary btn-sm hiddendel',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $send_hint,
+                ]) ?>
+        </div>
+        <input class="lft" style="display: none">
+        <input class="rgt" style="display: none">
+        <div class="table-wrapper" style="min-height:40px">
+        </div>
+        <div class="about-header" style="font-size:18px"></div>
+        <div id="tableDiv"></div>
     </div>
-
-    <div class="row" style="padding: 0 15px">
-      <div style="border-radius:2px;padding-top:40px">
-
-      <?php
-        echo \wbraganca\fancytree\FancytreeWidget::widget([
-            'options' => [
-                'source' => [
-                    'url' => '/admin/classifier/classifiers',
-                ],
-                'extensions' => ['filter'],
-                'quicksearch' => true,
-                'minExpandLevel' => 2,
-                'filter' => [
-                    'autoApply' => true,   // Re-apply last filter if lazy data is loaded
-                    'autoExpand' => false, // Expand all branches that contain matches while filtered
-                    'counter' => true,     // Show a badge with number of matching child nodes near parent icons
-                    'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
-                    'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
-                    'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
-                    'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
-                    'leavesOnly' => true, // Match end nodes only
-                    'nodata' => true,      // Display a 'no data' status node if result is empty
-                    'mode' => "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-                ],
-                'activate' => new \yii\web\JsExpression('function(node, data) {
-                        var node = data.node;
-                        var table = $("#example").DataTable();
-                        if (node.key == -999){
-                            $(".add-subcategory").hide();
-                            return;
-                        } else {
-                            $(".add-subcategory").show();
-                        }
-                        var title = node.title;
-                        var id = node.data.id;
-                        showTable(id);                        
-                        $(".lft").text(node.data.lft);                       
-                        $(".rgt").text(node.data.rgt);                       
-        }'),
-                'renderNode' => new \yii\web\JsExpression('function(node, data) {
-            }'),
-            ]
-        ]); ?>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="col-lg-8 col-md-8 about about-padding" style="position: relative;">
-    <div class="control-buttons-wrap" style="position: absolute;top: 0px;">
-    <?= Html::a('Удалить',
-        [''], [
-            'class' => 'btn btn-danger btn-sm hiddendel',
-            'style' => ['margin-top' => '5px', 'display' => 'none'],
-            'data-toggle' => "tooltip",
-            'data-placement' => "top",
-            'title' => $dell_hint,
-        ]) ?>
-    <?= Html::a('Передать->',
-        [''], [
-            'class' => 'btn btn-primary btn-sm hiddendel',
-            'style' => ['margin-top' => '5px', 'display' => 'none'],
-            'data-toggle' => "tooltip",
-            'data-placement' => "top",
-            'title' => $send_hint,
-        ]) ?>
-    </div>
-    <input class="lft" style="display: none">
-    <input class="rgt" style="display: none">
-    <div class="table-wrapper" style="min-height:40px">
-    </div>
-    <div class="about-header" style="font-size:18px"></div>
-    <div id="tableDiv"></div>
-  </div>
 
 </div>
 
 
 <script>
+    // Глобальные переменные
+    var tableName;
+    var nodeid;
+
+
+    //************************ Работа над стилем ****************************
+
     var showMenuBtn =
         '<div class="show-menu-button" data-placement="top" data-toggle="tooltip" title="Развернуть" onclick="onClick()">' +
-        '<i class="fa fa-chevron-right" aria-hidden="true"></i>'+
+        '<i class="fa fa-chevron-right" aria-hidden="true"></i>' +
         '</div>';
 
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
 
         $('.hideMenu-button').click(function (e) {
+            var indexes;
             e.preventDefault();
             $('.fancy-tree').animate({
                     width: "0%"
                 },
                 {
                     duration: 1000,
+                    start: indexes = rememberSelectedRows(),
                     complete: function () {
                         $('#main-table_wrapper').css('margin-left', '20px');
                         $('.about').css('width', '');
                         $('.about').removeClass('col-lg-9 col-md-9').addClass('col-lg-12 col-md-12');
-                        redrawTable()
+                        redrawTable();
+                        restoreSelectedRows(indexes);
                         $('.fancy-tree').hide();
                         $('[data-toggle="tooltip"]').tooltip();
                         if ($('.show-menu-button').length === 0) {
@@ -205,13 +218,11 @@ $send_hint = 'Передать выделенные строки в подроб
                     step: function (now, fx) {
                         if (now <= 25) {
                             $('.about').removeClass('col-lg-8 col-md-8').addClass('col-lg-9 col-md-9');
-                            redrawTable()
                         }
                         if (now <= 11 && now >= 5) {
                             $('.fancy-tree').hide();
                             $('#main-table_wrapper').css('position', 'relative');
                             $('[data-toggle="tooltip"]').tooltip();
-                            console.log($('.show-menu-button').length);
                             if ($('.show-menu-button').length === 0) {
                                 $('#main-table_wrapper').append(showMenuBtn);
                             }
@@ -223,18 +234,36 @@ $send_hint = 'Передать выделенные строки в подроб
         });
     });
 
+    function rememberSelectedRows() {
+        var table = $('#main-table').DataTable();
+        var indexes = table.rows({selected: true}).indexes();
+        return indexes;
+    }
 
-    function redrawTable(){
+    $('#main-table').on('length.dt', function (e, settings, len) {
+        $('.hiddendel').hide();
+        $('.classif').hide();
+        $('.classifier-add').fadeOut('slow');
+    });
+
+    function restoreSelectedRows(indexes) {
+        var table = $('#main-table').DataTable();
+        var count = indexes.count();
+        for (var i = 0; i < count; i++) {
+            table.rows(indexes[i]).select();
+        }
+    }
+
+    function redrawTable() {
         var table = $('#main-table').DataTable();
         table.draw();
         return true;
     }
 
-
     function onClick() {
-        var table = $('#main-table').DataTable();
         var width = '33%';
-        if ($(document).width() < 600){
+        var indexes;
+        if ($(document).width() < 600) {
             width = '100%';
         }
         $('.show-menu-button').hide();
@@ -243,20 +272,21 @@ $send_hint = 'Передать выделенные строки в подроб
             },
             {
                 duration: 1000,
+                start: indexes = rememberSelectedRows(),
                 complete: function () {
                     $('.about').css('width', '');
                     $('#main-table_wrapper').css('margin-left', '0px');
                     $('#main-table_wrapper').css('position', 'inherit');
+                    redrawTable();
+                    restoreSelectedRows(indexes);
                     $('[data-toggle="tooltip"]').tooltip();
                     $('.fancy-tree').css('width', '');
-                    table.draw();
                 },
                 step: function (now, fx) {
                     if (now > 5 && now < 14) {
                         $('.fancy-tree').show();
                         $('.about').removeClass('col-lg-12 col-md-12').addClass('col-lg-10 col-md-10');
-                        table.draw();
-                    } else if (now > 16){
+                    } else if (now > 16) {
                         $('.about').removeClass('col-lg-10 col-md-10').addClass('col-lg-8 col-md-8');
                     }
                 }
@@ -264,15 +294,12 @@ $send_hint = 'Передать выделенные строки в подроб
         );
     }
 
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+    //************************* Управление деревом ***************************************
 
     $(document).ready(function () {
         $('.refresh').click(function (event) {
             event.preventDefault();
             var tree = $(".fancytree-ext-filter").fancytree("getTree");
-            console.log(tree);
             tree.reload();
             $(".about-header").text("");
             $(".about-main").html('');
@@ -291,28 +318,23 @@ $send_hint = 'Передать выделенные строки в подроб
             opts = {},
             filterFunc = $("#branchMode").is(":checked") ? tree.filterBranches : tree.filterNodes,
             match = $(this).val();
-
         $.each(args, function (i, o) {
             opts[o] = $("#" + o).is(":checked");
         });
         opts.mode = $("#hideMode").is(":checked") ? "hide" : "dimm";
-
         if (e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === "") {
             $("button#btnResetSearch").click();
             return;
         }
         if ($("#regex").is(":checked")) {
-            // Pass function to perform match
             n = filterFunc.call(tree, function (node) {
                 return new RegExp(match, "i").test(node.title);
             }, opts);
         } else {
-            // Pass a string to perform case insensitive matching
             n = filterFunc.call(tree, match, opts);
         }
         $("#btnResetSearch").attr("disabled", false);
     }).focus();
-
 
     $("#btnResetSearch").click(function (e) {
         e.preventDefault();
@@ -330,6 +352,9 @@ $send_hint = 'Передать выделенные строки в подроб
             }
         })
     });
+
+    // ************************* Работа таблицы **************************************
+
     $(document).ready(function () {
         $.fn.dataTable.pipeline = function (opts) {
             var conf = $.extend({
@@ -350,12 +375,10 @@ $send_hint = 'Передать выделенные строки в подроб
                 var requestLength = request.length;
                 var requestEnd = requestStart + requestLength;
                 if (settings.clearCache) {
-                    // API requested that the cache be cleared
                     ajax = true;
                     settings.clearCache = false;
                 }
                 else if (cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper) {
-                    // outside cached data - need to make a request
                     ajax = true;
                 }
                 else if (JSON.stringify(request.order) !== JSON.stringify(cacheLastRequest.order) ||
@@ -422,7 +445,6 @@ $send_hint = 'Передать выделенные строки в подроб
         });
     });
 
-    var tableName;
 
     function showTable(id) {
         $.ajax({
@@ -448,7 +470,7 @@ $send_hint = 'Передать выделенные строки в подроб
                         "targets": -2,
                         "data": null,
                         "defaultContent": "<a href='#' class='fa fa-edit edit' style='padding-right: 5px'></a>" +
-                        "<a href='#' class='fa fa-eye view'></a>",
+                            "<a href='#' class='fa fa-eye view'></a>",
                         "orderable": false,
                         "responsivePriority": 1
 
@@ -463,24 +485,24 @@ $send_hint = 'Передать выделенные строки в подроб
                         "targets": 0,
                         "data": null,
                         "visible": false
-                    },{
+                    }, {
                         "targets": 0,
                         "data": null,
                         "visible": false
-                    },{
+                    }, {
                         "targets": 5,
                         "visible": false
                     },
                         {
-                        "targets": 2,
-                        "render": function (data, type, row) {
-                            return row[2] + " " + row[3];
-                        }
-                    }, {
-                        "targets": 3,
-                        "data": null,
-                        "visible": false
-                    }],
+                            "targets": 2,
+                            "render": function (data, type, row) {
+                                return row[2] + " " + row[3];
+                            }
+                        }, {
+                            "targets": 3,
+                            "data": null,
+                            "visible": false
+                        }],
                     select: {
                         style: 'os',
                         selector: 'td:last-child'
@@ -524,6 +546,8 @@ $send_hint = 'Передать выделенные строки в подроб
             "dataType": "json"
         });
     }
+
+    //********************** Удаление записей ***********************************
 
     $(document).ready(function () {
         $('.hiddendel').click(function (event) {
