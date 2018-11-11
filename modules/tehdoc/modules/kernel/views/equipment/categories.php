@@ -377,6 +377,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $(document).ready(function () {
         $.fn.dataTable.pipeline = function (opts) {
             // Configuration options
+
             var conf = $.extend({
                 pages: 5,     // number of pages to cache
                 url: '',      // script url

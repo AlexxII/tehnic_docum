@@ -226,7 +226,6 @@ $send_hint = 'Передать выделенные строки в подроб
 
     function redrawTable(){
         var table = $('#main-table').DataTable();
-
         table.draw();
         return true;
     }
@@ -331,10 +330,8 @@ $send_hint = 'Передать выделенные строки в подроб
             }
         })
     });
-
     $(document).ready(function () {
         $.fn.dataTable.pipeline = function (opts) {
-            // Configuration options
             var conf = $.extend({
                 pages: 5,     // number of pages to cache
                 url: '',      // script url
@@ -342,20 +339,16 @@ $send_hint = 'Передать выделенные строки в подроб
                               // matching how `ajax.data` works in DataTables
                 method: 'GET' // Ajax HTTP method
             }, opts);
-
-            // Private variables for storing the cache
             var cacheLower = -1;
             var cacheUpper = null;
             var cacheLastRequest = null;
             var cacheLastJson = null;
-
             return function (request, drawCallback, settings) {
                 var ajax = false;
                 var requestStart = request.start;
                 var drawStart = request.start;
                 var requestLength = request.length;
                 var requestEnd = requestStart + requestLength;
-
                 if (settings.clearCache) {
                     // API requested that the cache be cleared
                     ajax = true;
@@ -369,44 +362,30 @@ $send_hint = 'Передать выделенные строки в подроб
                     JSON.stringify(request.columns) !== JSON.stringify(cacheLastRequest.columns) ||
                     JSON.stringify(request.search) !== JSON.stringify(cacheLastRequest.search)
                 ) {
-                    // properties changed (ordering, columns, searching)
                     ajax = true;
                 }
-
-                // Store the request for checking next time around
                 cacheLastRequest = $.extend(true, {}, request);
-
                 if (ajax) {
                     // Need data from the server
                     if (requestStart < cacheLower) {
                         requestStart = requestStart - (requestLength * (conf.pages - 1));
-
                         if (requestStart < 0) {
                             requestStart = 0;
                         }
                     }
-
                     cacheLower = requestStart;
                     cacheUpper = requestStart + (requestLength * conf.pages);
-
                     request.start = requestStart;
                     request.length = requestLength * conf.pages;
-
-                    // Provide the same `data` options as DataTables.
                     if (typeof conf.data === 'function') {
-                        // As a function it is executed with the data object as an arg
-                        // for manipulation. If an object is returned, it is used as the
-                        // data object to submit
                         var d = conf.data(request);
                         if (d) {
                             $.extend(request, d);
                         }
                     }
                     else if ($.isPlainObject(conf.data)) {
-                        // As an object, the data given extends the default
                         $.extend(request, conf.data);
                     }
-
                     settings.jqXHR = $.ajax({
                         "type": conf.method,
                         "url": conf.url,
@@ -436,8 +415,6 @@ $send_hint = 'Передать выделенные строки в подроб
                 }
             }
         };
-        // Register an API method that will empty the pipelined data, forcing an Ajax
-        // fetch on the next draw (i.e. `table.clearPipeline().draw()`)
         $.fn.dataTable.Api.register('clearPipeline()', function () {
             return this.iterator('table', function (settings) {
                 settings.clearCache = true;
@@ -466,16 +443,6 @@ $send_hint = 'Передать выделенные строки в подроб
                         url: "server-side-ex?id=" + id,
                         dataSrc: "",
                         pages: 2 // number of pages to cache
-//                        data: function () {
-//                            var lft = $(".lft").text();
-//                            var rgt = $(".rgt").text();
-//                            return {
-//                                'db_tbl': 'placement_tbl',
-//                                'identifier': 'place_id',
-//                                'lft': lft,
-//                                'rgt': rgt
-//                            }
-//                        }
                     }),
                     "columnDefs": [{
                         "targets": -2,
