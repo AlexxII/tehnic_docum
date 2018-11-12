@@ -14,6 +14,7 @@ $about = 'На представленные данные опирается вс
 
 $add_hint = 'Добавить оборудование';
 $dell_hint = 'Удалить выделенное оборудование';
+$classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
 
 
 $this->params['breadcrumbs'][] = ['label' => 'Тех Док', 'url' => ['/tehdoc']];
@@ -59,6 +60,14 @@ $this->params['breadcrumbs'][] = $this->title;
               'data-placement' => "top",
               'title' => $dell_hint,
           ]) ?>
+      <?= Html::a('Классиф-тор',
+          [''], [
+              'class' => 'btn btn-info btn-sm classif',
+              'style' => ['margin-top' => '5px', 'display' => 'none'],
+              'data-toggle' => "tooltip",
+              'data-placement' => "top",
+              'title' => $classif_hint,
+          ]) ?>
     </div>
   </div>
 
@@ -88,18 +97,16 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <br>
 
+
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
-</script>
 
+    // ************************* Работа таблицы **************************************
 
-<script>
     $(document).ready(function () {
-
         $.fn.dataTable.pipeline = function (opts) {
-            // Configuration options
             var conf = $.extend({
                 pages: 2,     // number of pages to cache
                 url: '',      // script url
@@ -107,71 +114,50 @@ $this->params['breadcrumbs'][] = $this->title;
                               // matching how `ajax.data` works in DataTables
                 method: 'GET' // Ajax HTTP method
             }, opts);
-
-            // Private variables for storing the cache
             var cacheLower = -1;
             var cacheUpper = null;
             var cacheLastRequest = null;
             var cacheLastJson = null;
-
             return function (request, drawCallback, settings) {
                 var ajax = false;
                 var requestStart = request.start;
                 var drawStart = request.start;
                 var requestLength = request.length;
                 var requestEnd = requestStart + requestLength;
-
                 if (settings.clearCache) {
-                    // API requested that the cache be cleared
                     ajax = true;
                     settings.clearCache = false;
                 }
                 else if (cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper) {
-                    // outside cached data - need to make a request
                     ajax = true;
                 }
                 else if (JSON.stringify(request.order) !== JSON.stringify(cacheLastRequest.order) ||
                     JSON.stringify(request.columns) !== JSON.stringify(cacheLastRequest.columns) ||
                     JSON.stringify(request.search) !== JSON.stringify(cacheLastRequest.search)
                 ) {
-                    // properties changed (ordering, columns, searching)
                     ajax = true;
                 }
-
-                // Store the request for checking next time around
                 cacheLastRequest = $.extend(true, {}, request);
-
                 if (ajax) {
-                    // Need data from the server
                     if (requestStart < cacheLower) {
                         requestStart = requestStart - (requestLength * (conf.pages - 1));
-
                         if (requestStart < 0) {
                             requestStart = 0;
                         }
                     }
-
                     cacheLower = requestStart;
                     cacheUpper = requestStart + (requestLength * conf.pages);
-
                     request.start = requestStart;
                     request.length = requestLength * conf.pages;
-
-                    // Provide the same `data` options as DataTables.
                     if (typeof conf.data === 'function') {
-                        // As a function it is executed with the data object as an arg
-                        // for manipulation. If an object is returned, it is used as the
-                        // data object to submit
                         var d = conf.data(request);
                         if (d) {
                             $.extend(request, d);
                         }
                     }
                     else if ($.isPlainObject(conf.data)) {
-                        // As an object, the data given extends the default
                         $.extend(request, conf.data);
                     }
-
                     settings.jqXHR = $.ajax({
                         "type": conf.method,
                         "url": conf.url,
@@ -186,7 +172,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             if (requestLength >= -1) {
                                 json.data.splice(requestLength, json.data.length);
                             }
-
                             drawCallback(json);
                         }
                     });
@@ -196,21 +181,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     json.draw = request.draw; // Update the echo for each response
                     json.data.splice(0, requestStart - cacheLower);
                     json.data.splice(requestLength, json.data.length);
-
                     drawCallback(json);
                 }
             }
         };
-
-        // Register an API method that will empty the pipelined data, forcing an Ajax
-        // fetch on the next draw (i.e. `table.clearPipeline().draw()`)
         $.fn.dataTable.Api.register('clearPipeline()', function () {
             return this.iterator('table', function (settings) {
                 settings.clearCache = true;
             });
         });
     });
-
 
     $(document).ready(function () {
         var table = $('#main-table').DataTable({
@@ -258,20 +238,25 @@ $this->params['breadcrumbs'][] = $this->title;
         });
     });
 
+    // Работа таблицы -> событие выделения и снятия выделения
 
     $(document).ready(function () {
         var table = $('#main-table').DataTable();
         table.on('select', function (e, dt, type, indexes) {
             if (type === 'row') {
                 $('.hiddendel').show();
+                $('.classif').show();
             }
         });
         table.on('deselect', function (e, dt, type, indexes) {
             if (type === 'row') {
                 $('.hiddendel').hide();
+                $('.classif').hide();
             }
         });
     });
+
+    //********************** Удаление записей ***********************************
 
     $(document).ready(function () {
         $('.hiddendel').click(function (event) {
@@ -304,4 +289,64 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         })
     });
+
+    //************************** Добавление классификатора **********************************
+
+    $(document).ready(function () {
+        $('.classif').click(function (event) {
+            event.preventDefault();
+            var csrf = $("meta[name=csrf-token]").attr("content");
+            var table = $("#main-table").DataTable();
+            var data = table.rows({selected: true}).data();
+            var ar = [];
+            var count = data.length;
+            for (var i = 0; i < count; i++) {
+                ar[i] = data[i][0];
+            }
+            $("#classifier-modal").modal("show");
+            $('#classifier').off('change').on('change', function () {
+                var val = $(this).val();
+                if (val != '') {
+                    var el = $('#kv-tree-dropdown-container').find('.kv-selected');
+                    $.ajax({
+                        url: "/admin/classifier/extended-data-form?id=" + val,
+                        type: "GET",
+                        success: function (result) {
+                            $("#classifier-body").html(result);
+                            $("#assign-classifier-btn").removeAttr('disabled');
+                            $("#assign-classifier-btn").off('click').on("click", function (e) {
+                                e.preventDefault();
+                                var data = $('#form-classifier').serializeArray();
+                                var sendData = data.filter(function (item, i, arr) {
+                                    return arr[i]['value'] != 0;
+                                });
+                                $.ajax({
+                                    url: "/admin/classifier/assign-classifier",
+                                    type: "post",
+                                    data: {id: ar, _csrf: csrf, data: sendData},
+                                    success: function (result) {
+                                        $("#form-classifier")[0].reset();
+                                        $("#classifier-modal").modal("hide");
+
+                                    },
+                                    error: function () {
+                                        console.log("Ошибка cat_1! Обратитесь к разработчику.");
+                                        $("#classifier-modal").modal("hide");
+                                    }
+                                });
+                            })
+                        },
+                        error: function () {
+                            console.log("Ошибка cat_2! Обратитесь к разработчику.");
+                            $("#classifier-modal").modal("hide");
+                        }
+                    });
+                } else {
+                    $("#classifier-body").html('');
+                    $("#assign-classifier-btn").attr("disabled", "disabled");
+                }
+            });
+        })
+    });
+
 </script>

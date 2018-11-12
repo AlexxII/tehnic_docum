@@ -83,7 +83,6 @@ Asset::register($this);       // регистрация ресурсов мод�
   echo Nav::widget([
       'options' => ['class' => 'navbar-nav navbar-right'],
       'items' => [
-          ['label' => 'ТехДок', 'url' => ['/tehdoc']],
           [
               'label' => 'Представления',
               'items' => [

@@ -14,6 +14,7 @@ $about = "Панель отображения и управления обору
 $refresh_hint = 'Перезапустить форму';
 $dell_hint = 'Удалить выделенное оборудование из таблицы классификатора';
 $send_hint = 'Передать выделенные строки в подробную версию таблицы';
+$classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
 
 ?>
 
@@ -166,6 +167,14 @@ $send_hint = 'Передать выделенные строки в подроб
                     'data-placement' => "top",
                     'title' => $send_hint,
                 ]) ?>
+            <?= Html::a('Классиф-тор',
+                [''], [
+                    'class' => 'btn btn-info btn-sm classif',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $classif_hint,
+                ]) ?>
         </div>
         <input class="lft" style="display: none">
         <input class="rgt" style="display: none">
@@ -245,7 +254,7 @@ $send_hint = 'Передать выделенные строки в подроб
     $('#main-table').on('length.dt', function (e, settings, len) {
         $('.hiddendel').hide();
         $('.classif').hide();
-        $('.classifier-add').fadeOut('slow');
+        // $('.classifier-add').fadeOut('slow');
     });
 
     function restoreSelectedRows(indexes) {
@@ -513,14 +522,19 @@ $send_hint = 'Передать выделенные строки в подроб
                         url: "/lib/ru.json"
                     }
                 });
+
+ // Работа таблицы -> событие выделения и снятия выделения
+
                 table.on('select', function (e, dt, type, indexes) {
                     if (type === 'row') {
+                        $('.classif').show();
                         $('.hiddendel').show();
                     }
                 });
                 table.on('deselect', function (e, dt, type, indexes) {
                     if (type === 'row') {
                         $('.hiddendel').hide();
+                        $('.classif').hide();
                     }
                 });
                 table.on('click', '.edit', function (e) {
@@ -590,7 +604,7 @@ $send_hint = 'Передать выделенные строки в подроб
         });
     }
 
-    //********************** Удаление записей ***********************************
+    //********************** Удаление записей из таблицы классификатора в БД ***********************************
 
     $(document).ready(function () {
         $('.hiddendel').click(function (event) {
@@ -622,5 +636,65 @@ $send_hint = 'Передать выделенные строки в подроб
             }
         })
     });
+
+    //************************** Добавление классификатора **********************************
+
+    $(document).ready(function () {
+        $('.classif').click(function (event) {
+            event.preventDefault();
+            var csrf = $("meta[name=csrf-token]").attr("content");
+            var table = $("#main-table").DataTable();
+            var data = table.rows({selected: true}).data();
+            var ar = [];
+            var count = data.length;
+            for (var i = 0; i < count; i++) {
+                ar[i] = data[i][0];
+            }
+            $("#classifier-modal").modal("show");
+            $('#classifier').off('change').on('change', function () {
+                var val = $(this).val();
+                if (val != '') {
+                    var el = $('#kv-tree-dropdown-container').find('.kv-selected');
+                    $.ajax({
+                        url: "/admin/classifier/extended-data-form?id=" + val,
+                        type: "GET",
+                        success: function (result) {
+                            $("#classifier-body").html(result);
+                            $("#assign-classifier-btn").removeAttr('disabled');
+                            $("#assign-classifier-btn").off('click').on("click", function (e) {
+                                e.preventDefault();
+                                var data = $('#form-classifier').serializeArray();
+                                var sendData = data.filter(function (item, i, arr) {
+                                    return arr[i]['value'] != 0;
+                                });
+                                $.ajax({
+                                    url: "/admin/classifier/assign-classifier",
+                                    type: "post",
+                                    data: {id: ar, _csrf: csrf, data: sendData},
+                                    success: function (result) {
+                                        $("#form-classifier")[0].reset();
+                                        $("#classifier-modal").modal("hide");
+
+                                    },
+                                    error: function () {
+                                        console.log("Ошибка cat_1! Обратитесь к разработчику.");
+                                        $("#classifier-modal").modal("hide");
+                                    }
+                                });
+                            })
+                        },
+                        error: function () {
+                            console.log("Ошибка cat_2! Обратитесь к разработчику.");
+                            $("#classifier-modal").modal("hide");
+                        }
+                    });
+                } else {
+                    $("#classifier-body").html('');
+                    $("#assign-classifier-btn").attr("disabled", "disabled");
+                }
+            });
+        })
+    });
+
 
 </script>

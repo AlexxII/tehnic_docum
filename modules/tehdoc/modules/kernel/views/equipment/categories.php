@@ -1,5 +1,5 @@
 <?php
-
+//
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
@@ -262,7 +262,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $('#main-table').on('length.dt', function (e, settings, len) {
         $('.hiddendel').hide();
         $('.classif').hide();
-        $('.classifier-add').fadeOut('slow');
+        // $('.classifier-add').fadeOut('slow');
     });
 
     function restoreSelectedRows(indexes) {
@@ -543,6 +543,8 @@ $classif_hint = 'Присвоить выделенному оборудован�
         });
     });
 
+    // Работа таблицы -> событие выделения и снятия выделения
+
     $(document).ready(function () {
         var table = $('#main-table').DataTable();
         table.on('select', function (e, dt, type) {
@@ -556,7 +558,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             if (type === 'row' && i.count() == 0) {
                 $('.hiddendel').hide();
                 $('.classif').hide();
-                $('.classifier-add').fadeOut('slow');
+                // $('.classifier-add').fadeOut('slow');
             }
         });
     });
