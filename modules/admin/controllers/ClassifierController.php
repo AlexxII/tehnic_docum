@@ -466,6 +466,16 @@ class ClassifierController extends Controller
     return $form;
   }
 
+  public function actionExtendedDataUpdate($id, $tableName)
+  {
+      $sql_details = \Yii::$app->params['sql_details'];
+      $sql = 'SELECT * FROM '. $tableName . ' WHERE clsf_id = ' . $id;
+      $db = SSP::sql_connect($sql_details);
+      $stmt = $db->prepare($sql);
+      $stmt->execute();
+      return json_encode($stmt->fetch(PDO::FETCH_ASSOC));
+  }
+
   public function actionAssignClassifier()  // часть обработки запроса на присваивание классификатора
   {
     $sql_details = \Yii::$app->params['sql_details'];

@@ -131,8 +131,9 @@ $send_hint = 'Передать выделенные строки в подроб
                             } else {
                                 $(".add-subcategory").show();
                             }
-                            var title = node.title;
+                            nodeTitle = node.title;
                             var id = node.data.id;
+                            window.nodeId = id;
                             showTable(id);                        
                             $(".lft").text(node.data.lft);                       
                             $(".rgt").text(node.data.rgt);      
@@ -180,7 +181,8 @@ $send_hint = 'Передать выделенные строки в подроб
 <script>
     // Глобальные переменные
     var tableName;
-    var nodeid;
+    var nodeTitle;
+    var nodeId;
 
 
     //************************ Работа над стилем ****************************
@@ -523,13 +525,53 @@ $send_hint = 'Передать выделенные строки в подроб
                 });
                 table.on('click', '.edit', function (e) {
                     e.preventDefault();
+                    var csrf = $('meta[name=csrf-token]').attr("content");
                     var data = table.row($(this).parents('tr')).data();
-                    if (e.ctrlKey) {
-                        var href = "/tehdoc/kernel/equipment/update?id=" + data[0];
-                        window.open(href);
-                    } else {
-                        location.href = "/tehdoc/kernel/equipment/update?id=" + data[0];
-                    }
+                    var id = data[5];
+                    $("#classifier-modal").modal("show");
+                    $('.kv-placeholder').text(window.nodeTitle);
+                    $('.kv-tree-dropdown-container').hide();
+                    $('.modal-title').text('Обновление');
+                    $("#assign-classifier-btn").text('Обновить');
+                    $.ajax({
+                        url: "/admin/classifier/extended-data-form?id=" + window.nodeId,
+                        type: "GET",
+                        success: function (result) {
+                            $("#classifier-body").html(result);
+                            $("#assign-classifier-btn").removeAttr('disabled');
+                            $.ajax({
+                                url: "/admin/classifier/extended-data-update?id=" + id + '&tableName=' + window.tableName,
+                                type: "GET",
+                                success: function (result) {
+
+                                }
+                            });
+                            $("#assign-classifier-btn").off('click').on("click", function (e) {
+                                e.preventDefault();
+                                var data = $('#form-classifier').serializeArray();
+                                var sendData = data.filter(function (item, i, arr) {
+                                    return arr[i]['value'] != 0;
+                                });
+                                $.ajax({
+                                    url: "/admin/classifier/assign-classifier",
+                                    type: "post",
+                                    data: {id: id, _csrf: csrf, data: sendData},
+                                    success: function (result) {
+                                        $("#form-classifier")[0].reset();
+                                        $("#classifier-modal").modal("hide");
+                                    },
+                                    error: function () {
+                                        console.log("Ошибка cat_1! Обратитесь к разработчику.");
+                                        $("#classifier-modal").modal("hide");
+                                    }
+                                });
+                            })
+                        },
+                        error: function () {
+                            console.log("Ошибка cat_2! Обратитесь к разработчику.");
+                            $("#classifier-modal").modal("hide");
+                        }
+                    });
 
                 });
                 table.on('click', '.view', function (e) {
@@ -544,6 +586,7 @@ $send_hint = 'Передать выделенные строки в подроб
                 });
             },
             "dataType": "json"
+
         });
     }
 
@@ -552,7 +595,6 @@ $send_hint = 'Передать выделенные строки в подроб
     $(document).ready(function () {
         $('.hiddendel').click(function (event) {
             event.preventDefault();
-            console.log(window.tableName);
             var csrf = $('meta[name=csrf-token]').attr("content");
             var table = $('#main-table').DataTable();
             var data = table.rows({selected: true}).data();

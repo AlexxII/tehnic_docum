@@ -612,7 +612,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
             $("#classifier-modal").modal("show");
             $('#classifier').off('change').on('change', function () {
                 var val = $(this).val();
-                console.log(val);
                 if (val != '') {
                     var el = $('#kv-tree-dropdown-container').find('.kv-selected');
                     $.ajax({
