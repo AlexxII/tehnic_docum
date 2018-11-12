@@ -130,9 +130,9 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             'mode' => "hide"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
                         ],
                         'activate' => new \yii\web\JsExpression('function(node, data) {
-                            $(\'.hiddendel\').hide();
-                            $(\'.classif\').hide();
-                            $(\'.sendbtn\').hide();
+                            $(".hiddendel").hide();
+                            $(".classif").hide();
+                            $(".sendbtn").hide();
                             var node = data.node;
                             var table = $("#example").DataTable();
                             if (node.key == -999){
