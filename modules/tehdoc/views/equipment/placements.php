@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $about = "Панель отображения оборудования по местам размещения. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
 $refresh_hint = 'Перезапустить форму';
 $dell_hint = 'Удалить выделенное оборудование из ОСНОВНОЙ таблицы. БУДЬТЕ ВНИМАТЕЛЬНЫ, данные будут удалены безвозвратно.';
+$send_hint = 'Передать выделенные строки в подробную версию таблицы';
 $classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
 
 
@@ -131,6 +132,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         'activate' => new \yii\web\JsExpression('function(node, data) {
                             $(\'.hiddendel\').hide();
                             $(\'.classif\').hide();
+                            $(\'.sendbtn\').hide();
                             var node = data.node;
                             var table = $("#example").DataTable();
                             if (node.key == -999){
@@ -162,6 +164,14 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     'data-toggle' => "tooltip",
                     'data-placement' => "top",
                     'title' => $dell_hint,
+                ]) ?>
+            <?= Html::a('Передать->',
+                [''], [
+                    'class' => 'btn btn-primary btn-sm sendbtn',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $send_hint,
                 ]) ?>
             <?= Html::a('Классиф-тор',
                 [''], [
@@ -330,6 +340,9 @@ $classif_hint = 'Присвоить выделенному оборудован�
             $(".del-multi-nodes").hide();
             $(".lft").text('');
             $(".rgt").text('');
+            $('.hiddendel').hide();
+            $('.classif').hide();
+            $('.sendbtn').hide();
             $("#main-table").DataTable().clearPipeline().draw();
         })
     });
@@ -371,6 +384,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
         var tree = $(window.treeId).fancytree("getTree");
         tree.clearFilter();
     }).attr("disabled", true);
+
 
     $(document).ready(function () {
         $("input[name=search]").keyup(function (e) {
@@ -562,6 +576,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             if (type === 'row') {
                 $('.hiddendel').show();
                 $('.classif').show();
+                $('.sendbtn').show();
             }
         });
         table.on('deselect', function (e, dt, type) {
@@ -569,7 +584,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             if (type === 'row' && i.count() == 0) {
                 $('.hiddendel').hide();
                 $('.classif').hide();
-                $('.classifier-add').fadeOut('slow');
+                $('.sendbtn').hide();
             }
         });
     });

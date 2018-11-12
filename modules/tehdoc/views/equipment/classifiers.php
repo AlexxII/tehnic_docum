@@ -320,6 +320,9 @@ $classif_hint = 'Присвоить выделенному оборудован�
             $(".del-multi-nodes").hide();
             $(".lft").text('');
             $(".rgt").text('');
+            $('.hiddendel').hide();
+            $('.classif').hide();
+            $('.sendbtn').hide();
             $("#main-table").DataTable().clearPipeline().draw();
         })
     });
@@ -531,14 +534,19 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     if (type === 'row') {
                         $('.classif').show();
                         $('.hiddendel').show();
+                        $('.sendbtn').show();
                     }
                 });
                 table.on('deselect', function (e, dt, type, indexes) {
                     if (type === 'row') {
                         $('.hiddendel').hide();
                         $('.classif').hide();
+                        $('.sendbtn').hide();
                     }
                 });
+
+
+
                 table.on('click', '.edit', function (e) {
                     e.preventDefault();
                     var csrf = $('meta[name=csrf-token]').attr("content");
