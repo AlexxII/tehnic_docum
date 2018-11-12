@@ -613,6 +613,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         $("#main-table").DataTable().clearPipeline().draw();
                         $(".modal").modal('hide');
                         $('.hiddendel').hide();
+                        $('.sendbtn').hide();
                     },
                     error: function () {
                         alert('Ошибка! Обратитесь к разработчику.');

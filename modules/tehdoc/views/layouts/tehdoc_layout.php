@@ -52,6 +52,7 @@ Asset::register($this);       // регистрация ресурсов мод�
       color: white;
   }
   .dropdown-menu > li > a {
+
       color: white;
   }
   .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
@@ -79,6 +80,7 @@ Asset::register($this);       // регистрация ресурсов мод�
   ]);
   echo Nav::widget([
       'options' => ['class' => 'navbar-nav navbar-right'],
+      'encodeLabels' => false,
       'items' => [
           ['label' => 'Списание', 'url' => ['/tehdoc/']],
           ['label' => 'Приемка', 'url' => ['/tehdoc/']],
@@ -95,29 +97,33 @@ Asset::register($this);       // регистрация ресурсов мод�
           ],
           Yii::$app->user->isGuest ? (
           ['label' => 'Войти', 'url' => ['/site/login']]
-          ) : (
-              '<li>'
-              . Html::beginForm(['/site/logout'], 'post')
-              . Html::submitButton(
-                  '<i class="fa fa-sign-out" aria-hidden="true"></i>',
-                  [
-                      'class' => 'btn btn-link logout',
-                      'data-toggle' => "tooltip",
-                      'data-placement' => "bottom",
-                      'title' => 'Выход ' . Yii::$app->user->identity->username,
-
-                  ]
-              )
-              . Html::endForm()
-              . '</li>'
-          )
+          ) : ([
+            'label' => '<i class="fa fa-user" aria-hidden="true" style="font-size: 18px"></i>',
+              'items' => [
+                  '<li class="dropdown-header" style="font-size: 10px">' . Yii::$app->user->identity->username . '</li>',
+                  '<li class="divider"></li>',
+                  '<li>'
+                  . Html::beginForm(['/site/logout'], 'post')
+                  . Html::submitButton(
+                      '<i class="fa fa-sign-out" aria-hidden="true"> Выход</i>',
+                      [
+                          'class' => 'btn btn-link logout',
+                          'data-toggle' => "tooltip",
+                          'data-placement' => "bottom",
+                          'title' => 'Выход ' . Yii::$app->user->identity->username,
+                      ]
+                  )
+                  . Html::endForm()
+                  . '</li>'
+              ]
+          ])
       ],
   ]);
   NavBar::end();
   ?>
 
   <div class="container">
-    <?= Breadcrumbs::widget([
+        <?= Breadcrumbs::widget([
         'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         'options' => [
             'class' => 'breadcrumb'

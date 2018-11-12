@@ -186,7 +186,7 @@ class EquipmentController extends Controller
         $data = [
             "columns" => $columns,
         ];
-        if (!empty($tableScheme->columns)) {
+        if (!empty($tableScheme)) {
             $data = [
                 "columns" => $columns,
                 "tableName" => $tableScheme->tableName

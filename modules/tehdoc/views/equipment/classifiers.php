@@ -449,7 +449,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     json.draw = request.draw; // Update the echo for each response
                     json.data.splice(0, requestStart - cacheLower);
                     json.data.splice(requestLength, json.data.length);
-
                     drawCallback(json);
                 }
             }
@@ -460,7 +459,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
             });
         });
     });
-
 
     function showTable(id) {
         $.ajax({
@@ -639,6 +637,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         $(".modal").modal('hide');
                         $('.hiddendel').hide();
                         $('.classif').hide();
+                        $('.sendbtn').hide();
                     },
                     error: function () {
                         alert('Ошибка! Обратитесь к разработчику.');
