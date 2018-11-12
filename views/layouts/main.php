@@ -50,9 +50,6 @@ $exit_hint = 'Выход ';
       'items' => [
           ['label' => 'ТехДок', 'url' => ['/tehdoc']],
           ['label' => 'ТО', 'url' => ['/to']],
-          ['label' => 'Люди', 'url' => ['/people']],
-          ['label' => 'Документы', 'url' => ['/doc']],
-          ['label' => 'Система-И', 'url' => ['/sysi']],
           ['label' => 'Админка', 'url' => ['/admin']],
           Yii::$app->user->isGuest ? (
           ['label' => 'Войти', 'url' => ['/site/login']]

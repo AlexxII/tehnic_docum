@@ -12,8 +12,7 @@ use yii\widgets\DetailView;
 
 $this->title = 'Просмотр';
 
-$this->params['breadcrumbs'][] = ['label' => 'Тех Док', 'url' => ['/tehdoc']];
-$this->params['breadcrumbs'][] = ['label' => 'Основное оборудование', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Перечень оборудования', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="to-schedule-archive">

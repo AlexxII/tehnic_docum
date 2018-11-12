@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\tehdoc\modules\kernel\models;
+namespace app\modules\tehdoc\models;
 
 /*
  * Helper functions for building a DataTables server-side processing SQL query

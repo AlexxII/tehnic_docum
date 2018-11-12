@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\tehdoc\modules\kernel\models;
+namespace app\modules\tehdoc\models;
 
 use app\modules\admin\models\Placement;
 use app\modules\tehdoc\models\Images;

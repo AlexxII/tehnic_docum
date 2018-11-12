@@ -3,7 +3,7 @@
 namespace app\modules\admin\controllers;
 
 use app\modules\admin\models\Subcategory;
-use app\modules\tehdoc\modules\kernel\models\Equipment;
+use app\modules\tehdoc\models\Equipment;
 use app\modules\admin\models\Category;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

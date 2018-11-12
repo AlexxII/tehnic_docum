@@ -16,9 +16,8 @@ $add_hint = 'Добавить оборудование';
 $dell_hint = 'Удалить выделенное оборудование';
 $classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
 
-
-$this->params['breadcrumbs'][] = ['label' => 'Тех Док', 'url' => ['/tehdoc']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="to-schedule-archive">
 
@@ -198,7 +197,7 @@ $this->params['breadcrumbs'][] = $this->title;
             "serverSide": true,
             "responsive": true,
             "ajax": $.fn.dataTable.pipeline({
-                url: '/tehdoc/kernel/equipment/server-side',
+                url: '/tehdoc/equipment/server-side',
                 pages: 2 // number of pages to cache
             }),
             "columnDefs": [{
@@ -228,12 +227,12 @@ $this->params['breadcrumbs'][] = $this->title;
         $('#main-table tbody').on('click', '.edit', function (e) {
             e.preventDefault();
             var data = table.row($(this).parents('tr')).data();
-            location.href = "/tehdoc/kernel/equipment/update?id=" + data[0];
+            location.href = "/tehdoc/equipment/update?id=" + data[0];
         });
         $('#main-table tbody').on('click', '.view', function (e) {
             e.preventDefault();
             var data = table.row($(this).parents('tr')).data();
-            var href = "/tehdoc/kernel/equipment/view?id=" + data[0];
+            var href = "/tehdoc/equipment/view?id=" + data[0];
             window.open(href);
         });
     });
@@ -272,7 +271,7 @@ $this->params['breadcrumbs'][] = $this->title;
             if (confirm('Вы действительно хотите удалить выделенное оборудование? Выделено ' + data.length + '!!!  ')) {
                 $(".modal").modal("show");
                 $.ajax({
-                    url: "/tehdoc/kernel/equipment/delete",
+                    url: "/tehdoc/equipment/delete",
                     type: "post",
                     dataType: "JSON",
                     data: {jsonData: ar, _csrf: csrf},
@@ -280,6 +279,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         $("#main-table").DataTable().clearPipeline().draw();
                         $(".modal").modal('hide');
                         $('.hiddendel').hide();
+                        $('.classif').hide();
                     },
                     error: function () {
                         alert('Ошибка! Обратитесь к разработчику.');

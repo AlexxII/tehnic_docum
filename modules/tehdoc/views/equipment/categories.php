@@ -1,20 +1,20 @@
 <?php
-
+//
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
+use kartik\tree\TreeViewInput;
+use app\modules\admin\models\ClassifierTbl;
 
 
-$this->title = 'Оборудование по местам размещения';
-$this->params['breadcrumbs'][] = ['label' => 'Тех Док', 'url' => ['/tehdoc']];
-$this->params['breadcrumbs'][] = ['label' => 'Оборудование', 'url' => ['/tehdoc/kernel/']];
+$this->title = 'Оборудование по категориям';
+$this->params['breadcrumbs'][] = ['label' => 'Перечень оборудования', 'url' => ['/tehdoc']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$about = "Панель отображения оборудования по местам размещения. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
+$about = "Панель отображения оборудования по категориям. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
 $refresh_hint = 'Перезапустить форму';
 $dell_hint = 'Удалить выделенное оборудование из ОСНОВНОЙ таблицы. БУДЬТЕ ВНИМАТЕЛЬНЫ, данные будут удалены безвозвратно.';
 $classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
-
 
 ?>
 
@@ -48,12 +48,8 @@ $classif_hint = 'Присвоить выделенному оборудован�
         font-size: 22px;
     }
 
-    .about-padding-zero {
-        padding-top: 10px;
-    }
-
-    .about-padding {
-        padding-top: 0px;
+    .kv-has-checkbox .kv-selected > .kv-tree-list .kv-node-detail {
+        /*background-color: #fff;*/
     }
 
     .show-menu-button {
@@ -71,7 +67,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
 </style>
 
-<div class="eq-placement-pannel">
+<div class="eq-category-pannel">
     <h1><?= Html::encode($this->title) ?>
         <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
              data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
@@ -112,7 +108,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 echo \wbraganca\fancytree\FancytreeWidget::widget([
                     'options' => [
                         'source' => [
-                            'url' => '/admin/placement/placements',
+                            'url' => '/admin/category/categories',                      //!!!!!!!!!!!!!!***!!!!!!!!!!!!!!!!!
                         ],
                         'extensions' => ['filter'],
                         'quicksearch' => true,
@@ -142,17 +138,19 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             }
                             var title = node.title;
                             var id = node.data.id;
+                            window.nodeId = id;
                             $(".lft").text(node.data.lft);                       
                             $(".rgt").text(node.data.rgt);                       
                             $("#main-table").DataTable().clearPipeline().draw();
-                        }'),
+                    }'),
                         'renderNode' => new \yii\web\JsExpression('function(node, data) {
-                        }'),
+                    }'),
                     ]
                 ]); ?>
             </div>
         </div>
     </div>
+
 
     <div class="col-lg-8 col-md-8 about about-padding" style="position: relative;">
         <div class="control-buttons-wrap" style="position: absolute;top: 0px;width: 300px">
@@ -172,14 +170,12 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     'data-placement' => "top",
                     'title' => $classif_hint,
                 ]) ?>
-
         </div>
-
         <input class="lft" style="display: none">
         <input class="rgt" style="display: none">
         <div class="table-wrapper" style="min-height:40px">
         </div>
-        <div class="about-header" style="font-size:18px"></div>
+        <div class="about-header" style="font-size:18px;"></div>
         <table id="main-table" class="display no-wrap cell-border" style="width:100%">
             <thead>
             <tr>
@@ -203,6 +199,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     // Глобальные переменные
 
     var nodeid;
+
 
     //************************ Работа над стилем ****************************
 
@@ -264,7 +261,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $('#main-table').on('length.dt', function (e, settings, len) {
         $('.hiddendel').hide();
         $('.classif').hide();
-        $('.classifier-add').fadeOut('slow');
     });
 
     function restoreSelectedRows(indexes) {
@@ -374,7 +370,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
         $("input[name=search]").keyup(function (e) {
             if ($(this).val() == '') {
                 var tree = $(".fancytree-ext-filter").fancytree("getTree");
-                tree.clearFilter();
+                // tree.clearFilter();
             }
         })
     });
@@ -401,6 +397,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 var requestLength = request.length;
                 var requestEnd = requestStart + requestLength;
                 if (settings.clearCache) {
+                    // API requested that the cache be cleared
                     ajax = true;
                     settings.clearCache = false;
                 }
@@ -448,8 +445,8 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             if (requestLength >= -1) {
                                 json.data.splice(requestLength, json.data.length);
                             }
-
                             drawCallback(json);
+
                         }
                     });
                 }
@@ -482,8 +479,8 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     var lft = $(".lft").text();
                     var rgt = $(".rgt").text();
                     return {
-                        'db_tbl': 'placement_tbl',
-                        'identifier': 'place_id',
+                        'db_tbl': 'category_tbl',
+                        'identifier': 'category_id',
                         'lft': lft,
                         'rgt': rgt
                     }
@@ -526,29 +523,21 @@ $classif_hint = 'Присвоить выделенному оборудован�
             e.preventDefault();
             var data = table.row($(this).parents('tr')).data();
             if (e.ctrlKey) {
-                var href = "/tehdoc/kernel/equipment/update?id=" + data[0];
+                var href = "/tehdoc/equipment/update?id=" + data[0];
                 window.open(href);
             } else {
-                location.href = "/tehdoc/kernel/equipment/update?id=" + data[0];
+                location.href = "/tehdoc/equipment/update?id=" + data[0];
             }
-
         });
         $('#main-table tbody').on('click', '.view', function (e) {
             e.preventDefault();
             var data = table.row($(this).parents('tr')).data();
-            var id = data['0'];
-            $.ajax({
-                url: "/tehdoc/kernel/equipment/about?id=" + id,
-                type: "GET",
-                success: function (result) {
-                    $(".modal-body").html(result);
-                    $("#exampleModalCenter").modal("show");
-                },
-                error: function () {
-                    alert('Ошибка! Обратитесь к разработчику.');
-                }
-            });
-
+            if (e.ctrlKey) {
+                var href = "/tehdoc/equipment/view?id=" + data[0];
+                window.open(href);
+            } else {
+                location.href = "/tehdoc/equipment/view?id=" + data[0];
+            }
         });
     });
 
@@ -567,7 +556,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
             if (type === 'row' && i.count() == 0) {
                 $('.hiddendel').hide();
                 $('.classif').hide();
-                $('.classifier-add').fadeOut('slow');
             }
         });
     });
@@ -585,21 +573,22 @@ $classif_hint = 'Присвоить выделенному оборудован�
             for (var i = 0; i < count; i++) {
                 ar[i] = data[i][0];
             }
-            if (confirm('Вы действительно хотите удалить выделенное оборудование? Выделено ' + data.length + '!!!  ')) {
-                $(".modal").modal("show");
+            if (confirm('Вы действительно хотите удалить выделенное оборудование? Выделено ' + data.length)) {
+                $(".freeztime").modal("show");
                 $.ajax({
-                    url: "/tehdoc/kernel/equipment/delete",
+                    url: "/tehdoc/equipment/delete",
                     type: "post",
                     dataType: "JSON",
                     data: {jsonData: ar, _csrf: csrf},
                     success: function (result) {
                         $("#main-table").DataTable().clearPipeline().draw();
-                        $(".modal").modal('hide');
+                        $(".freeztime").modal('hide');
                         $('.hiddendel').hide();
+                        $('.classif').hide();
                     },
                     error: function () {
                         alert('Ошибка! Обратитесь к разработчику.');
-                        $(".modal").modal('hide');
+                        $(".freeztime").modal('hide');
                     }
                 });
             }
@@ -610,6 +599,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
     $(document).ready(function () {
         $('.classif').click(function (event) {
+            console.log('1111111111');
             event.preventDefault();
             var csrf = $("meta[name=csrf-token]").attr("content");
             var table = $("#main-table").DataTable();
@@ -622,7 +612,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
             $("#classifier-modal").modal("show");
             $('#classifier').off('change').on('change', function () {
                 var val = $(this).val();
-                console.log(val);
                 if (val != '') {
                     var el = $('#kv-tree-dropdown-container').find('.kv-selected');
                     $.ajax({
@@ -665,6 +654,5 @@ $classif_hint = 'Присвоить выделенному оборудован�
             });
         })
     });
-
 
 </script>

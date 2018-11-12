@@ -1,12 +1,12 @@
 <?php
 
-namespace app\modules\tehdoc\modules\kernel\controllers;
+namespace app\modules\tehdoc\controllers;
 
 use app\modules\admin\models\Category;
 use app\modules\admin\models\Classifier;
 use app\modules\admin\models\Placement;
-use app\modules\tehdoc\modules\kernel\models\Equipment;
-use app\modules\tehdoc\modules\kernel\models\SSP;
+use app\modules\tehdoc\models\Equipment;
+use app\modules\tehdoc\models\SSP;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

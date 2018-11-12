@@ -8,18 +8,19 @@ class TehdocModule extends \yii\base\Module
 {
 
   public $layout = 'tehdoc_layout.php';
+  public $defaultRoute = '/equipment';
 
   
   public function init()
   {
     parent::init();
 
-    // подключение дочернего модуля
-    $this->modules = [
-        'kernel' => [
-            'class' => 'app\modules\tehdoc\modules\kernel\Module',
-        ],
-    ];
+//    // подключение дочернего модуля
+//    $this->modules = [
+//        'kernel' => [
+//            'class' => 'app\modules\tehdoc\modules\kernel\Module',
+//        ],
+//    ];
   }
 
 }

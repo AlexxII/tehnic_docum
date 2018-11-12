@@ -5,16 +5,15 @@ use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
 
 
-$this->title = 'Пользовательские классификаторы';
-$this->params['breadcrumbs'][] = ['label' => 'Тех Док', 'url' => ['/tehdoc']];
-$this->params['breadcrumbs'][] = ['label' => 'Оборудование', 'url' => ['/tehdoc/kernel/']];
+$this->title = 'Оборудование по местам размещения';
+$this->params['breadcrumbs'][] = ['label' => 'Перечень оборудования', 'url' => ['/tehdoc']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$about = "Панель отображения и управления оборудованием, логически поделенного на пользовательские классификаторы. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
+$about = "Панель отображения оборудования по местам размещения. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
 $refresh_hint = 'Перезапустить форму';
-$dell_hint = 'Удалить выделенное оборудование из таблицы классификатора';
-$send_hint = 'Передать выделенные строки в подробную версию таблицы';
+$dell_hint = 'Удалить выделенное оборудование из ОСНОВНОЙ таблицы. БУДЬТЕ ВНИМАТЕЛЬНЫ, данные будут удалены безвозвратно.';
 $classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
+
 
 ?>
 
@@ -48,6 +47,14 @@ $classif_hint = 'Присвоить выделенному оборудован�
         font-size: 22px;
     }
 
+    .about-padding-zero {
+        padding-top: 10px;
+    }
+
+    .about-padding {
+        padding-top: 0px;
+    }
+
     .show-menu-button {
         position: absolute;
         background-color: #f5f7f8;
@@ -63,7 +70,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
 </style>
 
-<div class="eq-classifiers-pannel">
+<div class="eq-placement-pannel">
     <h1><?= Html::encode($this->title) ?>
         <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
              data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
@@ -104,7 +111,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 echo \wbraganca\fancytree\FancytreeWidget::widget([
                     'options' => [
                         'source' => [
-                            'url' => '/admin/classifier/classifiers',                       //!!!!!!!!!!!!!*********!!!!!!!!!!!
+                            'url' => '/admin/placement/placements',
                         ],
                         'extensions' => ['filter'],
                         'quicksearch' => true,
@@ -132,12 +139,10 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             } else {
                                 $(".add-subcategory").show();
                             }
-                            nodeTitle = node.title;
+                            var title = node.title;
                             var id = node.data.id;
-                            window.nodeId = id;
-                            showTable(id);                        
                             $(".lft").text(node.data.lft);                       
-                            $(".rgt").text(node.data.rgt);      
+                            $(".rgt").text(node.data.rgt);                       
                             $("#main-table").DataTable().clearPipeline().draw();
                         }'),
                         'renderNode' => new \yii\web\JsExpression('function(node, data) {
@@ -148,9 +153,8 @@ $classif_hint = 'Присвоить выделенному оборудован�
         </div>
     </div>
 
-
     <div class="col-lg-8 col-md-8 about about-padding" style="position: relative;">
-        <div class="control-buttons-wrap" style="position: absolute;top: 0px;">
+        <div class="control-buttons-wrap" style="position: absolute;top: 0px;width: 300px">
             <?= Html::a('Удалить',
                 [''], [
                     'class' => 'btn btn-danger btn-sm hiddendel',
@@ -158,14 +162,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     'data-toggle' => "tooltip",
                     'data-placement' => "top",
                     'title' => $dell_hint,
-                ]) ?>
-            <?= Html::a('Передать->',
-                [''], [
-                    'class' => 'btn btn-primary btn-sm hiddendel',
-                    'style' => ['margin-top' => '5px', 'display' => 'none'],
-                    'data-toggle' => "tooltip",
-                    'data-placement' => "top",
-                    'title' => $send_hint,
                 ]) ?>
             <?= Html::a('Классиф-тор',
                 [''], [
@@ -175,24 +171,37 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     'data-placement' => "top",
                     'title' => $classif_hint,
                 ]) ?>
+
         </div>
+
         <input class="lft" style="display: none">
         <input class="rgt" style="display: none">
         <div class="table-wrapper" style="min-height:40px">
         </div>
         <div class="about-header" style="font-size:18px"></div>
-        <div id="tableDiv"></div>
+        <table id="main-table" class="display no-wrap cell-border" style="width:100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th data-priority="1">Наименование</th>
+                <th data-priority="5">Производитель/Модель</th>
+                <th>Модель</th>
+                <th data-priority="6">s/n</th>
+                <th>Дата производства</th>
+                <th data-priority="4" title="Количество">Кол.</th>
+                <th data-priority="2">Action</th>
+                <th data-priority="3"></th>
+            </tr>
+            </thead>
+        </table>
     </div>
-
 </div>
 
 
 <script>
     // Глобальные переменные
-    var tableName;
-    var nodeTitle;
-    var nodeId;
 
+    var nodeid;
 
     //************************ Работа над стилем ****************************
 
@@ -254,7 +263,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $('#main-table').on('length.dt', function (e, settings, len) {
         $('.hiddendel').hide();
         $('.classif').hide();
-        // $('.classifier-add').fadeOut('slow');
+        $('.classifier-add').fadeOut('slow');
     });
 
     function restoreSelectedRows(indexes) {
@@ -329,23 +338,28 @@ $classif_hint = 'Присвоить выделенному оборудован�
             opts = {},
             filterFunc = $("#branchMode").is(":checked") ? tree.filterBranches : tree.filterNodes,
             match = $(this).val();
+
         $.each(args, function (i, o) {
             opts[o] = $("#" + o).is(":checked");
         });
         opts.mode = $("#hideMode").is(":checked") ? "hide" : "dimm";
+
         if (e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === "") {
             $("button#btnResetSearch").click();
             return;
         }
         if ($("#regex").is(":checked")) {
+            // Pass function to perform match
             n = filterFunc.call(tree, function (node) {
                 return new RegExp(match, "i").test(node.title);
             }, opts);
         } else {
+            // Pass a string to perform case insensitive matching
             n = filterFunc.call(tree, match, opts);
         }
         $("#btnResetSearch").attr("disabled", false);
     }).focus();
+
 
     $("#btnResetSearch").click(function (e) {
         e.preventDefault();
@@ -400,7 +414,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 }
                 cacheLastRequest = $.extend(true, {}, request);
                 if (ajax) {
-                    // Need data from the server
                     if (requestStart < cacheLower) {
                         requestStart = requestStart - (requestLength * (conf.pages - 1));
                         if (requestStart < 0) {
@@ -444,7 +457,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     json.draw = request.draw; // Update the echo for each response
                     json.data.splice(0, requestStart - cacheLower);
                     json.data.splice(requestLength, json.data.length);
-
                     drawCallback(json);
                 }
             }
@@ -456,155 +468,110 @@ $classif_hint = 'Присвоить выделенному оборудован�
         });
     });
 
-
-    function showTable(id) {
-        $.ajax({
-            "url": 'display-columns?id=' + id,
-            "success": function (json) {
-                var tableHeaders = '';
-                window.tableName = json.tableName;
-                $.each(json.columns, function (i, val) {
-                    tableHeaders += "<th>" + val + "</th>";
-                });
-                $("#tableDiv").empty();
-                $("#tableDiv").append('<table id="main-table" class="display" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead></table>');
-                var table = $('#main-table').DataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "responsive": true,
-                    "ajax": $.fn.dataTable.pipeline({
-                        url: "server-side-ex?id=" + id,
-                        dataSrc: "",
-                        pages: 2 // number of pages to cache
-                    }),
-                    "columnDefs": [{
-                        "targets": -2,
-                        "data": null,
-                        "defaultContent": "<a href='#' class='fa fa-edit edit' style='padding-right: 5px'></a>" +
-                            "<a href='#' class='fa fa-eye view'></a>",
-                        "orderable": false,
-                        "responsivePriority": 1
-
-                    }, {
-                        "orderable": false,
-                        "className": 'select-checkbox',
-                        "targets": -1,
-                        "defaultContent": "",
-                        "searchable": false,
-                        "responsivePriority": 2
-                    }, {
-                        "targets": 0,
-                        "data": null,
-                        "visible": false
-                    }, {
-                        "targets": 0,
-                        "data": null,
-                        "visible": false
-                    }, {
-                        "targets": 5,
-                        "visible": false
-                    },
-                        {
-                            "targets": 2,
-                            "render": function (data, type, row) {
-                                return row[2] + " " + row[3];
-                            }
-                        }, {
-                            "targets": 3,
-                            "data": null,
-                            "visible": false
-                        }],
-                    select: {
-                        style: 'os',
-                        selector: 'td:last-child'
-                    },
-                    language: {
-                        url: "/lib/ru.json"
+    $(document).ready(function () {
+        var table = $('#main-table').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "responsive": true,
+            "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+            "ajax": $.fn.dataTable.pipeline({
+                url: 'server-side',
+                pages: 2, // number of pages to cache
+                data: function () {
+                    var lft = $(".lft").text();
+                    var rgt = $(".rgt").text();
+                    return {
+                        'db_tbl': 'placement_tbl',
+                        'identifier': 'place_id',
+                        'lft': lft,
+                        'rgt': rgt
                     }
-                });
-
- // Работа таблицы -> событие выделения и снятия выделения
-
-                table.on('select', function (e, dt, type, indexes) {
-                    if (type === 'row') {
-                        $('.classif').show();
-                        $('.hiddendel').show();
-                    }
-                });
-                table.on('deselect', function (e, dt, type, indexes) {
-                    if (type === 'row') {
-                        $('.hiddendel').hide();
-                        $('.classif').hide();
-                    }
-                });
-                table.on('click', '.edit', function (e) {
-                    e.preventDefault();
-                    var csrf = $('meta[name=csrf-token]').attr("content");
-                    var data = table.row($(this).parents('tr')).data();
-                    var id = data[5];
-                    $("#classifier-modal").modal("show");
-                    $('.kv-placeholder').text(window.nodeTitle);
-                    $('.kv-tree-dropdown-container').hide();
-                    $('.modal-title').text('Обновление');
-                    $("#assign-classifier-btn").text('Обновить');
-                    $.ajax({
-                        url: "/admin/classifier/extended-data-form?id=" + window.nodeId,
-                        type: "GET",
-                        success: function (result) {
-                            $("#classifier-body").html(result);
-                            $("#assign-classifier-btn").removeAttr('disabled');
-                            $.ajax({
-                                url: "/admin/classifier/extended-data-update?id=" + id + '&tableName=' + window.tableName,
-                                type: "GET",
-                                success: function (result) {
-
-                                }
-                            });
-                            $("#assign-classifier-btn").off('click').on("click", function (e) {
-                                e.preventDefault();
-                                var data = $('#form-classifier').serializeArray();
-                                var sendData = data.filter(function (item, i, arr) {
-                                    return arr[i]['value'] != 0;
-                                });
-                                $.ajax({
-                                    url: "/admin/classifier/assign-classifier",
-                                    type: "post",
-                                    data: {id: id, _csrf: csrf, data: sendData},
-                                    success: function (result) {
-                                        $("#form-classifier")[0].reset();
-                                        $("#classifier-modal").modal("hide");
-                                    },
-                                    error: function () {
-                                        console.log("Ошибка cat_1! Обратитесь к разработчику.");
-                                        $("#classifier-modal").modal("hide");
-                                    }
-                                });
-                            })
-                        },
-                        error: function () {
-                            console.log("Ошибка cat_2! Обратитесь к разработчику.");
-                            $("#classifier-modal").modal("hide");
-                        }
-                    });
-
-                });
-                table.on('click', '.view', function (e) {
-                    e.preventDefault();
-                    var data = table.row($(this).parents('tr')).data();
-                    if (e.ctrlKey) {
-                        var href = "/tehdoc/kernel/equipment/view?id=" + data[0];
-                        window.open(href);
-                    } else {
-                        location.href = "/tehdoc/kernel/equipment/view?id=" + data[0];
-                    }
-                });
+                }
+            }),
+            "columnDefs": [{
+                "targets": -2,
+                "data": null,
+                "defaultContent": "<a href='#' class='fa fa-edit edit' style='padding-right: 5px'></a>" +
+                    "<a href='#' class='fa fa-eye view'></a>",
+                "orderable": false
+            }, {
+                "orderable": false,
+                "className": 'select-checkbox',
+                "targets": -1,
+                "defaultContent": ""
+            }, {
+                "targets": 0,
+                "data": null,
+                "visible": false
+            }, {
+                "targets": 3,
+                "data": null,
+                "visible": false
+            }, {
+                "targets": 2,
+                "render": function (data, type, row) {
+                    return row[2] + " " + row[3];
+                }
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:last-child'
             },
-            "dataType": "json"
+            language: {
+                url: "/lib/ru.json"
+            }
+        });
+        $('#main-table tbody').on('click', '.edit', function (e) {
+            e.preventDefault();
+            var data = table.row($(this).parents('tr')).data();
+            if (e.ctrlKey) {
+                var href = "/tehdoc/kernel/equipment/update?id=" + data[0];
+                window.open(href);
+            } else {
+                location.href = "/tehdoc/kernel/equipment/update?id=" + data[0];
+            }
 
         });
-    }
+        $('#main-table tbody').on('click', '.view', function (e) {
+            e.preventDefault();
+            var data = table.row($(this).parents('tr')).data();
+            var id = data['0'];
+            $.ajax({
+                url: "/tehdoc/kernel/equipment/about?id=" + id,
+                type: "GET",
+                success: function (result) {
+                    $(".modal-body").html(result);
+                    $("#exampleModalCenter").modal("show");
+                },
+                error: function () {
+                    alert('Ошибка! Обратитесь к разработчику.');
+                }
+            });
 
-    //********************** Удаление записей из таблицы классификатора в БД ***********************************
+        });
+    });
+
+    // Работа таблицы -> событие выделения и снятия выделения
+
+    $(document).ready(function () {
+        var table = $('#main-table').DataTable();
+        table.on('select', function (e, dt, type) {
+            if (type === 'row') {
+                $('.hiddendel').show();
+                $('.classif').show();
+            }
+        });
+        table.on('deselect', function (e, dt, type) {
+            var i = table.rows({selected: true}).indexes();
+            if (type === 'row' && i.count() == 0) {
+                $('.hiddendel').hide();
+                $('.classif').hide();
+                $('.classifier-add').fadeOut('slow');
+            }
+        });
+    });
+
+    //********************** Удаление записей ***********************************
 
     $(document).ready(function () {
         $('.hiddendel').click(function (event) {
@@ -615,15 +582,15 @@ $classif_hint = 'Присвоить выделенному оборудован�
             var ar = [];
             var count = data.length;
             for (var i = 0; i < count; i++) {
-                ar[i] = data[i][5];
+                ar[i] = data[i][0];
             }
             if (confirm('Вы действительно хотите удалить выделенное оборудование? Выделено ' + data.length + '!!!  ')) {
                 $(".modal").modal("show");
                 $.ajax({
-                    url: "/admin/classifier/delete-from-table",
+                    url: "/tehdoc/kernel/equipment/delete",
                     type: "post",
                     dataType: "JSON",
-                    data: {dellArray: ar, _csrf: csrf, tableName: window.tableName},
+                    data: {jsonData: ar, _csrf: csrf},
                     success: function (result) {
                         $("#main-table").DataTable().clearPipeline().draw();
                         $(".modal").modal('hide');
@@ -631,6 +598,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     },
                     error: function () {
                         alert('Ошибка! Обратитесь к разработчику.');
+                        $(".modal").modal('hide');
                     }
                 });
             }
@@ -653,6 +621,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             $("#classifier-modal").modal("show");
             $('#classifier').off('change').on('change', function () {
                 var val = $(this).val();
+                console.log(val);
                 if (val != '') {
                     var el = $('#kv-tree-dropdown-container').find('.kv-selected');
                     $.ajax({

@@ -9,7 +9,7 @@ use app\modules\admin\models\ClassifierTbl;
 use yii\base\DynamicModel;
 use yii\db\mssql\PDO;
 use yii\web\Controller;
-use app\modules\tehdoc\modules\kernel\models\SSP;
+use app\modules\tehdoc\models\SSP;
 use Yii;
 use yii\widgets\ActiveForm;
 use kartik\tree\TreeViewInput;
