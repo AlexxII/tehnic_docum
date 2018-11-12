@@ -123,6 +123,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         'activate' => new \yii\web\JsExpression('function(node, data) {
                             $(\'.hiddendel\').hide();
                             $(\'.classif\').hide();
+                            $(\'.sendbtn\').hide();
                             var node = data.node;
                             var table = $("#example").DataTable();
                             if (node.key == -999){
@@ -160,7 +161,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 ]) ?>
             <?= Html::a('Передать->',
                 [''], [
-                    'class' => 'btn btn-primary btn-sm hiddendel',
+                    'class' => 'btn btn-primary btn-sm sendbtn',
                     'style' => ['margin-top' => '5px', 'display' => 'none'],
                     'data-toggle' => "tooltip",
                     'data-placement' => "top",
@@ -191,7 +192,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     var tableName;
     var nodeTitle;
     var nodeId;
-
+    var treeId;
 
     //************************ Работа над стилем ****************************
 
@@ -253,7 +254,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $('#main-table').on('length.dt', function (e, settings, len) {
         $('.hiddendel').hide();
         $('.classif').hide();
-        // $('.classifier-add').fadeOut('slow');
+        $('.sendbtn').hide();
     });
 
     function restoreSelectedRows(indexes) {
@@ -306,10 +307,12 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
     //************************* Управление деревом ***************************************
 
+    window.treeId = "#fancyree_w0";
+
     $(document).ready(function () {
         $('.refresh').click(function (event) {
             event.preventDefault();
-            var tree = $(".fancytree-ext-filter").fancytree("getTree");
+            var tree = $(window.treeId).fancytree("getTree");
             tree.reload();
             $(".about-header").text("");
             $(".about-main").html('');
@@ -350,14 +353,14 @@ $classif_hint = 'Присвоить выделенному оборудован�
         e.preventDefault();
         $("input[name=search]").val("");
         $("span#matches").text("");
-        var tree = $(".fancytree-ext-filter").fancytree("getTree");
+        var tree = $(window.treeId).fancytree("getTree");
         tree.clearFilter();
     }).attr("disabled", true);
 
     $(document).ready(function () {
         $("input[name=search]").keyup(function (e) {
             if ($(this).val() == '') {
-                var tree = $(".fancytree-ext-filter").fancytree("getTree");
+                var tree = $(window.treeId).fancytree("getTree");
                 tree.clearFilter();
             }
         })

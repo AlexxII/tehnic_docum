@@ -202,6 +202,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     // Глобальные переменные
 
     var nodeid;
+    var treeId;
 
     //************************ Работа над стилем ****************************
 
@@ -316,10 +317,12 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
     //************************* Управление деревом ***************************************
 
+    window.treeId = "#fancyree_w0";
+
     $(document).ready(function () {
         $('.refresh').click(function (event) {
             event.preventDefault();
-            var tree = $(".fancytree-ext-filter").fancytree("getTree");
+            var tree = $(window.treeId).fancytree("getTree");
             tree.reload();
             $(".about-header").text("");
             $(".about-main").html('');
@@ -365,14 +368,14 @@ $classif_hint = 'Присвоить выделенному оборудован�
         e.preventDefault();
         $("input[name=search]").val("");
         $("span#matches").text("");
-        var tree = $(".fancytree-ext-filter").fancytree("getTree");
+        var tree = $(window.treeId).fancytree("getTree");
         tree.clearFilter();
     }).attr("disabled", true);
 
     $(document).ready(function () {
         $("input[name=search]").keyup(function (e) {
             if ($(this).val() == '') {
-                var tree = $(".fancytree-ext-filter").fancytree("getTree");
+                var tree = $(window.treeId).fancytree("getTree");
                 tree.clearFilter();
             }
         })
