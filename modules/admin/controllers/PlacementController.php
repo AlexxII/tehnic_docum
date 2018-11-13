@@ -17,7 +17,7 @@ class PlacementController extends Controller
 
   public function actionPlacements()
   {
-    $id = Placement::find()->select('id, lft, rgt')->where(['=', 'lvl', 0])->all();
+    $id = Placement::find()->select('id, lft, rgt, root')->where(['=', 'lvl', 0])->all();
     if (!$id) {
       $data = array();
       $data = [['title' => 'База данных пуста', 'key' => -999]];

@@ -82,7 +82,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 
   </div>
 
-  <div class="col-lg-7 col-md-7">
+  <div class="col-lg-7 col-md-7" style="padding-bottom: 10px">
     <div class="">
       <div style="position: relative">
         <div class="container-fuid" style="float:left; width: 100%">
@@ -225,11 +225,13 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
   </div>
 
 
-  <div class="col-lg-6 col-md-6" style="border-radius:2px;padding-top:10px">
-    <?php
-    //        print_r($model);
-    ?>
-
+  <div class="col-lg-5 col-md-5">
+      <div class="alert alert-warning">
+          <a href="#" class="close" data-dismiss="alert">&times;</a>
+          <strong>Внимание!</strong> Возможность создавать несколько деревьев первого уровня не предоставляется.
+          При необходимости конкретизировать информацию, создайте дерево более крупного уровня.
+          Например: <strong>Земной шар</strong> -> <strong>Евразия</strong> -> <strong>Россия</strong> и т.д. Будьте внимательны!
+      </div>
   </div>
 
 </div>
