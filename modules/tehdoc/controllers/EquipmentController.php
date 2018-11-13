@@ -151,12 +151,14 @@ class EquipmentController extends Controller
             if ($_GET['lft']) {
                 $lft = (int)$_GET['lft'];
                 $rgt = (int)$_GET['rgt'];
+                $root = (int)$_GET['root'];
                 $table_ex = (string)$_GET['db_tbl'];
                 $identifier = (string)$_GET['identifier'];
                 $where = ' ' . $identifier . ' in (SELECT id
     FROM ' . $table_ex . '
-      WHERE ' . $table_ex . '.lft >= ' . $lft . '
-        AND ' . $table_ex . '.rgt <= ' . $rgt . ')';
+      WHERE ' . $table_ex . '.lft >= ' . $lft .
+        ' AND ' . $table_ex . '.rgt <= ' . $rgt .
+            ' AND ' . $table_ex . '.root = ' . $root . ')';
                 return json_encode(
                     SSP::complex($_GET, $sql_details, $table, $primaryKey, $columns, NULL, $where)
                 );

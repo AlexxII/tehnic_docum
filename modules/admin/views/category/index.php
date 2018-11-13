@@ -54,7 +54,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
           'data-placement' => 'top'
       ]) ?>
       <?= Html::a('<i class="fa fa-tree" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm add-category',
-          'style' => ['margin-top' => '5px', 'display' => 'none'],
+          'style' => ['margin-top' => '5px'],
           'title' => $add_tree_hint,
           'data-toggle' => 'tooltip',
           'data-placement' => 'top'
@@ -208,9 +208,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                         if (data.node.key == -999){
                             $(".add-category").show();
                             $(".add-subcategory").hide();
-                        } else {
-                            $(".add-category").hide();
-                        }
+                        } 
             }'),
             ]
         ]); ?>

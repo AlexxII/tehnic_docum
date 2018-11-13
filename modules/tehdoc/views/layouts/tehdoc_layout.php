@@ -101,7 +101,6 @@ Asset::register($this);       // регистрация ресурсов мод�
             'label' => '<i class="fa fa-user" aria-hidden="true" style="font-size: 18px"></i>',
               'items' => [
                   '<li class="dropdown-header" style="font-size: 10px">' . Yii::$app->user->identity->username . '</li>',
-                  '<li class="divider"></li>',
                   '<li>'
                   . Html::beginForm(['/site/logout'], 'post')
                   . Html::submitButton(

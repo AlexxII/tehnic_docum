@@ -141,6 +141,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             var title = node.title;
                             var id = node.data.id;
                             window.nodeId = id;
+                            $(".root").text(node.data.root);                       
                             $(".lft").text(node.data.lft);                       
                             $(".rgt").text(node.data.rgt);                       
                             $("#main-table").DataTable().clearPipeline().draw();
@@ -181,6 +182,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     'title' => $classif_hint,
                 ]) ?>
         </div>
+        <input class="root" style="display: none">
         <input class="lft" style="display: none">
         <input class="rgt" style="display: none">
         <div class="table-wrapper" style="min-height:40px">
@@ -335,6 +337,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             $(".about-main").html('');
             $(".del-node").hide();
             $(".del-multi-nodes").hide();
+            $(".root").text('');
             $(".lft").text('');
             $(".rgt").text('');
             $('.hiddendel').hide();
@@ -492,11 +495,13 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 url: 'server-side',
                 pages: 2, // number of pages to cache
                 data: function () {
+                    var root = $(".root").text();
                     var lft = $(".lft").text();
                     var rgt = $(".rgt").text();
                     return {
                         'db_tbl': 'category_tbl',
                         'identifier': 'category_id',
+                        'root': root,
                         'lft': lft,
                         'rgt': rgt
                     }

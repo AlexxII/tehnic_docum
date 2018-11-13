@@ -4,7 +4,7 @@ namespace app\modules\admin\controllers;
 
 
 use app\modules\admin\models\Category;
-use app\modules\tehdoc\modules\kernel\models\Equipment;
+use app\modules\tehdoc\models\Equipment;
 use yii\web\Controller;
 
 class CategoryController extends Controller
@@ -17,7 +17,7 @@ class CategoryController extends Controller
 
   public function actionCategories()
   {
-    $id = Category::find()->select('id, rgt, lft')->where(['=', 'lvl', 0])->all();
+    $id = Category::find()->select('id, rgt, lft, root')->where(['=', 'lvl', 0])->all();
     if (!$id) {
       $data = array();
       $data = [['title' => 'База данных пуста', 'key' => -999]];

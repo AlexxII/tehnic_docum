@@ -163,7 +163,6 @@ class ClassifierController extends Controller
   }
 
     public function actionDeleteFromTable(){
-
       // TODO: try {catch}
         if(!empty($_POST)) {
             $dellArray = array();
