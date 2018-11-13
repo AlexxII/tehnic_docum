@@ -178,6 +178,10 @@ $classif_hint = 'Присвоить выделенному оборудован�
         </div>
         <input class="lft" style="display: none">
         <input class="rgt" style="display: none">
+        <form class="send_ids" action="extended-table" method="post">
+            <input id="_crsf" style="display: none" name="_crsf">
+            <input id="rows_ids" style="display: none" name="rows_ids">
+        </form>
         <div class="table-wrapper" style="min-height:40px">
         </div>
         <div class="about-header" style="font-size:18px"></div>
@@ -655,8 +659,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             var csrf = $("meta[name=csrf-token]").attr("content");
             var table = $("#main-table").DataTable();
             var data = table.rows({selected: true}).data();
-            var ar = [];
-            var count = data.length;
+            var ar = [];            var count = data.length;
             for (var i = 0; i < count; i++) {
                 ar[i] = data[i][0];
             }
@@ -706,5 +709,36 @@ $classif_hint = 'Присвоить выделенному оборудован�
         })
     });
 
+    //************************** Перенос данных в подробную таблицу **********************************
+
+    $(document).ready(function () {
+        $('.sendbtn').click(function (event) {
+            event.preventDefault();
+            var csrf = $("meta[name=csrf-token]").attr("content");
+            var table = $("#main-table").DataTable();
+            var data = table.rows({selected: true}).data();
+            var ar = [];
+            var count = data.length;
+            for (var i = 0; i < count; i++) {
+                ar[i] = data[i][0];
+            }
+            $.unique(ar);
+            $('#rows_ids').val(ar);
+            $('#_crsf').val(csrf);
+            $('.send_ids').submit();
+
+/*
+            $.ajax({
+                url: "/admin/classifier/send-data-ext-table",
+                type: "post",
+                dataType: "JSON",
+                data: {jsonData: ar, _csrf: csrf},
+                success: function (responce) {
+                    console.log('success');
+                }
+            })
+*/
+        })
+    });
 
 </script>

@@ -284,4 +284,12 @@ class EquipmentController extends Controller
         return 1;
     }
 
+    public function actionExtendedTable()
+    {
+        $model = $_GET;
+        return $this->render('about', [
+            'model' => $model,
+        ]);
+    }
+
 }

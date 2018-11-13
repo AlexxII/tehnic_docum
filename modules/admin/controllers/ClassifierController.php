@@ -65,13 +65,13 @@ class ClassifierController extends Controller
         break;
     }
     $parent = Classifier::findOne($second);
-    if (!$parent->children()->one()) {
+/*    if (!$parent->children()->one()) {
       $parent->disabled = 0;
       $parent->save();
     } else {
-      $parent->disabled = 1;
+      $parent->disabled = 0;
       $parent->save();
-    }
+    }*/
     if ($item_model->save()) {
       return true;
     }
@@ -86,7 +86,6 @@ class ClassifierController extends Controller
     $newSubcat->root = $category->id;
     $newSubcat->appendTo($category);
     if ($parent = $newSubcat->parents(1)->one()) {
-      $parent->disabled = 1;
       $parent->save();
     }
     $data['acceptedTitle'] = $title;
@@ -507,4 +506,10 @@ class ClassifierController extends Controller
     }
     return $result;
   }
+
+  public function actionSendDataExtTable()
+  {
+      return 1;
+  }
+
 }
