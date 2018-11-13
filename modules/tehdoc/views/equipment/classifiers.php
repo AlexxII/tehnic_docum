@@ -121,8 +121,9 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             'mode' => "hide"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
                         ],
                         'activate' => new \yii\web\JsExpression('function(node, data) {
-                            $(\'.hiddendel\').hide();
-                            $(\'.classif\').hide();
+                            $(".hiddendel").hide();
+                            $(".classif").hide();
+                            $(".sendbtn").hide();
                             var node = data.node;
                             var table = $("#example").DataTable();
                             if (node.key == -999){
@@ -160,7 +161,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 ]) ?>
             <?= Html::a('Передать->',
                 [''], [
-                    'class' => 'btn btn-primary btn-sm hiddendel',
+                    'class' => 'btn btn-primary btn-sm sendbtn',
                     'style' => ['margin-top' => '5px', 'display' => 'none'],
                     'data-toggle' => "tooltip",
                     'data-placement' => "top",
@@ -177,6 +178,10 @@ $classif_hint = 'Присвоить выделенному оборудован�
         </div>
         <input class="lft" style="display: none">
         <input class="rgt" style="display: none">
+        <form class="send_ids" action="extended-table" method="post">
+            <input id="_crsf" style="display: none" name="_crsf">
+            <input id="rows_ids" style="display: none" name="rows_ids">
+        </form>
         <div class="table-wrapper" style="min-height:40px">
         </div>
         <div class="about-header" style="font-size:18px"></div>
@@ -191,7 +196,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     var tableName;
     var nodeTitle;
     var nodeId;
-
+    var treeId;
 
     //************************ Работа над стилем ****************************
 
@@ -253,7 +258,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $('#main-table').on('length.dt', function (e, settings, len) {
         $('.hiddendel').hide();
         $('.classif').hide();
-        // $('.classifier-add').fadeOut('slow');
+        $('.sendbtn').hide();
     });
 
     function restoreSelectedRows(indexes) {
@@ -306,10 +311,12 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
     //************************* Управление деревом ***************************************
 
+    window.treeId = "#fancyree_w0";
+
     $(document).ready(function () {
         $('.refresh').click(function (event) {
             event.preventDefault();
-            var tree = $(".fancytree-ext-filter").fancytree("getTree");
+            var tree = $(window.treeId).fancytree("getTree");
             tree.reload();
             $(".about-header").text("");
             $(".about-main").html('');
@@ -317,6 +324,9 @@ $classif_hint = 'Присвоить выделенному оборудован�
             $(".del-multi-nodes").hide();
             $(".lft").text('');
             $(".rgt").text('');
+            $('.hiddendel').hide();
+            $('.classif').hide();
+            $('.sendbtn').hide();
             $("#main-table").DataTable().clearPipeline().draw();
         })
     });
@@ -350,14 +360,14 @@ $classif_hint = 'Присвоить выделенному оборудован�
         e.preventDefault();
         $("input[name=search]").val("");
         $("span#matches").text("");
-        var tree = $(".fancytree-ext-filter").fancytree("getTree");
+        var tree = $(window.treeId).fancytree("getTree");
         tree.clearFilter();
     }).attr("disabled", true);
 
     $(document).ready(function () {
         $("input[name=search]").keyup(function (e) {
             if ($(this).val() == '') {
-                var tree = $(".fancytree-ext-filter").fancytree("getTree");
+                var tree = $(window.treeId).fancytree("getTree");
                 tree.clearFilter();
             }
         })
@@ -443,7 +453,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     json.draw = request.draw; // Update the echo for each response
                     json.data.splice(0, requestStart - cacheLower);
                     json.data.splice(requestLength, json.data.length);
-
                     drawCallback(json);
                 }
             }
@@ -454,7 +463,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
             });
         });
     });
-
 
     function showTable(id) {
         $.ajax({
@@ -528,14 +536,19 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     if (type === 'row') {
                         $('.classif').show();
                         $('.hiddendel').show();
+                        $('.sendbtn').show();
                     }
                 });
                 table.on('deselect', function (e, dt, type, indexes) {
                     if (type === 'row') {
                         $('.hiddendel').hide();
                         $('.classif').hide();
+                        $('.sendbtn').hide();
                     }
                 });
+
+
+
                 table.on('click', '.edit', function (e) {
                     e.preventDefault();
                     var csrf = $('meta[name=csrf-token]').attr("content");
@@ -628,6 +641,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         $(".modal").modal('hide');
                         $('.hiddendel').hide();
                         $('.classif').hide();
+                        $('.sendbtn').hide();
                     },
                     error: function () {
                         alert('Ошибка! Обратитесь к разработчику.');
@@ -645,8 +659,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             var csrf = $("meta[name=csrf-token]").attr("content");
             var table = $("#main-table").DataTable();
             var data = table.rows({selected: true}).data();
-            var ar = [];
-            var count = data.length;
+            var ar = [];            var count = data.length;
             for (var i = 0; i < count; i++) {
                 ar[i] = data[i][0];
             }
@@ -696,5 +709,36 @@ $classif_hint = 'Присвоить выделенному оборудован�
         })
     });
 
+    //************************** Перенос данных в подробную таблицу **********************************
+
+    $(document).ready(function () {
+        $('.sendbtn').click(function (event) {
+            event.preventDefault();
+            var csrf = $("meta[name=csrf-token]").attr("content");
+            var table = $("#main-table").DataTable();
+            var data = table.rows({selected: true}).data();
+            var ar = [];
+            var count = data.length;
+            for (var i = 0; i < count; i++) {
+                ar[i] = data[i][0];
+            }
+            $.unique(ar);
+            $('#rows_ids').val(ar);
+            $('#_crsf').val(csrf);
+            $('.send_ids').submit();
+
+/*
+            $.ajax({
+                url: "/admin/classifier/send-data-ext-table",
+                type: "post",
+                dataType: "JSON",
+                data: {jsonData: ar, _csrf: csrf},
+                success: function (responce) {
+                    console.log('success');
+                }
+            })
+*/
+        })
+    });
 
 </script>

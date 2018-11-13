@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $about = "Панель отображения оборудования по местам размещения. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
 $refresh_hint = 'Перезапустить форму';
 $dell_hint = 'Удалить выделенное оборудование из ОСНОВНОЙ таблицы. БУДЬТЕ ВНИМАТЕЛЬНЫ, данные будут удалены безвозвратно.';
+$send_hint = 'Передать выделенные строки в подробную версию таблицы';
 $classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
 
 
@@ -129,8 +130,9 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             'mode' => "hide"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
                         ],
                         'activate' => new \yii\web\JsExpression('function(node, data) {
-                            $(\'.hiddendel\').hide();
-                            $(\'.classif\').hide();
+                            $(".hiddendel").hide();
+                            $(".classif").hide();
+                            $(".sendbtn").hide();
                             var node = data.node;
                             var table = $("#example").DataTable();
                             if (node.key == -999){
@@ -162,6 +164,14 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     'data-toggle' => "tooltip",
                     'data-placement' => "top",
                     'title' => $dell_hint,
+                ]) ?>
+            <?= Html::a('Передать->',
+                [''], [
+                    'class' => 'btn btn-primary btn-sm sendbtn',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $send_hint,
                 ]) ?>
             <?= Html::a('Классиф-тор',
                 [''], [
@@ -202,6 +212,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     // Глобальные переменные
 
     var nodeid;
+    var treeId;
 
     //************************ Работа над стилем ****************************
 
@@ -316,10 +327,12 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
     //************************* Управление деревом ***************************************
 
+    window.treeId = "#fancyree_w0";
+
     $(document).ready(function () {
         $('.refresh').click(function (event) {
             event.preventDefault();
-            var tree = $(".fancytree-ext-filter").fancytree("getTree");
+            var tree = $(window.treeId).fancytree("getTree");
             tree.reload();
             $(".about-header").text("");
             $(".about-main").html('');
@@ -327,6 +340,9 @@ $classif_hint = 'Присвоить выделенному оборудован�
             $(".del-multi-nodes").hide();
             $(".lft").text('');
             $(".rgt").text('');
+            $('.hiddendel').hide();
+            $('.classif').hide();
+            $('.sendbtn').hide();
             $("#main-table").DataTable().clearPipeline().draw();
         })
     });
@@ -365,14 +381,15 @@ $classif_hint = 'Присвоить выделенному оборудован�
         e.preventDefault();
         $("input[name=search]").val("");
         $("span#matches").text("");
-        var tree = $(".fancytree-ext-filter").fancytree("getTree");
+        var tree = $(window.treeId).fancytree("getTree");
         tree.clearFilter();
     }).attr("disabled", true);
+
 
     $(document).ready(function () {
         $("input[name=search]").keyup(function (e) {
             if ($(this).val() == '') {
-                var tree = $(".fancytree-ext-filter").fancytree("getTree");
+                var tree = $(window.treeId).fancytree("getTree");
                 tree.clearFilter();
             }
         })
@@ -559,6 +576,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             if (type === 'row') {
                 $('.hiddendel').show();
                 $('.classif').show();
+                $('.sendbtn').show();
             }
         });
         table.on('deselect', function (e, dt, type) {
@@ -566,7 +584,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             if (type === 'row' && i.count() == 0) {
                 $('.hiddendel').hide();
                 $('.classif').hide();
-                $('.classifier-add').fadeOut('slow');
+                $('.sendbtn').hide();
             }
         });
     });
@@ -595,6 +613,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         $("#main-table").DataTable().clearPipeline().draw();
                         $(".modal").modal('hide');
                         $('.hiddendel').hide();
+                        $('.sendbtn').hide();
                     },
                     error: function () {
                         alert('Ошибка! Обратитесь к разработчику.');

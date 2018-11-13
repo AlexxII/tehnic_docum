@@ -14,6 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $about = "Панель отображения оборудования по категориям. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
 $refresh_hint = 'Перезапустить форму';
 $dell_hint = 'Удалить выделенное оборудование из ОСНОВНОЙ таблицы. БУДЬТЕ ВНИМАТЕЛЬНЫ, данные будут удалены безвозвратно.';
+$send_hint = 'Передать выделенные строки в подробную версию таблицы';
 $classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
 
 ?>
@@ -126,8 +127,9 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             'mode' => "hide"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
                         ],
                         'activate' => new \yii\web\JsExpression('function(node, data) {
-                            $(\'.hiddendel\').hide();
-                            $(\'.classif\').hide();
+                            $(".hiddendel").hide();
+                            $(".classif").hide();
+                            $(".sendbtn").hide();
                             var node = data.node;
                             var table = $("#example").DataTable();
                             if (node.key == -999){
@@ -139,6 +141,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             var title = node.title;
                             var id = node.data.id;
                             window.nodeId = id;
+                            $(".root").text(node.data.root);                       
                             $(".lft").text(node.data.lft);                       
                             $(".rgt").text(node.data.rgt);                       
                             $("#main-table").DataTable().clearPipeline().draw();
@@ -162,6 +165,14 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     'data-placement' => "top",
                     'title' => $dell_hint,
                 ]) ?>
+            <?= Html::a('Передать->',
+                [''], [
+                    'class' => 'btn btn-primary btn-sm sendbtn',
+                    'style' => ['margin-top' => '5px', 'display' => 'none'],
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "top",
+                    'title' => $send_hint,
+                ]) ?>
             <?= Html::a('Классиф-тор',
                 [''], [
                     'class' => 'btn btn-info btn-sm classif',
@@ -171,6 +182,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     'title' => $classif_hint,
                 ]) ?>
         </div>
+        <input class="root" style="display: none">
         <input class="lft" style="display: none">
         <input class="rgt" style="display: none">
         <div class="table-wrapper" style="min-height:40px">
@@ -199,6 +211,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     // Глобальные переменные
 
     var nodeid;
+    var treeId;
 
 
     //************************ Работа над стилем ****************************
@@ -313,17 +326,23 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
     //************************* Управление деревом ***************************************
 
+    window.treeId = "#fancyree_w0";
+
     $(document).ready(function () {
         $('.refresh').click(function (event) {
             event.preventDefault();
-            var tree = $(".fancytree-ext-filter").fancytree("getTree");
+            var tree = $(window.treeId).fancytree("getTree");
             tree.reload();
             $(".about-header").text("");
             $(".about-main").html('');
             $(".del-node").hide();
             $(".del-multi-nodes").hide();
+            $(".root").text('');
             $(".lft").text('');
             $(".rgt").text('');
+            $('.hiddendel').hide();
+            $('.classif').hide();
+            $('.sendbtn').hide();
             $("#main-table").DataTable().clearPipeline().draw();
         })
     });
@@ -362,15 +381,15 @@ $classif_hint = 'Присвоить выделенному оборудован�
         e.preventDefault();
         $("input[name=search]").val("");
         $("span#matches").text("");
-        var tree = $(".fancytree-ext-filter").fancytree("getTree");
+        var tree = $(window.treeId).fancytree("getTree");
         tree.clearFilter();
     }).attr("disabled", true);
 
     $(document).ready(function () {
         $("input[name=search]").keyup(function (e) {
             if ($(this).val() == '') {
-                var tree = $(".fancytree-ext-filter").fancytree("getTree");
-                // tree.clearFilter();
+                var tree = $(window.treeId).fancytree("getTree");
+                tree.clearFilter();
             }
         })
     });
@@ -476,11 +495,13 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 url: 'server-side',
                 pages: 2, // number of pages to cache
                 data: function () {
+                    var root = $(".root").text();
                     var lft = $(".lft").text();
                     var rgt = $(".rgt").text();
                     return {
                         'db_tbl': 'category_tbl',
                         'identifier': 'category_id',
+                        'root': root,
                         'lft': lft,
                         'rgt': rgt
                     }
@@ -549,6 +570,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             if (type === 'row') {
                 $('.hiddendel').show();
                 $('.classif').show();
+                $('.sendbtn').show();
             }
         });
         table.on('deselect', function (e, dt, type) {
@@ -556,6 +578,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             if (type === 'row' && i.count() == 0) {
                 $('.hiddendel').hide();
                 $('.classif').hide();
+                $('.sendbtn').hide();
             }
         });
     });
@@ -585,6 +608,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         $(".freeztime").modal('hide');
                         $('.hiddendel').hide();
                         $('.classif').hide();
+                        $('.sendbtn').hide();
                     },
                     error: function () {
                         alert('Ошибка! Обратитесь к разработчику.');

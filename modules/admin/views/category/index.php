@@ -14,6 +14,7 @@ $add_hint = 'Добавить новый узел';
 $add_tree_hint = 'Добавить дерево';
 $refresh_hint = 'Перезапустить форму';
 $del_hint = 'Удалить выбранную категорию БЕЗ вложений';
+$del_root_hint = 'Удалить ветку полностью';
 $del_multi_nodes = 'Удвлить выбранную категорию С вложениями';
 
 ?>
@@ -54,7 +55,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
           'data-placement' => 'top'
       ]) ?>
       <?= Html::a('<i class="fa fa-tree" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm add-category',
-          'style' => ['margin-top' => '5px', 'display' => 'none'],
+          'style' => ['margin-top' => '5px'],
           'title' => $add_tree_hint,
           'data-toggle' => 'tooltip',
           'data-placement' => 'top'
@@ -68,6 +69,12 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
       <?= Html::a('<i class="fa fa-trash" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-node',
           'style' => ['margin-top' => '5px', 'display' => 'none'],
           'title' => $del_hint,
+          'data-toggle' => 'tooltip',
+          'data-placement' => 'top'
+      ]) ?>
+      <?= Html::a('</i><i class="fa fa-tree" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-root',
+          'style' => ['margin-top' => '5px', 'display' => 'none'],
+          'title' => $del_root_hint,
           'data-toggle' => 'tooltip',
           'data-placement' => 'top'
       ]) ?>
@@ -193,6 +200,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                             $(".add-subcategory").show();
                         }
                         if (node.data.lvl == 0){
+                            $(".del-root").show();
                             $(".del-node").hide();
                             $(".del-multi-nodes").hide();
                         } else {
@@ -201,6 +209,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                             } else {
                                 $(".del-multi-nodes").hide();
                             }
+                            $(".del-root").hide();
                             $(".del-node").show();
                         }
         }'),
@@ -208,9 +217,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                         if (data.node.key == -999){
                             $(".add-category").show();
                             $(".add-subcategory").hide();
-                        } else {
-                            $(".add-category").hide();
-                        }
+                        } 
             }'),
             ]
         ]); ?>
@@ -267,12 +274,38 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             event.preventDefault();
             var tree = $(".ui-draggable-handle").fancytree("getTree");
             tree.reload();
+            $(".del-root").hide();
             $(".del-node").hide();
             $(".del-multi-nodes").hide();
         })
     });
 
     $(document).ready(function () {
+        $('.del-root').click(function (event) {
+            var csrf = $('meta[name=csrf-token]').attr("content");
+            if (confirm('Вы уверены, что хотите удалить выбранный классификатор вместе с вложениями?')) {
+                event.preventDefault();
+                var node = $(".ui-draggable-handle").fancytree("getActiveNode");
+                if (!node){
+                    alert('Выберите родительский классификатор');
+                    return;
+                }
+                $.ajax({
+                    url: "/admin/category/delete-root",
+                    type: "post",
+                    data: {id: node.data.id, _csrf: csrf}
+                })
+                    .done(function () {
+                        node.remove();
+                        restoreInputs(false, false);
+                        $('.about-info').html('');
+                        $('.del-root').hide();
+                    })
+                    .fail(function () {
+                        alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
+                    });
+            }
+        });
         $('.del-node').click(function (event) {
             if (confirm('Вы уверены, что хотите удалить выбранную категорию?')) {
                 event.preventDefault();
@@ -288,10 +321,8 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                         alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
                     });
             }
-        })
-    });
+        });
 
-    $(document).ready(function () {
         $('.del-multi-nodes').click(function (event) {
             if (confirm('Вы уверены, что хотите удалить узел вместе с вложенниями?')) {
                 event.preventDefault();
