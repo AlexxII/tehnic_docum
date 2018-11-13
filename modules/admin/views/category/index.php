@@ -88,7 +88,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 
   </div>
 
-  <div class="col-lg-7 col-md-7">
+  <div class="col-lg-7 col-md-7" style="padding-bottom: 10px">
     <div style="position: relative">
       <div class="container-fuid" style="float:left; width: 100%">
         <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
@@ -226,11 +226,12 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
   </div>
 
 
-  <div class="col-lg-6 col-md-6" style="border-radius:2px;padding-top:10px">
-    <?php
-    //        print_r($model);
-    ?>
-
+  <div class="col-lg-5 col-md-5">
+      <div class="alert alert-warning">
+          <a href="#" class="close" data-dismiss="alert">&times;</a>
+          <strong>Внимание!</strong> Не создавайте много категорий 1го уровня. При категорировании
+          оборудования возможны дубли оборудования. Будьте внимательны!
+      </div>
   </div>
 
 </div>
