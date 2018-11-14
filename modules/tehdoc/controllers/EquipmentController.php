@@ -136,12 +136,19 @@ class EquipmentController extends Controller
                 'db' => 'eq_factdate',
                 'dt' => 5,
                 'formatter' => function ($d, $row) { //TODO разобраться с форматом отображения даты
-                    return date('jS M y', strtotime($d));
+                    if ($d != null) {
+                        return date('jS M y', strtotime($d));
+                    } else {
+                        return '-';
+                    }
                 }
             ),
             array(
                 'db' => 'quantity',
                 'dt' => 6,
+                'formatter' => function ($d, $row) { //TODO
+                    return $d . ' шт.';
+                }
             )
         );
 
@@ -231,6 +238,8 @@ class EquipmentController extends Controller
             array('db' => 'eq_model', 'dt' => 3),
             array('db' => 'eq_serial', 'dt' => 4),
         );
+
+        //TODO: Вставить функцию обработки ДАТЫ, если в таблице дата (необходимо поле - тип данных)
 
         if (!empty($tableScheme)) {                           // формируется запрос, если классификатор сложный
             $i = 6;                                             // простой классификатор просто хранит перечень техники

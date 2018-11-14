@@ -155,8 +155,18 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
 <?php ActiveForm::end(); ?>
 
 <script>
+
+
+
+
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
+
+        $('#w1-tree-input-menu').on('change', function (e) {
+            var text = $('#w1-tree-input').text();
+            console.log(text);
+            $('#equipment-eq_title').val(text);
+        });
     });
 
 

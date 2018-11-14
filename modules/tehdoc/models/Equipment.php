@@ -144,10 +144,11 @@ class Equipment extends \yii\db\ActiveRecord
 
   public function getPlace()
   {
+    $depth = 2; // сколько уровней
     if ($this->placement){
       $full = $this->placement;
       $parentCount = $full->parents()->count();
-      $parent = $full->parents($parentCount - 2)->all();
+      $parent = $full->parents($parentCount - $depth)->all();
       $fullname = '';
       foreach ($parent as $p) {
         $fullname .= $p->name . ' ->';

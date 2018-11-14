@@ -460,6 +460,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
         $.ajax({
             "url": 'display-columns?id=' + id,
             "success": function (json) {
+                var groupRow = 7;
                 var tableHeaders = '';
                 window.tableName = json.tableName;
                 $.each(json.columns, function (i, val) {
@@ -471,11 +472,15 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     "processing": true,
                     "serverSide": true,
                     "responsive": true,
+                    "order": [[ groupRow, 'asc' ]],
                     "ajax": $.fn.dataTable.pipeline({
                         url: "server-side-ex?id=" + id,
                         dataSrc: "",
                         pages: 2 // number of pages to cache
                     }),
+                    rowGroup: {
+                        dataSrc: groupRow
+                    },
                     "columnDefs": [{
                         "targets": -2,
                         "data": null,
@@ -502,7 +507,11 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     }, {
                         "targets": 5,
                         "visible": false
+                    },{
+                        "targets": groupRow,
+                        "visible": false
                     },
+
                         {
                             "targets": 2,
                             "render": function (data, type, row) {
