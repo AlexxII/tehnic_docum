@@ -180,7 +180,7 @@ Asset::register($this);       // регистрация ресурсов мод�
 
                       </div>
                   </div>
-                  <form action="assign-classifier" id="form-classifier">
+                  <form action="assign-classifier" id="form-classifier" method="POST" enctype="multipart/form-data">
                       <div class="modal-body" id="classifier-body">
                       </div>
                       <div class="modal-footer">

@@ -453,7 +453,7 @@ class ClassifierController extends Controller
         case 'fileinput':
           $form .=
               '<label>' . $column->label . '</label>' .
-              '<input type="file" name="' . $column->name . '" >' .
+              '<input type="file" multiple class="files-up" name="' . $column->name . '" >' .
               '<p></p>';
           break;
         default:

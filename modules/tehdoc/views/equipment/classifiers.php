@@ -22,31 +22,24 @@ $classif_hint = 'Присвоить выделенному оборудован�
         font-size: 18px;
         color: #1e6887;
     }
-
     li {
         word-wrap: break-word
     }
-
     .fa {
         font-size: 15px;
     }
-
     ul.fancytree-container {
         font-size: 12px;
     }
-
     input {
         color: black;
     }
-
     #main-table {
         font-size: 12px;
     }
-
     td .fa {
         font-size: 22px;
     }
-
     .show-menu-button {
         position: absolute;
         background-color: #f5f7f8;
@@ -59,7 +52,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
         padding-top: 25px;
         border-radius: 1px;
     }
-
 </style>
 
 <div class="eq-classifiers-pannel">
@@ -178,8 +170,8 @@ $classif_hint = 'Присвоить выделенному оборудован�
         </div>
         <input class="lft" style="display: none">
         <input class="rgt" style="display: none">
-        <form class="send_ids" action="extended-table" method="post">
-            <input id="_crsf" style="display: none" name="_crsf">
+        <form class="send_ids" action="extended-table" method="get">
+<!--            <input id="_crsf" style="display: none" name="_crsf">-->
             <input id="rows_ids" style="display: none" name="rows_ids">
         </form>
         <div class="table-wrapper" style="min-height:40px">
@@ -687,10 +679,10 @@ $classif_hint = 'Присвоить выделенному оборудован�
                                     success: function (result) {
                                         $("#form-classifier")[0].reset();
                                         $("#classifier-modal").modal("hide");
-
                                     },
                                     error: function () {
                                         console.log("Ошибка cat_1! Обратитесь к разработчику.");
+                                        $("#form-classifier")[0].reset();
                                         $("#classifier-modal").modal("hide");
                                     }
                                 });
@@ -714,7 +706,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $(document).ready(function () {
         $('.sendbtn').click(function (event) {
             event.preventDefault();
-            var csrf = $("meta[name=csrf-token]").attr("content");
+            // var csrf = $("meta[name=csrf-token]").attr("content");
             var table = $("#main-table").DataTable();
             var data = table.rows({selected: true}).data();
             var ar = [];
@@ -724,7 +716,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
             }
             $.unique(ar);
             $('#rows_ids').val(ar);
-            $('#_crsf').val(csrf);
+            // $('#_crsf').val(csrf);
             $('.send_ids').submit();
 
 /*

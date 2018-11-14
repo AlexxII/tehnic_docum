@@ -622,8 +622,8 @@ $classif_hint = 'Присвоить выделенному оборудован�
     //************************** Добавление классификатора **********************************
 
     $(document).ready(function () {
+        var files;
         $('.classif').click(function (event) {
-            console.log('1111111111');
             event.preventDefault();
             var csrf = $("meta[name=csrf-token]").attr("content");
             var table = $("#main-table").DataTable();
@@ -644,23 +644,35 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         success: function (result) {
                             $("#classifier-body").html(result);
                             $("#assign-classifier-btn").removeAttr('disabled');
-                            $("#assign-classifier-btn").off('click').on("click", function (e) {
+                            $('input[type=file]').change(function(){
+                                files = this.files;
+                                console.log(files);
+                            });
+                            $("#assign-classifier-btn").off("click").on("click", function (e) {
+                            // $("#form-clsassifier").on("submit", function (e) {
                                 e.preventDefault();
-                                var data = $('#form-classifier').serializeArray();
-                                var sendData = data.filter(function (item, i, arr) {
-                                    return arr[i]['value'] != 0;
+                                // var data = $('#form-classifier').serializeArray();
+                                // var sendData = data.filter(function (item, i, arr) {
+                                //     return arr[i]['value'] != 0;
+                                // });
+                                var data = new FormData();
+                                $.each( files, function( key, value ){
+                                    data.append( key, value );
                                 });
                                 $.ajax({
                                     url: "/admin/classifier/assign-classifier",
                                     type: "post",
-                                    data: {id: ar, _csrf: csrf, data: sendData},
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
+                                    data: {id: ar, _csrf: csrf, data: data},
                                     success: function (result) {
                                         $("#form-classifier")[0].reset();
                                         $("#classifier-modal").modal("hide");
-
                                     },
                                     error: function () {
                                         console.log("Ошибка cat_1! Обратитесь к разработчику.");
+                                        $("#form-classifier")[0].reset();
                                         $("#classifier-modal").modal("hide");
                                     }
                                 });
