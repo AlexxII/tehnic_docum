@@ -51,7 +51,7 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
                 data-toggle="tooltip" data-placement="top" title="' . $cat_hint . '"></sup>{input}{hint}'
         ])->widget(\kartik\tree\TreeViewInput::class, [
                 'query' => \app\modules\admin\models\CategoryTbl::find()->addOrderBy('root, lft'),
-                'name' => 'category_kv',    // input name
+                'name' => 'category_kv',            // input name
                 'asDropdown' => true,            // will render the tree input widget as a dropdown.
                 'multiple' => false,            // set to false if you do not need multiple selection
                 'fontAwesome' => true,            // render font awesome icons

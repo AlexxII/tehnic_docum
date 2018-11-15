@@ -6,12 +6,14 @@ use Yii;
 
 class CategoryTbl extends \kartik\tree\models\Tree
 {
-  /**
-   * @inheritdoc
-   */
-  public static function tableName()
-  {
-    return 'category_tbl';
-  }
+    public static function tableName()
+    {
+        return 'category_tbl';
+    }
+
+    public static function findOnlyParents()
+    {
+
+    }
 
 }
