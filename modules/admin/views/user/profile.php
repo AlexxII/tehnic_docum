@@ -1,5 +1,4 @@
 <?php
 
-    echo 'Профиль пользователя';
+    echo 'Профиль пользователя - ' . Yii::$app->user->identity->username;
 
-    

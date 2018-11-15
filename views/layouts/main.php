@@ -93,6 +93,9 @@ $exit_hint = 'Выход ';
               'label' => '<i class="fa fa-user" aria-hidden="true" style="font-size: 18px"></i>',
               'items' => [
                   '<li class="dropdown-header" style="font-size: 10px">' . Yii::$app->user->identity->username . '</li>',
+                  ['label' => '<i class="fa fa-cogs" aria-hidden="true" style="font-size: 16px"></i> Профиль',
+                      'url' => ['/admin/user/profile']
+                  ],
                   ['label' => ''
                       . Html::beginForm(['/site/logout'], 'post')
                       . Html::submitButton(

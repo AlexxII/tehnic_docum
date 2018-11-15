@@ -23,47 +23,55 @@ Asset::register($this);       // регистрация ресурсов мод�
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
-  <meta charset="<?= Yii::$app->charset ?>">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <?= Html::csrfMetaTags() ?>
-  <title><?= Html::encode($this->title) ?></title>
-  <?php $this->head() ?>
+    <meta charset="<?= Yii::$app->charset ?>">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?= Html::csrfMetaTags() ?>
+    <title><?= Html::encode($this->title) ?></title>
+    <?php $this->head() ?>
 
-  <style>
-    .fa {
-        font-size: 18px;
-    }
-    .navbar-inverse .navbar-nav > .active > a {
-        background-color: #0000aa;
-    }
-    .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
-        background-color: #0000aa;
-        color: white;
-    }
-    .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
-        background-color: #0000aa;
-        color: white;
-    }
-    .navbar-inverse .btn-link:hover, .navbar-inverse .btn-link:focus {
-        text-decoration: none;
-    }
-    .navbar-nav > li > .dropdown-menu {
-        background-color: #014993;
-        color: white;
-    }
-    .dropdown-menu > li > a {
-        color: white;
-    }
-    .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
-        background-color: #05226f;
-        color: white;
-    }
-    .dropdown-header {
-        color: white;
-    }
+    <style>
+        .fa {
+            font-size: 18px;
+        }
 
-  </style>
+        .navbar-inverse .navbar-nav > .active > a {
+            background-color: #0000aa;
+        }
+
+        .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
+            background-color: #0000aa;
+            color: white;
+        }
+
+        .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
+            background-color: #0000aa;
+            color: white;
+        }
+
+        .navbar-inverse .btn-link:hover, .navbar-inverse .btn-link:focus {
+            text-decoration: none;
+        }
+
+        .navbar-nav > li > .dropdown-menu {
+            background-color: #014993;
+            color: white;
+        }
+
+        .dropdown-menu > li > a {
+            color: white;
+        }
+
+        .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+            background-color: #05226f;
+            color: white;
+        }
+
+        .dropdown-header {
+            color: white;
+        }
+
+    </style>
 
 </head>
 
@@ -72,72 +80,72 @@ Asset::register($this);       // регистрация ресурсов мод�
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-  <?php
-  NavBar::begin([
-      'brandLabel' => '<img src="/images/logo.jpg" style="display:inline">',
-      'brandUrl' => Yii::$app->homeUrl,
-      'options' => [
-          'class' => 'navbar-inverse',
-      ],
-  ]);
-  echo Nav::widget([
-      'options' => ['class' => 'navbar-nav navbar-right'],
-      'encodeLabels' => false,
-      'items' => [
-          [
-              'label' => 'Представления',
-              'items' => [
-                  '<li class="dropdown-header" style="font-size: 10px">Системные</li>',
-                  ['label' => 'Категории', 'url' => ['/admin/category/index']],
-                  ['label' => 'Места размещения', 'url' => ['/admin/placement/index']],
-                  '<li class="divider"></li>',
-                  '<li class="dropdown-header" style="font-size: 10px">Пользовательские</li>',
-                  ['label' => 'Классификаторы', 'url' => ['/admin/classifier/index']],
-              ],
-          ],
-          Yii::$app->user->isGuest ? (
-          ['label' => 'Войти', 'url' => ['/site/login']]
-          ) : ([
-              'label' => '<i class="fa fa-user" aria-hidden="true" style="font-size: 18px"></i>',
-              'items' => [
-                  '<li class="dropdown-header" style="font-size: 10px">' . Yii::$app->user->identity->username . '</li>',
-                  ['label' => '<i class="fa fa-cogs" aria-hidden="true" style="font-size: 16px"></i> Профиль',
-                      'url' => ['/admin/user/profile']
-                  ],
-                  ['label' => ''
-                      . Html::beginForm(['/site/logout'], 'post')
-                      . Html::submitButton(
-                          '<span style="cursor: default"><i class="fa fa-sign-out" aria-hidden="true"></i> Выход</span>',
-                          [
-                              'class' => 'btn btn-link logout',
-                              'data-toggle' => "tooltip",
-                              'data-placement' => "bottom",
-                              'style' => [
-                                  'padding' => '0px',
-                              ]
-                          ]
-                      )
-                      . Html::endForm()
-                  ]
-              ]
-          ])
-      ],
-  ]);
-  NavBar::end();
-  ?>
-
-  <div class="container">
-    <?= Breadcrumbs::widget([
-        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+    <?php
+    NavBar::begin([
+        'brandLabel' => '<img src="/images/logo.jpg" style="display:inline">',
+        'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'breadcrumb'
+            'class' => 'navbar-inverse',
         ],
-        'tag' => 'ol',
+    ]);
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-right'],
+        'encodeLabels' => false,
+        'items' => [
+            [
+                'label' => 'Представления',
+                'items' => [
+                    '<li class="dropdown-header" style="font-size: 10px">Системные</li>',
+                    ['label' => 'Категории', 'url' => ['/admin/category/index']],
+                    ['label' => 'Места размещения', 'url' => ['/admin/placement/index']],
+                    '<li class="divider"></li>',
+                    '<li class="dropdown-header" style="font-size: 10px">Пользовательские</li>',
+                    ['label' => 'Классификаторы', 'url' => ['/admin/classifier/index']],
+                ],
+            ],
+            Yii::$app->user->isGuest ? (
+            ['label' => 'Войти', 'url' => ['/site/login']]
+            ) : ([
+                'label' => '<i class="fa fa-user" aria-hidden="true" style="font-size: 18px"></i>',
+                'items' => [
+                    '<li class="dropdown-header" style="font-size: 10px">' . Yii::$app->user->identity->username . '</li>',
+                    ['label' => '<i class="fa fa-cogs" aria-hidden="true" style="font-size: 16px"></i> Профиль',
+                        'url' => ['/admin/user/profile']
+                    ],
+                    ['label' => ''
+                        . Html::beginForm(['/site/logout'], 'post')
+                        . Html::submitButton(
+                            '<span style="cursor: default"><i class="fa fa-sign-out" aria-hidden="true"></i> Выход</span>',
+                            [
+                                'class' => 'btn btn-link logout',
+                                'data-toggle' => "tooltip",
+                                'data-placement' => "bottom",
+                                'style' => [
+                                    'padding' => '0px',
+                                ]
+                            ]
+                        )
+                        . Html::endForm()
+                    ]
+                ]
+            ])
+        ],
+    ]);
+    NavBar::end();
+    ?>
 
-    ]) ?>
-    <?= Alert::widget() ?>
-    <?= $content ?>
-  </div>
+    <div class="container">
+        <?= Breadcrumbs::widget([
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            'options' => [
+                'class' => 'breadcrumb'
+            ],
+            'tag' => 'ol',
+
+        ]) ?>
+        <?= Alert::widget() ?>
+        <?= $content ?>
+    </div>
 </div>
 
 <?php $this->endBody() ?>
