@@ -5,11 +5,9 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use kartik\file\FileInput;
-use app\modules\tehdoc\modules\kernel\models\Equipment;
-
+use app\modules\tehdoc\models\Equipment;
 
 // TODO Добавить checkbox - возвращаться в данную форму после сохранения.
-
 
 ?>
 
@@ -20,11 +18,9 @@ use app\modules\tehdoc\modules\kernel\models\Equipment;
         /*color: #1e6887;*/
         color: #FF0000;
     }
-
     .nonreq {
         color: #1e6887;
     }
-
     .select-selected {
         padding-left: 40px;
     }
@@ -41,11 +37,6 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data', 'class' => '']]); ?>
     <div class="form-group">
         <?php
-        /*    echo $form->field($model, 'category_id', [
-                'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
-                        data-toggle="tooltip" data-placement="right" title="' . $cat_hint . '"></sup>{input}{hint}'
-            ])->dropDownList(\app\modules\admin\models\Category::testTree(), ['prompt' => ['text' => 'Выберите', 'options' => ['value' => 'none', 'disabled' => 'true', 'selected' => 'true']]])->hint('Выберите из списка', ['class' => ' w3-label-under']);
-        */
         echo $form->field($model, 'category_id', [
             'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
                 data-toggle="tooltip" data-placement="top" title="' . $cat_hint . '"></sup>{input}{hint}'
@@ -145,7 +136,8 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
         ]); ?>
     </div>
     <div class="form-group">
-        <label style="font-size:18px"><input type="checkbox" name="stay" style="width:20px;height:20px"> Остаться в форме</label>
+        <label style="font-size:18px"><input type="checkbox" name="stay" style="width:20px;height:20px"> Остаться в
+            форме</label>
     </div>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Обновить', ['class' => 'btn btn-primary']) ?>
@@ -155,8 +147,6 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
 <?php ActiveForm::end(); ?>
 
 <script>
-
-
 
 
     $(document).ready(function () {
@@ -243,19 +233,19 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
         return false;
     }
 
-    $(document).ready(function () {
-        $("#equipment-category_id option").each(function () {
-            a = document.createElement("DIV");
-            b = document.createElement("DIV");
-            a.setAttribute("class", "select-selected");
-            a.appendChild(b);
-            b.textContent = '';
-            $(b).css({
-                color: "red"
-            });
-            this.appendChild(a);
-        });
-    });
+    // $(document).ready(function () {
+    //     $("#equipment-category_id option").each(function () {
+    //         a = document.createElement("DIV");
+    //         b = document.createElement("DIV");
+    //         a.setAttribute("class", "select-selected");
+    //         a.appendChild(b);
+    //         b.textContent = '';
+    //         $(b).css({
+    //             color: "red"
+    //         });
+    //         this.appendChild(a);
+    //     });
+    // });
 
 
 </script>

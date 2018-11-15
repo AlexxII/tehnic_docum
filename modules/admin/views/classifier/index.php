@@ -626,6 +626,30 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
           '<input type="radio" disabled >' +
           '<label style="font-size: 16px;color: #000" class="label"></label>'+
         '</div>';
+
+    var select = ''+
+        '<div class="add-wrap" style="padding: 20px 20px;border: dashed 1px lightgrey;margin-bottom: 10px; position: relative">'+
+          '<i class="fa fa-angle-up move-up"' +
+            'style="position: absolute;top:0;right:10px;font-size:20px;cursor:pointer;" ' +
+            'aria-hidden="true" title="Переместить наверх"' +
+            'data-toggle="tooltip" data-placement="left"></i>'+
+          '<i class="fa fa-angle-down move-down"' +
+            'style="position: absolute;top:20px;right:10px;font-size:20px;cursor:pointer;" ' +
+            'aria-hidden="true" title="Переместить вниз"' +
+            'data-toggle="tooltip" data-placement="left"></i>'+
+          '<div class="col-lg-11 col-md-11 col-xs-11" style="padding: 0px 0px">'+
+          '<label style="font-size: 14px">Название флажка:</label>'+
+          '<input class="form-control input-name-ex" id="radio" data-order="" data-id="" data-condition="" name="radio">'+
+          '<p></p>'+
+          '</div>'+
+          '<div style="padding: 30px 0px 20px 0px;text-align: right;margin">'+
+          '<i class="fa fa-minus-square delete-input" aria-hidden="true" style="color:red;cursor: pointer;font-size:24px;opacity: 0.7"></i>'+
+          '</div>'+
+          '<p></p>'+
+          '<span class="select-input-place"></span>' +
+          '<label style="font-size: 16px;color: #000" class="label"></label>'+
+        '</div>';
+
     var checkBox = ''+
         '<div class="add-wrap" style="padding: 20px 20px;border: dashed 1px lightgrey;margin-bottom: 10px; position: relative">'+
         '<i class="fa fa-angle-up move-up"' +
@@ -670,7 +694,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
         '<label style="font-size: 16px;color: #000;" class="label"></label>'+
         '<input class="form-control" disabled placeholder="Добавить файл..." style="max-width: 170px">'+
         '</div>';
-    
+
     function goodAlert(text) {
         var div = ''+
             '<div id="w3-success-0" class="alert-success alert fade in">'+
@@ -679,7 +703,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
             '</div>';
         return div;
     }
-    
+
     function badAlert(text) {
         var div = ''+
             '<div id="w3-success-0" class="alert-danger alert fade in">'+
@@ -717,6 +741,9 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                         break;
                     case 'textarea':
                         divMain.append(window.textArea);
+                        break;
+                    case 'select':
+                        divMain.append(window.select);
                         break;
                     case 'radio':
                         divMain.append(window.radioButton);
@@ -779,7 +806,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
             return false;
         })
     }
-    
+
     function addInput(div) {
         $('#clsf-form-add').change(function () {
             var val = $(this).val();
@@ -787,6 +814,18 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                 div.append(window.nameInput);
             } else if (val == 2) {
                 div.append(window.dateInput);
+            } else if (val == 3) {
+                div.append(window.select);
+                $.ajax({
+                    url: "/admin/user/test",
+                    type: "get",
+                    success: function (result) {
+                        $('.select-input-place').append(result);
+                    },
+                    error: function () {
+                        alert('Ошибка! Обратитесь к разработчику.');
+                    }
+                });
             } else if (val == 4) {
                 div.append(window.textArea);
             } else if (val == 5) {
