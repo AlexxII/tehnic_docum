@@ -144,6 +144,7 @@ class Equipment extends \yii\db\ActiveRecord
 
   public function getPlace()
   {
+    // TODO: Возможно необходимо сделать переменную $depth настраиваемой
     $depth = 2; // сколько уровней
     if ($this->placement){
       $full = $this->placement;

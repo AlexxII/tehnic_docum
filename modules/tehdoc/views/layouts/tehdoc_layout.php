@@ -47,6 +47,9 @@ Asset::register($this);       // регистрация ресурсов мод�
         background-color: #0000aa;
         color: white;
     }
+    .navbar-inverse .btn-link:hover, .navbar-inverse .btn-link:focus {
+        text-decoration: none;
+    }
     .navbar-nav > li > .dropdown-menu {
         background-color: #014993;
         color: white;
@@ -60,6 +63,9 @@ Asset::register($this);       // регистрация ресурсов мод�
     }
     .dropdown-header {
         color: white;
+    }
+    a:hover{
+        text-decoration: none;
     }
 </style>
 
@@ -100,23 +106,21 @@ Asset::register($this);       // регистрация ресурсов мод�
                 'label' => '<i class="fa fa-user" aria-hidden="true" style="font-size: 18px"></i>',
                 'items' => [
                     '<li class="dropdown-header" style="font-size: 10px">' . Yii::$app->user->identity->username . '</li>',
-                    '<li>'
-                    . Html::beginForm(['/site/logout'], 'post')
-                    . Html::submitButton(
-                        '<span style="cursor: default"><i class="fa fa-sign-out" aria-hidden="true"></i> Выход</span>',
-                        [
-                            'class' => 'btn btn-link logout',
-                            'data-toggle' => "tooltip",
-                            'data-placement' => "bottom",
-                            'style' => [
-                                'padding' => '5px',
-                                'padding-left' => '15px',
-                                'font-family' => 'Verdana,sans-serif'
+                    ['label' => ''
+                        . Html::beginForm(['/site/logout'], 'post')
+                        . Html::submitButton(
+                            '<span style="cursor: default"><i class="fa fa-sign-out" aria-hidden="true"></i> Выход</span>',
+                            [
+                                'class' => 'btn btn-link logout',
+                                'data-toggle' => "tooltip",
+                                'data-placement' => "bottom",
+                                'style' => [
+                                    'padding' => '0px',
+                                ]
                             ]
-                        ]
-                    )
-                    . Html::endForm()
-                    . '</li>'
+                        )
+                        . Html::endForm()
+                    ]
                 ]
             ])
         ],

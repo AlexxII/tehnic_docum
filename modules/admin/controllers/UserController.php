@@ -83,6 +83,11 @@ class UserController extends Controller
 
   }
 
+  public function actionProfile()
+  {
+      return $this->render('profile');
+  }
+
   protected function findModel($id)
   {
     if (($model = User::findOne($id)) !== null) {
