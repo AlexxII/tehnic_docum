@@ -109,13 +109,13 @@ Asset::register($this);       // регистрация ресурсов мод�
                 'label' => '<i class="fa fa-user" aria-hidden="true" style="font-size: 18px"></i>',
                 'items' => [
                     '<li class="dropdown-header" style="font-size: 10px">' . Yii::$app->user->identity->username . '</li>',
-                    ['label' => '<i class="fa fa-cogs" aria-hidden="true" style="font-size: 16px"></i> Профиль',
+                    ['label' => '<i class="fa fa-cogs" aria-hidden="true" style="font-size:16px;padding-right: 15px"></i> Профиль',
                         'url' => ['/admin/user/profile']
                     ],
                     ['label' => ''
                         . Html::beginForm(['/site/logout'], 'post')
                         . Html::submitButton(
-                            '<span style="cursor: default"><i class="fa fa-sign-out" aria-hidden="true"></i> Выход</span>',
+                            '<i class="fa fa-sign-out" aria-hidden="true" style="font-size:16px;padding-right: 17px"></i> Выход',
                             [
                                 'class' => 'btn btn-link logout',
                                 'data-toggle' => "tooltip",
