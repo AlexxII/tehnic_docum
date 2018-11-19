@@ -101,10 +101,10 @@ class UserController extends Controller
     {
         return \kartik\tree\TreeViewInput::widget([
             'query' => \app\modules\admin\models\ClassifierTbl::find()->addOrderBy('root, lft'),
-            'id' => 'classifier',
-            'name' => 'id',                  // input name
+            'id' => 'classifier-test',
+            'name' => 'idse',                  // input name
             'asDropdown' => true,            // will render the tree input widget as a dropdown.
-            'headingOptions' => ['label' => 'Классификаторы'],
+            'headingOptions' => ['label' => 'Хрен пока знает как выразить'],
             'value' => false,
             'multiple' => false,              // set to false if you do not need multiple selection
             'fontAwesome' => true,           // render font awesome icons
@@ -113,11 +113,11 @@ class UserController extends Controller
             ],
             'dropdownConfig' => [
                 'input' => [
-                    'placeholder' => 'Выберите классификатор...'
+                    'placeholder' => 'Выберите...'
                 ]
             ],
             'options' => [
-                'class' => 'classifier-cl'
+                'class' => 'classifier-clll'
             ]
         ]);
     }

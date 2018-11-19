@@ -20,138 +20,144 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 ?>
 
 <style>
-  .h-title {
-    font-size: 18px;
-    color: #1e6887;
-  }
+    .h-title {
+        font-size: 18px;
+        color: #1e6887;
+    }
 
-  .fa {
-    font-size: 15px;
-  }
+    .fa {
+        font-size: 15px;
+    }
 
-  ul.fancytree-container {
-    font-size: 16px;
-  }
+    ul.fancytree-container {
+        font-size: 16px;
+    }
 
-  input {
-    color: black;
-  }
+    input {
+        color: black;
+    }
 </style>
 
 <div class="admin-placement-pannel">
 
-  <h1><?= Html::encode($this->title) ?>
-    <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
-         data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
-  </h1>
+    <h1><?= Html::encode($this->title) ?>
+        <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
+             data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
+    </h1>
 </div>
 <div class="row">
-  <div class="">
-    <div class="container-fluid" style="margin-bottom: 10px">
-      <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm add-subcategory',
-          'style' => ['margin-top' => '5px'],
-          'title' => $add_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
-      <?= Html::a('<i class="fa fa-tree" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm add-category',
-          'style' => ['margin-top' => '5px' , 'display' => 'none'],
-          'title' => $add_tree_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
-      <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
-          'style' => ['margin-top' => '5px'],
-          'title' => $refresh_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
-      <?= Html::a('<i class="fa fa-trash" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-node',
-          'style' => ['margin-top' => '5px', 'display' => 'none'],
-          'title' => $del_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
-      <?= Html::a('<i class="fa fa-object-group" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-multi-nodes',
-          'style' => ['margin-top' => '5px', 'display' => 'none'],
-          'title' => $del_multi_nodes,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
-    </div>
-
-  </div>
-
-  <div class="col-lg-7 col-md-7" style="padding-bottom: 10px">
     <div class="">
-      <div style="position: relative">
-        <div class="container-fuid" style="float:left; width: 100%">
-          <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
+        <div class="container-fluid" style="margin-bottom: 10px">
+            <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm add-subcategory',
+                'style' => ['margin-top' => '5px'],
+                'title' => $add_hint,
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'top'
+            ]) ?>
+            <?= Html::a('<i class="fa fa-tree" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm add-category',
+                'style' => ['margin-top' => '5px'],
+                'title' => $add_tree_hint,
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'top'
+            ]) ?>
+            <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
+                'style' => ['margin-top' => '5px'],
+                'title' => $refresh_hint,
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'top'
+            ]) ?>
+            <?= Html::a('<i class="fa fa-trash" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-node',
+                'style' => ['margin-top' => '5px', 'display' => 'none'],
+                'title' => $del_hint,
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'top'
+            ]) ?>
+            <?= Html::a('</i><i class="fa fa-tree" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-root',
+                'style' => ['margin-top' => '5px', 'display' => 'none'],
+                'title' => $del_root_hint,
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'top'
+            ]) ?>
+            <?= Html::a('<i class="fa fa-object-group" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-multi-nodes',
+                'style' => ['margin-top' => '5px', 'display' => 'none'],
+                'title' => $del_multi_nodes,
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'top'
+            ]) ?>
         </div>
-        <div style="padding-top: 8px; right: 10px; position: absolute">
-          <a href="" id="btnResetSearch"><i class="fa fa-times-circle" aria-hidden="true"
-                                            style="font-size:20px; color: #9d9d9d"></i></a>
-        </div>
-      </div>
+
     </div>
 
-    <div class="row" style="padding: 0 15px">
-      <div class="" style="border-radius:2px;padding-top:40px">
+    <div class="col-lg-7 col-md-7" style="padding-bottom: 10px">
+        <div class="">
+            <div style="position: relative">
+                <div class="container-fuid" style="float:left; width: 100%">
+                    <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
+                </div>
+                <div style="padding-top: 8px; right: 10px; position: absolute">
+                    <a href="" id="btnResetSearch"><i class="fa fa-times-circle" aria-hidden="true"
+                                                      style="font-size:20px; color: #9d9d9d"></i></a>
+                </div>
+            </div>
+        </div>
 
-        <?php
-        echo \wbraganca\fancytree\FancytreeWidget::widget([
-            'options' => [
-                'source' => [
-                    'url' => '/admin/placement/placements',
-                ],
-                'extensions' => ['dnd', 'edit', 'filter'],
-                'quicksearch' => true,
-                'minExpandLevel' => 2,
-                'dnd' => [
-                    'preventVoidMoves' => true,
-                    'preventRecursiveMoves' => true,
-                    'autoCollapse' => true,
-                    'dragStart' => new \yii\web\JsExpression('function(node, data) {
+        <div class="row" style="padding: 0 15px">
+            <div class="" style="border-radius:2px;padding-top:40px">
+
+                <?php
+                echo \wbraganca\fancytree\FancytreeWidget::widget([
+                    'options' => [
+                        'source' => [
+                            'url' => '/admin/placement/placements',
+                        ],
+                        'extensions' => ['dnd', 'edit', 'filter'],
+                        'quicksearch' => true,
+                        'minExpandLevel' => 2,
+                        'dnd' => [
+                            'preventVoidMoves' => true,
+                            'preventRecursiveMoves' => true,
+                            'autoCollapse' => true,
+                            'dragStart' => new \yii\web\JsExpression('function(node, data) {
                     return true;
                 }'),
-                    'dragEnter' => new \yii\web\JsExpression('function(node, data) {
+                            'dragEnter' => new \yii\web\JsExpression('function(node, data) {
                     return true;
                 }'),
-                    'dragDrop' => new \yii\web\JsExpression('function(node, data) {
+                            'dragDrop' => new \yii\web\JsExpression('function(node, data) {
                     $.get("/admin/placement/move", {item: data.otherNode.data.id, action: data.hitMode, second:
                     node.data.id},function(){
                     data.otherNode.moveTo(node, data.hitMode);
                     })
                 }'),
-                ],
-                'filter' => [
-                    'autoApply' => true,   // Re-apply last filter if lazy data is loaded
-                    'autoExpand' => false, // Expand all branches that contain matches while filtered
-                    'counter' => true,     // Show a badge with number of matching child nodes near parent icons
-                    'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
-                    'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
-                    'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
-                    'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
-                    'leavesOnly' => true, // Match end nodes only
-                    'nodata' => true,      // Display a 'no data' status node if result is empty
-                    'mode' => "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-                ],
+                        ],
+                        'filter' => [
+                            'autoApply' => true,   // Re-apply last filter if lazy data is loaded
+                            'autoExpand' => false, // Expand all branches that contain matches while filtered
+                            'counter' => true,     // Show a badge with number of matching child nodes near parent icons
+                            'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                            'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
+                            'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
+                            'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
+                            'leavesOnly' => true, // Match end nodes only
+                            'nodata' => true,      // Display a 'no data' status node if result is empty
+                            'mode' => "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+                        ],
 
-                'edit' => [
-                    'inputCss' => [
-                        'minWidth' => "10em"
-                    ],
-                    'triggerStart' => ["clickActive", "dblclick", "f2", "mac+enter", "shift+click"],
-                    'beforeEdit' => new \yii\web\JsExpression('function(event, data){
+                        'edit' => [
+                            'inputCss' => [
+                                'minWidth' => "10em"
+                            ],
+                            'triggerStart' => ["clickActive", "dblclick", "f2", "mac+enter", "shift+click"],
+                            'beforeEdit' => new \yii\web\JsExpression('function(event, data){
                       // Return false to prevent edit mode
         }'),
-                    'edit' => new \yii\web\JsExpression('function(event, data){
+                            'edit' => new \yii\web\JsExpression('function(event, data){
                       // Editor was opened (available as data.input)
         }'),
-                    'beforeClose' => new \yii\web\JsExpression('function(event, data){
+                            'beforeClose' => new \yii\web\JsExpression('function(event, data){
                       data.save;
         }'),
-                    'save' => new \yii\web\JsExpression('function(event, data){
+                            'save' => new \yii\web\JsExpression('function(event, data){
                         var node = data.node;
                         if (data.isNew){
                             $.ajax({
@@ -178,15 +184,15 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                         }
                         return true;
         }'),
-                    'close' => new \yii\web\JsExpression('function(event, data){
+                            'close' => new \yii\web\JsExpression('function(event, data){
                         // Editor was removed
                         if( data.save ) {
                           // Since we started an async request, mark the node as preliminary
                           $(data.node.span).addClass("pending");
                         }
         }')
-                ],
-                'activate' => new \yii\web\JsExpression('function(node, data) {
+                        ],
+                        'activate' => new \yii\web\JsExpression('function(node, data) {
                         var node = data.node;
                         if (node.key == -999){
                             $(".add-subcategory").hide();
@@ -195,6 +201,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                             $(".add-subcategory").show();
                         }
                         if (node.data.lvl == 0){
+                            $(".del-root").show();
                             $(".del-node").hide();
                             $(".del-multi-nodes").hide();
                         } else {
@@ -203,36 +210,29 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                             } else {
                                 $(".del-multi-nodes").hide();
                             }
+                            $(".del-root").hide();
                             $(".del-node").show();
                         }
-                        
-                        if (node.data.url) {
-                            window.location=(node.data.url);
-                        }
         }'),
-                'renderNode' => new \yii\web\JsExpression('function(node, data) {
+                        'renderNode' => new \yii\web\JsExpression('function(node, data) {
                         if (data.node.key == -999){
                             $(".add-category").show();
                             $(".add-subcategory").hide();
-                        } else {
-                            $(".add-category").hide();
                         }
             }'),
-            ]
-        ]); ?>
-      </div>
+                    ]
+                ]); ?>
+            </div>
+        </div>
     </div>
-  </div>
 
 
-  <div class="col-lg-5 col-md-5">
-      <div class="alert alert-warning">
-          <a href="#" class="close" data-dismiss="alert">&times;</a>
-          <strong>Внимание!</strong> Возможность создавать несколько деревьев первого уровня не предоставляется.
-          При необходимости конкретизировать информацию, создайте дерево более крупного уровня.
-          Например: <strong>Земной шар</strong> -> <strong>Евразия</strong> -> <strong>Россия</strong> и т.д. Будьте внимательны!
-      </div>
-  </div>
+    <div class="col-lg-5 col-md-5">
+        <div class="alert alert-warning">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong>Внимание!</strong> Будьте внимательны!
+        </div>
+    </div>
 
 </div>
 
@@ -275,45 +275,81 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             event.preventDefault();
             var tree = $(".ui-draggable-handle").fancytree("getTree");
             tree.reload();
+            $(".del-root").hide();
             $(".del-node").hide();
             $(".del-multi-nodes").hide();
         })
     });
 
     $(document).ready(function () {
-        $('.del-node').click(function (event) {
-            if (confirm('Вы уверены, что хотите удалить выбранную категорию?')) {
+        $('.del-root').click(function (event) {
+            var csrf = $('meta[name=csrf-token]').attr("content");
+            if (confirm('Вы уверены, что хотите удалить выбранный классификатор вместе с вложениями?')) {
                 event.preventDefault();
                 var node = $(".ui-draggable-handle").fancytree("getActiveNode");
+                if (!node) {
+                    alert('Выберите родительский классификатор');
+                    return;
+                }
                 $.ajax({
-                    url: "/admin/placement/delete",
-                    data: {id: node.data.id}
+                    url: "/admin/placement/delete-root",
+                    type: "post",
+                    data: {id: node.data.id, _csrf: csrf}
                 })
                     .done(function () {
                         node.remove();
+                        restoreInputs(false, false);
+                        $('.about-info').html('');
+                        $('.del-root').hide();
                     })
                     .fail(function () {
                         alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
                     });
             }
-        })
-    });
-
-    $(document).ready(function () {
-        $('.del-multi-nodes').click(function (event) {
-            if (confirm('Вы уверены, что хотите удалить узел вместе с вложенниями?')) {
+        });
+        $('.del-node').click(function (event) {
+            if (confirm('Вы уверены, что хотите удалить выбранный классификатор?')) {
                 event.preventDefault();
+                var csrf = $('meta[name=csrf-token]').attr("content");
                 var node = $(".ui-draggable-handle").fancytree("getActiveNode");
-                if (!node){
+                $.ajax({
+                    url: "/admin/placement/delete",
+                    type: "post",
+                    data: {id: node.data.id, _csrf: csrf}
+                })
+                    .done(function () {
+                        node.remove();
+                        restoreInputs(false, false);
+                        $('.about-info').html('');
+                        $('.del-node').hide();
+                    })
+                    .fail(function () {
+                        alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
+                    });
+            }
+        });
+
+        $('.del-multi-nodes').click(function (event) {
+            if (confirm('Вы уверены, что хотите удалить выбранный классификатор вместе с вложениями?')) {
+                event.preventDefault();
+                var csrf = $('meta[name=csrf-token]').attr("content");
+                var node = $(".ui-draggable-handle").fancytree("getActiveNode");
+                if (!node) {
                     alert('Выберите узел');
                     return;
                 }
                 $.ajax({
                     url: "/admin/placement/delete-root",
-                    data: {id: node.data.id}
+                    type: "post",
+                    data: {id: node.data.id, _csrf: csrf}
                 })
                     .done(function () {
                         node.remove();
+                        restoreInputs(false, false);
+                        $('.about-info').html('');
+                        $('.del-multi-nodes').hide();
+                        $('.del-node').hide();
+
                     })
                     .fail(function () {
                         alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
@@ -321,7 +357,6 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             }
         })
     });
-
 
     $("input[name=search]").keyup(function (e) {
         var n,

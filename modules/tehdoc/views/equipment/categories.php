@@ -622,18 +622,19 @@ $classif_hint = 'Присвоить выделенному оборудован�
     //************************** Добавление классификатора **********************************
 
     $(document).ready(function () {
-        var files;
         $('.classif').click(function (event) {
+            var files;
             event.preventDefault();
             var csrf = $("meta[name=csrf-token]").attr("content");
             var table = $("#main-table").DataTable();
             var data = table.rows({selected: true}).data();
-            var ar = [];
+            var idArray = [];
             var count = data.length;
             for (var i = 0; i < count; i++) {
-                ar[i] = data[i][0];
+                idArray[i] = data[i][0];
             }
             $("#classifier-modal").modal("show");
+
             $('#classifier').off('change').on('change', function () {
                 var val = $(this).val();
                 if (val != '') {
@@ -642,33 +643,42 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         url: "/admin/classifier/extended-data-form?id=" + val,
                         type: "GET",
                         success: function (result) {
+                            if (result == 'Error_01'){
+                                $("#assign-classifier-btn").attr("disabled", "disabled");
+                                $("#classifier-body").html('Таблица базы данных не создана, создайте ее в панеле Администратора.');
+                                return;
+                            }
                             $("#classifier-body").html(result);
                             $("#assign-classifier-btn").removeAttr('disabled');
                             $('input[type=file]').change(function(){
                                 files = this.files;
-                                console.log(files);
                             });
-                            $("#assign-classifier-btn").off("click").on("click", function (e) {
-                            // $("#form-clsassifier").on("submit", function (e) {
+
+                            $("#form-classifier").off('submit').on('submit', function (e) {
                                 e.preventDefault();
-                                // var data = $('#form-classifier').serializeArray();
-                                // var sendData = data.filter(function (item, i, arr) {
-                                //     return arr[i]['value'] != 0;
-                                // });
+                                var formsData = $('#form-classifier').serializeArray();
+                                var sendData = formsData.filter(function (item, i, arr) {
+                                    return arr[i]['value'] != 0;
+                                });
                                 var data = new FormData();
                                 $.each( files, function( key, value ){
                                     data.append( key, value );
                                 });
+                                data.append( 'ids', idArray);
+                                data.append( 'table', formsData[0].value );
                                 $.ajax({
                                     url: "/admin/classifier/assign-classifier",
-                                    type: "post",
+                                    type: "POST",
+                                    dataType: "JSON",
+                                    data: data,
+                                    cache: false,
+                                    enctype: 'multipart/form-data',
                                     processData: false,
                                     contentType: false,
-                                    cache: false,
-                                    data: {id: ar, _csrf: csrf, data: data},
                                     success: function (result) {
                                         $("#form-classifier")[0].reset();
                                         $("#classifier-modal").modal("hide");
+                                        $('#classifier').val('0');
                                     },
                                     error: function () {
                                         console.log("Ошибка cat_1! Обратитесь к разработчику.");

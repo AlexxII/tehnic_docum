@@ -87,18 +87,21 @@ class CategoryController extends Controller
         return true;
     }
 
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        // TODO: удаление или невидимый !!!!!!!
-        $category = Category::findOne(['id' => $id]);
-        $parent = $category->parents(1)->one();
-        $category->delete();
-        if (!$parent->children()->one()) {
-            $parent->disabled = 0;
-            $parent->save();
-        } else {
-            $parent->disabled = 1;
-            $parent->save();
+        if (!empty($_POST)) {
+            // TODO: удаление или невидимый !!!!!!!
+            $id = $_POST['id'];
+            $category = Category::findOne(['id' => $id]);
+            $parent = $category->parents(1)->one();
+            $category->delete();
+            if (!$parent->children()->one()) {
+                $parent->disabled = 0;
+                $parent->save();
+            } else {
+                $parent->disabled = 1;
+                $parent->save();
+            }
         }
     }
 

@@ -518,12 +518,13 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
           '>'+
             '<option selected disabled value="0">Выберите</option>'+
             '<option value="1">input</option>'+
-            '<option value="2">dateInput</option>'+
-            '<option value="3">select</option>'+
-            '<option value="4">textarea</option>'+
-            '<option value="5">radioButton</option>'+
-            '<option value="6">checkBox</option>'+
-            '<option value="7">fileInput</option>'+
+            '<option value="2">floatInput</option>'+
+            '<option value="3">dateInput</option>'+
+            '<option value="4">select</option>'+
+            '<option value="5">textarea</option>'+
+            '<option value="6">radioButton</option>'+
+            '<option value="7">checkBox</option>'+
+            '<option value="8">fileInput</option>'+
           '</select></p>';
 
     var saveButton = ''+
@@ -559,6 +560,28 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
           '<p></p>'+
           '<label style="font-size: 16px;color: #000;" class="label"></label>'+
           '<input class="form-control" disabled value="Текст (max: 255 симв.)">'+
+        '</div>';
+    var floatInput = ''+
+        '<div class="add-wrap" style="padding: 20px 20px;border: dashed 1px lightgrey;margin-bottom: 10px;position: relative">'+
+          '<a class="fa fa-angle-up move-up"' +
+            'style="position: absolute;top:0;right:10px;font-size:20px;cursor:pointer;" ' +
+            'aria-hidden="true" title="Переместить наверх"' +
+            'data-toggle="tooltip" data-placement="left"></a>'+
+          '<a class="fa fa-angle-down move-down" ' +
+            'style="position: absolute;top:20px;right:10px;font-size:20px;cursor:pointer;" ' +
+            'aria-hidden="true" title="Переместить вниз"' +
+            'data-toggle="tooltip" data-placement="left"></a>'+
+          '<div class="col-lg-11 col-md-11 col-xs-11" style="padding: 0px 0px">'+
+          '<label style="font-size: 14px">Название поля ввода:</label>'+
+          '<input class="form-control input-name-ex" id="input" data-order="" data-id="" data-condition="" name="floatinput">'+
+          '<p></p>'+
+          '</div>'+
+          '<div class="col-lg-1 col-md-1 col-xs-1" style="padding: 30px 0px 20px 0px;text-align: right;margin">'+
+          '<i class="fa fa-minus-square delete-input" aria-hidden="true" style="color:red;cursor: pointer;font-size:24px;opacity: 0.7"></i>'+
+          '</div>'+
+          '<p></p>'+
+          '<label style="font-size: 16px;color: #000;" class="label"></label>'+
+          '<input class="form-control" disabled value="Вещественные числа">'+
         '</div>';
     var dateInput = ''+
         '<div class="add-wrap" style="padding: 20px 20px;border: dashed 1px lightgrey;margin-bottom: 10px; position: relative">'+
@@ -646,8 +669,8 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
           '<i class="fa fa-minus-square delete-input" aria-hidden="true" style="color:red;cursor: pointer;font-size:24px;opacity: 0.7"></i>'+
           '</div>'+
           '<p></p>'+
-          '<span class="select-input-place"></span>' +
           '<label style="font-size: 16px;color: #000" class="label"></label>'+
+          '<span class="select-input-place"></span>'
         '</div>';
 
     var checkBox = ''+
@@ -736,6 +759,9 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                     case 'input':
                         divMain.append(window.nameInput);
                         break;
+                    case 'floatinput':
+                        divMain.append(window.nameInput);
+                        break;
                     case 'dateinput':
                         divMain.append(window.dateInput);
                         break;
@@ -813,8 +839,10 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
             if (val == 1) {
                 div.append(window.nameInput);
             } else if (val == 2) {
-                div.append(window.dateInput);
+                div.append(window.floatInput);
             } else if (val == 3) {
+                div.append(window.dateInput);
+            } else if (val == 4) {
                 div.append(window.select);
                 $.ajax({
                     url: "/admin/user/test",
@@ -826,13 +854,13 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                         alert('Ошибка! Обратитесь к разработчику.');
                     }
                 });
-            } else if (val == 4) {
-                div.append(window.textArea);
             } else if (val == 5) {
-                div.append(window.radioButton);
+                div.append(window.textArea);
             } else if (val == 6) {
-                div.append(window.checkBox);
+                div.append(window.radioButton);
             } else if (val == 7) {
+                div.append(window.checkBox);
+            } else if (val == 8) {
                 div.append(window.fileInput);
             }
             var lastIn = $(div).children().last();

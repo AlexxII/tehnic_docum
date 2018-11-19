@@ -149,6 +149,11 @@ Asset::register($this);       // регистрация ресурсов мод�
 </div>
 
 <?php $this->endBody() ?>
+<script src="/js/kv-tree.min.js"></script>
+<script src="/js/bootstrap-dialog.js"></script>
+<script src="/js/dialog-yii.min.js"></script>
+<script src="/js/kv-widgets.min.js"></script>
+<script src="/js/kv-tree-input.js"></script>
 </body>
 </html>
 <?php $this->endPage() ?>

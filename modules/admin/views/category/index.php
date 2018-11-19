@@ -229,8 +229,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
   <div class="col-lg-5 col-md-5">
       <div class="alert alert-warning">
           <a href="#" class="close" data-dismiss="alert">&times;</a>
-          <strong>Внимание!</strong> Не создавайте много категорий 1го уровня. При категорировании
-          оборудования возможны дубли оборудования. Будьте внимательны!
+          <strong>Внимание!</strong> Будьте внимательны!
       </div>
   </div>
 
@@ -308,15 +307,20 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             }
         });
         $('.del-node').click(function (event) {
-            if (confirm('Вы уверены, что хотите удалить выбранную категорию?')) {
+            if (confirm('Вы уверены, что хотите удалить выбранный классификатор?')) {
                 event.preventDefault();
+                var csrf = $('meta[name=csrf-token]').attr("content");
                 var node = $(".ui-draggable-handle").fancytree("getActiveNode");
                 $.ajax({
                     url: "/admin/category/delete",
-                    data: {id: node.data.id}
+                    type: "post",
+                    data: {id: node.data.id, _csrf: csrf}
                 })
                     .done(function () {
                         node.remove();
+                        restoreInputs(false, false);
+                        $('.about-info').html('');
+                        $('.del-node').hide();
                     })
                     .fail(function () {
                         alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
@@ -325,8 +329,9 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
         });
 
         $('.del-multi-nodes').click(function (event) {
-            if (confirm('Вы уверены, что хотите удалить узел вместе с вложенниями?')) {
+            if (confirm('Вы уверены, что хотите удалить выбранный классификатор вместе с вложениями?')) {
                 event.preventDefault();
+                var csrf = $('meta[name=csrf-token]').attr("content");
                 var node = $(".ui-draggable-handle").fancytree("getActiveNode");
                 if (!node) {
                     alert('Выберите узел');
@@ -334,10 +339,16 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                 }
                 $.ajax({
                     url: "/admin/category/delete-root",
-                    data: {id: node.data.id}
+                    type: "post",
+                    data: {id: node.data.id, _csrf: csrf}
                 })
                     .done(function () {
                         node.remove();
+                        restoreInputs(false, false);
+                        $('.about-info').html('');
+                        $('.del-multi-nodes').hide();
+                        $('.del-node').hide();
+
                     })
                     .fail(function () {
                         alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");

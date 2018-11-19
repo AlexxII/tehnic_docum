@@ -20,11 +20,18 @@ class AppAsset extends AssetBundle
   public $basePath = '@webroot';
   public $baseUrl = '@web';
   public $css = [
-      'css/site.css',
-      'css/w3.css',
       'lib/awesome/css/font-awesome.min.css',
       'css/bootstrap-datepicker.min.css',
-      'css/fotorama.css'
+      'css/fotorama.css',
+      'css/kv-tree.min.css',
+      'css/kv-tree-input.min.css',
+      'css/bootstrap-dialog-bs3.min.css',
+      'css/activeform.min.css',
+      'css/animate.min.css',
+      'css/html5input.min.css',
+      'css/kv-widgets.min.css',
+      'css/site.css',
+      'css/w3.css',
 
   ];
 
@@ -34,9 +41,21 @@ class AppAsset extends AssetBundle
       'js/jQuery_mini.js',
       'js/bootstrap-datepicker.min.js',
       'js/bootstrap-datepicker.ru.min.js',
+      'js/activeform.min.js',
+      'js/dialog.js',
       'js/moment-with-locales.min.js',
       'js/fotorama.js',
       'js/tether.min.js'
+  ];
+
+  public $js2Options = ['position' => \yii\web\View::POS_END];
+
+  public $js2 = [
+      'js/kv-tree.min.js',
+      'js/bootstrap-dialog.js',
+      'js/dialog-yii.min.js',
+      'js/kv-widgets.min.js',
+      'js/kv-tree-input.min.js',
   ];
 
   public $depends = [

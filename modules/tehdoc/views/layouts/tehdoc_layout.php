@@ -195,6 +195,7 @@ Asset::register($this);       // регистрация ресурсов мод�
                                     'class' => 'classifier-cl'
                                 ]
                             ]); ?>
+
                         </div>
                     </div>
                     <form action="assign-classifier" id="form-classifier" method="POST" enctype="multipart/form-data">
