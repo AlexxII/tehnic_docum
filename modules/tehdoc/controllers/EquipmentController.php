@@ -46,7 +46,7 @@ class EquipmentController extends Controller
                 }
                 return $this->redirect(['view', 'id' => $model->id_eq]);
             } else {
-                Yii::$app->session->setFlash('success', 'Ошибка валидации');
+                Yii::$app->session->setFlash('error', 'Ошибка валидации');
             }
         }
         return $this->render('create', [
@@ -198,22 +198,21 @@ class EquipmentController extends Controller
         if (!empty($tableScheme)) {
             $data = [
                 "columns" => $columns,
-                "tableName" => $tableScheme->tableName
+                "tableName" => $tableScheme->tableName,
+                "group" => 5
             ];
         }
         return json_encode($data);
     }
 
-
+    // отработка запроса на отображение оборудования по классификатору
     public function actionServerSideEx($id)
     {
         $sql_details = \Yii::$app->params['sql_details'];
         $table = 'equipment_tbl';                                 // основная таблица с оборудованием
         $primaryKey = 'id_eq';
-
         $clsf = Classifier::findOne($id);
         $tableScheme = json_decode($clsf->clsf_table_scheme);
-
         if (!$tableScheme) {
             $sql = "SELECT COUNT(`{$primaryKey}`)
 			 FROM `$table`";
@@ -230,6 +229,9 @@ class EquipmentController extends Controller
             ));
         }
 
+        // TODO: в зависимости от типа записи -> применять форматирование для данных для checkbox -> "ВКЛ."
+        // TODO: Вставить функцию обработки ДАТЫ, если в таблице дата (необходимо поле - тип данных)
+
         $tableTwo = $tableScheme->tableName;
         $columns = array(                                         // колонки из основной таблицы оборудования
             array('db' => 'id_eq', 'dt' => 0),
@@ -237,13 +239,11 @@ class EquipmentController extends Controller
             array('db' => 'eq_manufact', 'dt' => 2),
             array('db' => 'eq_model', 'dt' => 3),
             array('db' => 'eq_serial', 'dt' => 4),
+            array('db' => 'name', 'dt' => 5),
         );
-
-        //TODO: Вставить функцию обработки ДАТЫ, если в таблице дата (необходимо поле - тип данных)
-
         if (!empty($tableScheme)) {                           // формируется запрос, если классификатор сложный
-            $i = 6;                                             // простой классификатор просто хранит перечень техники
-            $columns[] = array('db' => 'clsf_id', 'dt' => 5);
+            $i = 7;                                             // простой классификатор просто хранит перечень техники
+            $columns[] = array('db' => 'clsf_id', 'dt' => 6);
             foreach ($tableScheme->columns as $column) {
                 $temp = array();
                 $temp['db'] = $column->name;

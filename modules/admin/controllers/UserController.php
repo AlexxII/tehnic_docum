@@ -7,9 +7,13 @@ use Yii;
 use app\modules\admin\models\PasswordChangeForm;
 use app\modules\admin\models\SignupForm;
 use app\modules\admin\models\User;
+use yii\base\DynamicModel;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use kartik\file\FileInput;
+use yii\widgets\ActiveForm;
+
 
 /**
  * CategoryController implements the CRUD actions for Category model.
@@ -119,6 +123,22 @@ class UserController extends Controller
             'options' => [
                 'class' => 'classifier-clll'
             ]
+        ]);
+    }
+
+    public function actionTest2()
+    {
+        $model = new DynamicModel(['file']);
+        $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data', 'class' => '']]);
+
+        echo $form->field($model, "file")->widget(FileInput::class, [
+            'language' => 'ru',
+            'options' => ['multiple' => true],
+            'pluginOptions' => [
+                'previewFileType' => 'any',
+                'overwriteInitial' => false,
+                'showUpload' => false
+            ],
         ]);
     }
 

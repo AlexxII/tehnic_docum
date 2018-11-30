@@ -461,7 +461,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
         $.ajax({
             "url": 'display-columns?id=' + id,
             "success": function (json) {
-                var groupRow = 6;
+                var groupRow = json.group;
                 var tableHeaders = '';
                 window.tableName = json.tableName;
                 $.each(json.columns, function (i, val) {
@@ -506,13 +506,12 @@ $classif_hint = 'Присвоить выделенному оборудован�
                         "data": null,
                         "visible": false
                     }, {
-                        "targets": 5,
+                        "targets": 6,
                         "visible": false
                     },{
                         "targets": groupRow,
                         "visible": false
                     },
-
                         {
                             "targets": 2,
                             "render": function (data, type, row) {

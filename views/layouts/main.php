@@ -85,6 +85,7 @@ $exit_hint = 'Выход ';
       'encodeLabels' => false,
       'items' => [
           ['label' => 'ТехДок', 'url' => ['/tehdoc']],
+          ['label' => 'ВКС', 'url' => ['/vks']],
           ['label' => 'ТО', 'url' => ['/to']],
           ['label' => 'Админ панель', 'url' => ['/admin']],
           Yii::$app->user->isGuest ? (

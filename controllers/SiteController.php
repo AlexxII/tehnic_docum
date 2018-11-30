@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\modules\admin\models\Testmodel;
 use app\modules\admin\models\User;
 use Yii;
 use yii\filters\AccessControl;
@@ -59,7 +60,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $id = 1;
+//        $model = Testmodel("clsf_18353201_tbl");
+//        $model = $model->find()->all();
+
+        return $this->render('index', [
+//                'model' => $model
+            ]);
     }
 
     /**

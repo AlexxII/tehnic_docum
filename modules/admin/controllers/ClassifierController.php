@@ -21,7 +21,7 @@ class ClassifierController extends Controller
 
     public function beforeAction($action)
     {
-        if ($action->id === 'assign-classifier') {
+        if ($action->id === 'files-load') {
             $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -238,6 +238,10 @@ class ClassifierController extends Controller
                         $clmnsArray .= ', ' . $clmn . ' VARCHAR(255)';
                         $tableScheme['columns'][$i - 1]['type'] = 'VARCHAR(255)';
                         break;
+                    case "floatinput":
+                        $clmnsArray .= ', ' . $clmn . ' FLOAT';
+                        $tableScheme['columns'][$i - 1]['type'] = 'FLOAT';
+                        break;
                     case "dateinput":
                         $clmnsArray .= ', ' . $clmn . ' DATE';
                         $tableScheme['columns'][$i - 1]['type'] = 'DATE';
@@ -247,16 +251,16 @@ class ClassifierController extends Controller
                         $tableScheme['columns'][$i - 1]['type'] = 'MEDIUMTEXT';
                         break;
                     case "radio":
-                        $clmnsArray .= ', ' . $clmn . ' TINYINT DEFAULT NULL';
-                        $tableScheme['columns'][$i - 1]['type'] = 'TINYINT DEFAULT NULL';
+                        $clmnsArray .= ', ' . $clmn . ' TINYINT DEFAULT 0';
+                        $tableScheme['columns'][$i - 1]['type'] = 'TINYINT DEFAULT 0';
                         break;
                     case "checkbox":
-                        $clmnsArray .= ', ' . $clmn . ' TINYINT DEFAULT NULL';
-                        $tableScheme['columns'][$i - 1]['type'] = 'TINYINT DEFAULT NULL';
+                        $clmnsArray .= ', ' . $clmn . ' TINYINT DEFAULT 0';
+                        $tableScheme['columns'][$i - 1]['type'] = 'TINYINT DEFAULT 0';
                         break;
                     case "fileinput":
-                        $clmnsArray .= ', ' . $clmn . ' VARCHAR(255) NOT NULL';
-                        $tableScheme['columns'][$i - 1]['type'] = 'VARCHAR(255) NOT NULL';
+                        $clmnsArray .= ', ' . $clmn . ' VARCHAR(255)';
+                        $tableScheme['columns'][$i - 1]['type'] = 'VARCHAR(255)';
                         break;
                 }
             }
@@ -312,16 +316,16 @@ class ClassifierController extends Controller
                     $outScheme[$i]['type'] = 'MEDIUMTEXT';
                     break;
                 case "radio":
-                    $addColumn .= $clmn . ' TINYINT DEFAULT NULL';
-                    $outScheme[$i]['type'] = 'TINYINT DEFAULT NULL';
+                    $addColumn .= $clmn . ' TINYINT DEFAULT 0';
+                    $outScheme[$i]['type'] = 'TINYINT DEFAULT 0';
                     break;
                 case "checkbox":
-                    $addColumn .= $clmn . ' TINYINT DEFAULT NULL';
-                    $outScheme[$i]['type'] = 'TINYINT DEFAULT NULL';
+                    $addColumn .= $clmn . ' TINYINT DEFAULT 0';
+                    $outScheme[$i]['type'] = 'TINYINT DEFAULT 0';
                     break;
                 case "fileinput":
-                    $addColumn .= $clmn . ' VARCHAR(255) NOT NULL';
-                    $outScheme[$i]['type'] = 'VARCHAR(255) NOT NULL';
+                    $addColumn .= $clmn . ' VARCHAR(255)';
+                    $outScheme[$i]['type'] = 'VARCHAR(255)';
                     break;
             }
             $sql = 'ALTER TABLE ' . $tableName . ' ADD ' . $addColumn;
@@ -331,7 +335,7 @@ class ClassifierController extends Controller
                 $stmt->execute();
             }                                           // TODO обработчик ошибок
             catch (\PDOException $e) {
-                self::fatal("An SQL error occurred: " . $e->getMessage());
+                self::fatal("Ошибка в SQL запросе: " . $e->getMessage() . 'sql-запрос: ' . $sql);
             }
         }
         return $outScheme;
@@ -368,7 +372,7 @@ class ClassifierController extends Controller
                             try {
                                 $stmt->execute();                         // TODO try {} catch
                             } catch (\PDOException $e) {
-                                self::fatal("An SQL error occurred: " . $e->getMessage());
+                                self::fatal("Ошибка в SQL запросе: " . $e->getMessage() . 'sql-запрос: ' . $sql);
                             }
                             unset($tableSchemeNew['columns'][$i]);
                         }
@@ -389,7 +393,6 @@ class ClassifierController extends Controller
             $clsf->save();
         }
         return true;
-
     }
 
 
@@ -412,8 +415,7 @@ class ClassifierController extends Controller
 
         //TODO: если нет таблицы сообщить, что нет возможности использовать классификатор!
 
-
-        $form = '<input hidden readonly value="' . $tableScheme->tableName . '" name="tbl-name">';
+        $form = '<input id="tbl-name" hidden readonly value="' . $tableScheme->tableName . '" name="tbl-name">';
 
         if (empty($tableScheme->columns)) {
             return $form .= '<div>Простой классификатор. Просто нажмите <strong>Присвоить</strong>.</div>';
@@ -433,6 +435,7 @@ class ClassifierController extends Controller
                 }
             }
         }
+
         foreach ($columns as $column) {
             switch ($column->typeName) {
                 case 'input':
@@ -474,7 +477,7 @@ class ClassifierController extends Controller
                 case 'fileinput':
                     $form .=
                         '<label>' . $column->label . '</label>' .
-                        '<input type="file" multiple class="files-up" name="' . $column->name . '" >' .
+                        '<input type="file" multiple class="files-up" name="' . $column->name . '" style="wax-width:200px;width:180px; padding-bottom:15px">' .
                         '<p></p>';
                     break;
                 default:
@@ -497,10 +500,6 @@ class ClassifierController extends Controller
 
     public function actionAssignClassifier()  // часть обработки запроса на присваивание классификатора
     {
-        $key = Yii::$app->request->post();
-        $file = $_FILES;
-
-        return var_dump($key);
         $sql_details = \Yii::$app->params['sql_details'];
         $result = false;
         $data = $_POST['data'];
@@ -511,7 +510,7 @@ class ClassifierController extends Controller
         $values = '';
         if (!empty($_POST['data'][1])) {
             for ($i = 1; $i < count($data); $i++) {
-                if ($data[$i]['value'] == 'on') {
+                if ($data[$i]['value'] == 'on') {                   // для checkbox или radiobutton
                     $data[$i]['value'] = 1;
                 }
                 $columns .= ', ' . $data[$i]['name'];
@@ -531,9 +530,69 @@ class ClassifierController extends Controller
         return $result;
     }
 
+    public function actionFilesLoad()
+    {
+        $sql_details = \Yii::$app->params['sql_details'];
+        $result = false;
+        $keyPost = $_POST;
+        $files = $_FILES;
+        $tblName = $keyPost['tbl-name'];
+        $idArray = array();
+        $idArray[] = explode(',', $keyPost['ids']);
+        $clmnNames = array();
+        $sql = 'INSERT INTO ' . $tblName . ' (eq_id';
+        $clmns = array();
+        $done_files = array();
+        $uploaddir = \Yii::$app->params['uploadPath'];
+        $tmpClmnName = '';
+        $pattern = '/([A-Za-z_]+)(\|[0-9]+)/i';                     // Регулярное для выделения имени колонки
+        $replacement = '${1}';
+        $columns = '';
+        $values = '';
+        $subvalues = '';
+        foreach ($files as $key => $file) {
+            $file_name = $file['name'];
+            $keyName = preg_replace('(\.)', '_', $file_name);
+            if (in_array($keyName, $keyPost)) {
+                $done_files[] = $keyPost[$keyName];
+            }
+            if ($tmpClmnName == '') {
+                $tmpClmnName = preg_replace($pattern, $replacement, $key);
+            }
+            if (move_uploaded_file($file['tmp_name'], "$uploaddir/$file_name")) {
+//                    $done_files[] = realpath("$uploaddir/$file_name");
+                $clmnName = preg_replace($pattern, $replacement, $key);
+//                    $done_files[] = \Yii::$app->security->generateRandomString() . "_files";
+                if ($tmpClmnName == preg_replace($pattern, $replacement, $key)) {
+                    $subvalues .= ' ' . $file_name;
+                } else {
+                    $tmpClmnName = preg_replace($pattern, $replacement, $key);
+                    $columns .= ', ' . $clmnName;
+                    $values = ', "' . $subvalues . '"';
+                }
+            }
+//            return var_dump($keyName);
+//            return var_dump($keyName);
+        }
+        $db = SSP::sql_connect($sql_details);
+        $sql .= $columns . ') VALUES (?' . $values . ')';
+
+        return var_dump($done_files);
+
+        for ($i = 0; $i < count($idArray[0]); $i++) {
+            $stmt = $db->prepare($sql);                             //TODO: try->catch
+            if ($stmt->execute(array($idArray[0][$i]))) {
+                $result = true;
+            } else {
+                $result = false;
+            }
+        }
+        return $result;
+    }
+
+
     public function actionSendDataExtTable()
     {
         return 1;
     }
-
 }

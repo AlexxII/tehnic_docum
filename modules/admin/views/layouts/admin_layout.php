@@ -92,6 +92,14 @@ Asset::register($this);       // регистрация ресурсов мод�
         'options' => ['class' => 'navbar-nav navbar-right'],
         'encodeLabels' => false,
         'items' => [
+            ['label' => 'Пользователи',
+                'url' => ['user/'],
+                'options' => [
+                    'data-toggle' => "tooltip",
+                    'data-placement' => "bottom",
+                    'title' => 'Управление пользователями системы',
+                ]
+            ],
             [
                 'label' => 'Представления',
                 'items' => [

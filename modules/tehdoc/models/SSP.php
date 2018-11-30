@@ -246,6 +246,7 @@ class SSP {
     $data = self::sql_exec( $db, $bindings,
         "SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
 			 FROM $table RIGHT JOIN $tableTwo ON $table.id_eq = $tableTwo.eq_id 
+			 INNER JOIN category_tbl ON $table.category_id = category_tbl.id  
 			 $where
 			 $order
 			 $limit"

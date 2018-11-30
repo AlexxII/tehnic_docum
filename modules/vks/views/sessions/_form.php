@@ -121,20 +121,6 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
         $allImages = false;
     }
     ?>
-
-    <div class="form-group">
-        <?= $form->field($fUpload, "imageFiles[]")->widget(FileInput::class, [
-            'language' => 'ru',
-            'options' => ['multiple' => true],
-            'pluginOptions' => [
-                'previewFileType' => 'any',
-                'initialPreview' => $allImages,
-                'initialPreviewConfig' => $previewImagesConfig,
-                'overwriteInitial' => false,
-                'showUpload' => false
-            ],
-        ]); ?>
-    </div>
     <div class="form-group">
         <label style="font-size:18px"><input type="checkbox" name="stay" style="width:20px;height:20px"> Остаться в
             форме</label>
@@ -232,21 +218,6 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
         }
         return false;
     }
-
-
-    // $(document).ready(function () {
-    //     $("#equipment-category_id option").each(function () {
-    //         a = document.createElement("DIV");
-    //         b = document.createElement("DIV");
-    //         a.setAttribute("class", "select-selected");
-    //         a.appendChild(b);
-    //         b.textContent = '';
-    //         $(b).css({
-    //             color: "red"
-    //         });
-    //         this.appendChild(a);
-    //     });
-    // });
 
 
 </script>

@@ -10,13 +10,11 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-use app\modules\tehdoc\asset\Asset;
 
 ?>
 <?php
 
 AppAsset::register($this);    // регистрация ресурсов всего приложения
-Asset::register($this);       // регистрация ресурсов модуля
 
 ?>
 <?php $this->beginPage() ?>
@@ -96,17 +94,27 @@ Asset::register($this);       // регистрация ресурсов мод�
         'options' => ['class' => 'navbar-nav navbar-right'],
         'encodeLabels' => false,
         'items' => [
-            ['label' => 'Списание', 'url' => ['/tehdoc/']],
-            ['label' => 'Приемка', 'url' => ['/tehdoc/']],
             [
-                'label' => 'Представления',
+                'label' => 'Журнал ВКС',
+                'items' => [
+                    '<li class="dropdown-header" style="font-size: 10px">Сеансы ВКС</li>',
+                    ['label' => 'Предстоящие сеансы', 'url' => ['/vks/sessions']],
+                    ['label' => 'Добавить сеанс', 'url' => ['/vks/sessions/create']],
+                    ['label' => 'Подтвердить сеанс', 'url' => ['/tehdoc/equipment/placement']],
+                    '<li class="divider"></li>',
+                    '<li class="dropdown-header" style="font-size: 10px">Статистика</li>',
+                    ['label' => 'Архив сеансов', 'url' => ['/tehdoc/equipment/classifiers']],
+                    ['label' => 'Переработка', 'url' => ['/tehdoc/equipment/classifiers']],
+                ],
+            ],
+            [
+                'label' => 'Настройки',
                 'items' => [
                     '<li class="dropdown-header" style="font-size: 10px">Системные</li>',
-                    ['label' => 'По категориям', 'url' => ['/tehdoc/equipment/categories']],
-                    ['label' => 'По месту размещения', 'url' => ['/tehdoc/equipment/placement']],
-                    '<li class="divider"></li>',
-                    '<li class="dropdown-header" style="font-size: 10px">Пользовательские</li>',
-                    ['label' => 'Классификатор', 'url' => ['/tehdoc/equipment/classifiers']],
+                    ['label' => 'Пользователи', 'url' => ['/tehdoc/equipment/categories']],
+                    ['label' => 'Места проведения вкс', 'url' => ['/tehdoc/equipment/placement']],
+                    ['label' => 'Сотрудники спецсвязи', 'url' => ['/tehdoc/equipment/placement']],
+                    ['label' => 'Оборудование', 'url' => ['/tehdoc/equipment/placement']],
                 ],
             ],
             Yii::$app->user->isGuest ? (
@@ -164,57 +172,6 @@ Asset::register($this);       // регистрация ресурсов мод�
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="classifier-modal" tabindex="-1" role="dialog"
-             data-backdrop="static" data-keyboard="false" aria-labelledby="ModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="form">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h5 class="modal-title" id="ModalLabel">Присвоение классификатора.</h5>
-                        <div class="modal-header-select-place">
-                            <hr>
-                            <?= \kartik\tree\TreeViewInput::widget([
-                                'query' => \app\modules\admin\models\ClassifierTbl::find()->addOrderBy('root, lft'),
-                                'id' => 'classifier',
-                                'name' => 'id',                  // input name
-                                'asDropdown' => true,            // will render the tree input widget as a dropdown.
-                                'headingOptions' => ['label' => 'Классификаторы'],
-                                'value' => false,
-                                'multiple' => false,              // set to false if you do not need multiple selection
-                                'fontAwesome' => true,           // render font awesome icons
-                                'rootOptions' => [
-                                    'label' => '<i class="fa fa-tree"></i>',
-                                ],
-                                'dropdownConfig' => [
-                                    'input' => [
-                                        'placeholder' => 'Выберите классификатор...'
-                                    ]
-                                ],
-                                'options' => [
-                                    'class' => 'classifier-cl'
-                                ]
-                            ]); ?>
-
-                        </div>
-                    </div>
-                    <div id="modal-form">
-                        <form action="assign-classifier" id="form-classifier" method="POST"
-                              enctype="multipart/form-data">
-                            <div class="modal-body" id="classifier-body">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                                <button type="submit" class="btn btn-primary" id="assign-classifier-btn" disabled>
-                                    Просвоить
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <?= $content ?>
     </div>
 </div>
@@ -223,3 +180,8 @@ Asset::register($this);       // регистрация ресурсов мод�
 </body>
 </html>
 <?php $this->endPage() ?>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

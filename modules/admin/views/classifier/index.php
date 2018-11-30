@@ -14,9 +14,10 @@ $about = "Панель управления классификаторами и�
             Позволяет произвольно задавать параметры отображения информации";
 $add_hint = 'Добавить дочерний классификатор';
 $add_tree_hint = 'Добавить родительский классификатор';
-$refresh_hint = 'Перезапустить форму';
+$refresh_hint = 'Перезапустить дерево классификаторов';
 $del_hint = 'Удалить выбранный классификатор БЕЗ вложений';
-$del_root_hint = 'Удалить ветку полностью';
+$del_root_hint = 'Удалить ветку полностью. ВНИМАНИЕ! Удаление распространяется 
+                  на вложенные классификаторы. В том числе будут удалены таблицы в базе данных.';
 $del_multi_nodes = 'Удалить классификатор С вложениями';
 
 ?>
@@ -141,7 +142,6 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                     'nodata' => true,      // Display a 'no data' status node if result is empty
                     'mode' => "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
                 ],
-
                 'edit' => [
                     'inputCss' => [
                         'minWidth' => "10em"
@@ -152,12 +152,12 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                         if (node.key == -999){
                             return false;
                         }
-        }'),
+                }'),
                     'edit' => new \yii\web\JsExpression('function(event, data){
                       // Editor was opened (available as data.input)
-        }'),
+                }'),
                     'beforeClose' => new \yii\web\JsExpression('function(event, data){
-        }'),
+                }'),
                     'save' => new \yii\web\JsExpression('function(event, data){
                         var node = data.node;
                         var tree = $(".ui-draggable-handle").fancytree("getTree");
@@ -185,7 +185,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                             });
                         }
                         return true;
-        }'),
+                }'),
                     'close' => new \yii\web\JsExpression('function(event, data){
                         // Editor was removed
                         if( data.save ) {
@@ -193,7 +193,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                           $(data.node.span).addClass("pending");
                           $(".clsf-name").val(data.node.title);
                         }
-        }')
+                }')
                 ],
                 'activate' => new \yii\web\JsExpression('function(node, data) {
                         var node = data.node;
@@ -232,7 +232,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                           $(".node-id").val(id);
                           $(\'[data-toggle="tooltip"]\').tooltip();
                         })                        
-        }'),
+                }'),
                 'renderNode' => new \yii\web\JsExpression('function(node, data) {
                         if (data.node.key == -999){
                             $(".add-category").show();
@@ -715,6 +715,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
         '</div>'+
         '<p></p>'+
         '<label style="font-size: 16px;color: #000;" class="label"></label>'+
+        // '<span class="file-input-place"></span>' +
         '<input class="form-control" disabled placeholder="Добавить файл..." style="max-width: 170px">'+
         '</div>';
 
@@ -862,6 +863,18 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                 div.append(window.checkBox);
             } else if (val == 8) {
                 div.append(window.fileInput);
+/*
+                $.ajax({
+                    url: "/admin/user/test2",
+                    type: "get",
+                    success: function (result) {
+                        $('.file-input-place').append(result);
+                    },
+                    error: function () {
+                        alert('Ошибка! Обратитесь к разработчику.');
+                    }
+                });
+*/
             }
             var lastIn = $(div).children().last();
             lastIn.find('.input-name-ex').data("id", Date.now());

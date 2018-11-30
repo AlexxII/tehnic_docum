@@ -9,15 +9,30 @@ class CategoryTblEx extends \kartik\tree\models\Tree
 {
     // Важно!!!! Класс переопределяет метод для отображения только категории - родители
 
-    public function isDisabled()
+//    public function isDisabled()
+//    {
+//        $res = $this->parse('disabled');
+//        if ($res == 1) {
+//            return 0;
+//        } else {
+//            return 1;
+//        }
+//    }
+
+    public static $boolAttribs = [
+        'viz'
+    ];
+
+    public function isVisible()
     {
-        $res = $this->parse('disabled');
-        if ($res == 1) {
-            return 0;
+        $result = $this->parse('viz');
+        if ($result == 0) {
+            return false;
         } else {
-            return 1;
+            return true;
         }
     }
+
 
     public static function tableName()
     {

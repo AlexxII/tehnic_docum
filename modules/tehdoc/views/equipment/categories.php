@@ -224,6 +224,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
 
+
         $('.hideMenu-button').click(function (e) {
             var indexes;
             e.preventDefault();
@@ -274,6 +275,13 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $('#main-table').on('length.dt', function (e, settings, len) {
         $('.hiddendel').hide();
         $('.classif').hide();
+        $('.sendbtn').hide();
+    });
+
+    $('#main-table').on('draw.dt', function (e, settings, len) {
+        $('.hiddendel').hide();
+        $('.classif').hide();
+        $('.sendbtn').hide();
     });
 
     function restoreSelectedRows(indexes) {
@@ -622,9 +630,9 @@ $classif_hint = 'Присвоить выделенному оборудован�
     //************************** Добавление классификатора **********************************
 
     $(document).ready(function () {
-        $('.classif').click(function (event) {
-            var files;
-            event.preventDefault();
+        $('.classif').click(function (e) {
+            e.preventDefault();
+            var kartikVal = $('#classifier').val();
             var csrf = $("meta[name=csrf-token]").attr("content");
             var table = $("#main-table").DataTable();
             var data = table.rows({selected: true}).data();
@@ -634,71 +642,100 @@ $classif_hint = 'Присвоить выделенному оборудован�
                 idArray[i] = data[i][0];
             }
             $("#classifier-modal").modal("show");
+            if (kartikVal != '') {
+                loadForm(csrf, idArray);
+            }
+            $('#classifier').on('change', function () {
+                loadForm(csrf, idArray);
+            });
+        });
+    });
 
-            $('#classifier').off('change').on('change', function () {
-                var val = $(this).val();
-                if (val != '') {
-                    var el = $('#kv-tree-dropdown-container').find('.kv-selected');
-                    $.ajax({
-                        url: "/admin/classifier/extended-data-form?id=" + val,
-                        type: "GET",
-                        success: function (result) {
-                            if (result == 'Error_01'){
-                                $("#assign-classifier-btn").attr("disabled", "disabled");
-                                $("#classifier-body").html('Таблица базы данных не создана, создайте ее в панеле Администратора.');
-                                return;
-                            }
-                            $("#classifier-body").html(result);
-                            $("#assign-classifier-btn").removeAttr('disabled');
-                            $('input[type=file]').change(function(){
-                                files = this.files;
-                            });
+    function loadForm(crsf, idArray) {
+        var val = $('#classifier').val();
+        var data;
+        if (val != '') {
+            $.ajax({
+                url: "/admin/classifier/extended-data-form?id=" + val,
+                type: "GET",
+                success: function (result) {
+                    if (result == 'Error_01') {
+                        $("#assign-classifier-btn").attr("disabled", "disabled");
+                        $("#classifier-body").html('Таблица базы данных не создана, создайте ее в панеле Администратора.');
+                        return;
+                    }
+                    $("#classifier-body").html(result);
+                    $("#assign-classifier-btn").removeAttr('disabled');
 
-                            $("#form-classifier").off('submit').on('submit', function (e) {
-                                e.preventDefault();
-                                var formsData = $('#form-classifier').serializeArray();
-                                var sendData = formsData.filter(function (item, i, arr) {
-                                    return arr[i]['value'] != 0;
-                                });
-                                var data = new FormData();
-                                $.each( files, function( key, value ){
-                                    data.append( key, value );
-                                });
-                                data.append( 'ids', idArray);
-                                data.append( 'table', formsData[0].value );
-                                $.ajax({
-                                    url: "/admin/classifier/assign-classifier",
-                                    type: "POST",
-                                    dataType: "JSON",
-                                    data: data,
-                                    cache: false,
-                                    enctype: 'multipart/form-data',
-                                    processData: false,
-                                    contentType: false,
-                                    success: function (result) {
-                                        $("#form-classifier")[0].reset();
-                                        $("#classifier-modal").modal("hide");
-                                        $('#classifier').val('0');
-                                    },
-                                    error: function () {
-                                        console.log("Ошибка cat_1! Обратитесь к разработчику.");
-                                        $("#form-classifier")[0].reset();
-                                        $("#classifier-modal").modal("hide");
-                                    }
-                                });
-                            })
-                        },
-                        error: function () {
-                            console.log("Ошибка cat_2! Обратитесь к разработчику.");
-                            $("#classifier-modal").modal("hide");
+
+                    $("input[type=file]").on('change', function () {
+                        var input = this;
+                        var inputHmlt;
+                        var count = this.files.length;
+                        var files = this.files;
+                        for (var i = 0, file; file = files[i]; i++) {
+                            inputHmlt = '' +
+                                '<label style="font-size: 16px;color: #000;" class="label">Наименование документа</label>' +
+                                '<input label="Vtnrf" type=text class="form-control" name="' + file.name + '">';
+                            $(input).after(inputHmlt + '<br>');
                         }
                     });
-                } else {
-                    $("#classifier-body").html('');
-                    $("#assign-classifier-btn").attr("disabled", "disabled");
+
+                    $("#form-classifier").off('submit').on('submit', function (e) {
+                        e.preventDefault();
+                        var formData = $("#form-classifier").serializefiles();
+                        formData.append('ids', idArray);                                    // массив с id из таблицы
+                        $.ajax({
+                            url: "/admin/classifier/files-load",
+                            type: "POST",
+                            dataType: "JSON",
+                            data: formData,
+                            enctype: 'multipart/form-data',
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            success: function (result) {
+                                $("#form-classifier")[0].reset();
+                                $("#classifier-modal").modal("hide");
+                            },
+                            error: function () {
+                                console.log("Ошибка cat_1! Обратитесь к разработчику.");
+                                $("#form-classifier")[0].reset();
+                                $("#classifier-modal").modal("hide");
+                            }
+                        });
+                    })
+                },
+                error: function () {
+                    console.log("Ошибка cat_2! Обратитесь к разработчику.");
+                    $("#classifier-modal").modal("hide");
                 }
             });
-        })
-    });
+        } else {
+            $("#classifier-body").html('');
+            $("#assign-classifier-btn").attr("disabled", "disabled");
+        }
+
+    }
+
+    (function ($) {
+        $.fn.serializefiles = function () {
+            var obj = $(this);
+            var formData = new FormData();
+            $.each($(obj).find("input[type='file']"), function (i, tag) {
+                $.each($(tag)[0].files, function (i, file) {
+                    formData.append(tag.name + '|' + i, file);
+                });
+            });
+            var params = $(obj).serializeArray();
+            $.each(params, function (i, val) {
+                if (val.value !== '') {
+                    formData.append(val.name, val.value);                       // добавляем только непустые поля
+                }
+            });
+            return formData;
+        };
+    })(jQuery);
+
 
 </script>
