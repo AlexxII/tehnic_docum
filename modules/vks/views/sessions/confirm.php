@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$this->title = 'Добавить предстоящий сеанс';
+$this->title = 'Подтвердить состоявшийся сеанс';
 $this->params['breadcrumbs'][] = ['label' => 'ВКС', 'url' => ['/vks']];
 $this->params['breadcrumbs'][] = ['label' => 'Журнал', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
 
-    <?= $this->render('_form', [
+    <?= $this->render('_form_conf', [
         'model' => $model,
     ]) ?>
 

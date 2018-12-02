@@ -7,13 +7,16 @@ use yii\db\Migration;
  */
 class m181031_200539_create_image_tbl extends Migration
 {
+
+    const TABLE_NAME = '{{%image_tbl}}';
+
     public function up()
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
-        $this->createTable('image_tbl', [
+        $this->createTable(self::TABLE_NAME, [
             'id' => $this->primaryKey(),
             'eq_id' => $this->integer()->notNull(),
             'image_path' => $this->string(255)->notNull()->unique(),
@@ -22,7 +25,7 @@ class m181031_200539_create_image_tbl extends Migration
     }
     public function down()
     {
-        $this->dropTable('user');
+        $this->dropTable(self::TABLE_NAME);
     }
 
 }

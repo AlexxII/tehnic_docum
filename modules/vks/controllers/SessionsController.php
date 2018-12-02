@@ -2,9 +2,7 @@
 
 namespace app\modules\vks\controllers;
 
-use app\modules\tehdoc\models\Equipment;
-
-
+use app\modules\vks\models\VksSessions;
 use Yii;
 use yii\web\Controller;
 
@@ -15,11 +13,18 @@ class SessionsController extends Controller
         return $this->render('index');
     }
 
-
     public function actionCreate()
     {
-        $model = new Equipment();
-        return $this->render('create',[
+        $model = new VksSessions();
+        return $this->render('create', [
+            'model' => $model
+        ]);
+    }
+
+    public function actionConfirm()
+    {
+        $model = new VksSessions();
+        return $this->render('confirm', [
             'model' => $model
         ]);
     }
