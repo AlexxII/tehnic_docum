@@ -180,7 +180,7 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
                         'label' => '<i class="fa fa-tree"></i>',
                     ]
                 ]
-            )->hint('Выберите из списка', ['class' => ' w3-label-under']);
+            )->hint('', ['class' => ' w3-label-under']);
             ?>
         </div>
 
@@ -190,7 +190,7 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
                 data-toggle="tooltip" data-placement="top" title="' . $vks_recmsg_date_hint . '"></sup>{input}{hint}'
             ])->textInput([
                 'class' => 'vks_receive-date form-control'
-            ])->hint('Выберите дату', ['class' => ' w3-label-under']); ?>
+            ])->hint('', ['class' => ' w3-label-under']); ?>
         </div>
 
         <div class="form-group col-md-12 col-lg-12">
