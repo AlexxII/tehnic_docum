@@ -104,7 +104,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
++     * Displays contact page.
      *
      * @return Response|string
      */

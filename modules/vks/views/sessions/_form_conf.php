@@ -14,25 +14,24 @@ use app\modules\tehdoc\models\Equipment;
         font-size: 15px;
         color: #FF0000;
     }
-
     .nonreq {
         color: #1e6887;
     }
-
     .select-selected {
         padding-left: 40px;
     }
-
     .form-group {
         margin-bottom: 5px;
     }
-
     .control-label {
         font-size: 14px;
     }
 </style>
 
 <?php
+
+\yii\widgets\MaskedInputAsset::register($this);
+
 $vks_date_hint = 'Обязательное поле! Укажите дату проведения сеанса ВКС';
 $vks_type_hint = 'Обязательное поле! Укажите ТИП сеанса ВКС (Напрмер: ЗВС-ОГВ, КВС и т.д.)';
 $vks_place_hint = 'Укажите место проведения сеанса видеосвязи';
@@ -57,7 +56,6 @@ $vks_equipment_hint = '3';
             ])->textInput([
                 'class' => 'fact-date form-control'
             ])->hint('', ['class' => ' w3-label-under']); ?>
-        </div>
     </div>
 
     <div class="form-group">
@@ -83,36 +81,16 @@ $vks_equipment_hint = '3';
         <?php
         echo $form->field($model, 'vks_type', [
             'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
-                data-toggle="tooltip" data-placement="top" title="' . $vks_type_hint . '"></sup>{input}{hint}{error}'
-        ])->widget(\kartik\tree\TreeViewInput::class, [
-                'query' => \app\modules\admin\models\CategoryTbl::find()->addOrderBy('root, lft'),
-                'name' => 'category_kv',
-                'asDropdown' => true,
-                'multiple' => false,
-                'fontAwesome' => true,
-                'rootOptions' => [
-                    'label' => '<i class="fa fa-tree"></i>',
-                ]
-            ]
-        )->hint('', ['class' => ' w3-label-under']);
+                data-toggle="tooltip" data-placement="top" title="' . $vks_type_hint . '"></sup>{input}{hint}'
+        ])->dropDownList($model->vksTypesList, ['prompt' => ['text' => 'Выберите', 'options' => ['value' => 'none', 'disabled' => 'true', 'selected' => 'true']]])->hint('', ['class' => ' w3-label-under']);
         ?>
     </div>
 
     <div class="form-group col-md-12 col-lg-12">
         <?= $form->field($model, 'vks_place', [
-            'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
-                data-toggle="tooltip" data-placement="top" title="' . $vks_place_hint . '"></sup>{input}{hint}{error}'
-        ])->widget(\kartik\tree\TreeViewInput::class, [
-                'query' => \app\modules\admin\models\PlacementTbl::find()->addOrderBy('root, lft'),
-                'name' => 'placement_kv',
-                'asDropdown' => true,
-                'multiple' => false,
-                'fontAwesome' => true,
-                'rootOptions' => [
-                    'label' => '<i class="fa fa-tree"></i>',
-                ]
-            ]
-        )->hint('', ['class' => ' w3-label-under']);
+            'template' => '{label} <sup class="h-title fa fa-info-circle nonreq" aria-hidden="true"
+                data-toggle="tooltip" data-placement="top" title="' . $vks_place_hint . '"></sup>{input}{hint}'
+        ])->dropDownList($model->vksPlacesList, ['prompt' => ['text' => 'Выберите', 'options' => ['value' => 'none', 'disabled' => 'true', 'selected' => 'true']]])->hint('', ['class' => ' w3-label-under']);
         ?>
     </div>
 
@@ -178,7 +156,7 @@ $vks_equipment_hint = '3';
         ?>
     </div>
 
-    <div class="form-group">
+    <div class="col-md-12 col-lg-12" style="border: dashed 1px #0c0c0c;border-radius: 4px;padding: 10px 0px;margin-bottom: 10px">
         <div class="form-group col-md-7 col-lg-7">
             <?= $form->field($model, 'vks_subscriber_name', [
                 'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
@@ -227,7 +205,7 @@ $vks_equipment_hint = '3';
     </div>
 
     <div class="form-group col-md-12 col-lg-12">
-        <?= $form->field($model, 'vks_comments')->textArea(array('rows' => '4', 'resize' => 'none')) ?>
+        <?= $form->field($model, 'vks_comments')->textArea(array('style' =>'resize:vertical', 'rows' => '5')) ?>
     </div>
 
     <div class="form-group col-md-12 col-lg-12">
@@ -255,7 +233,10 @@ $vks_equipment_hint = '3';
             language: "ru",
             startView: "days",
             minViewMode: "days",
-            clearBtn: true
+            clearBtn: true,
+            todayHighlight: true,
+            daysOfWeekHighlighted: [0,6]
+
         })
     });
 

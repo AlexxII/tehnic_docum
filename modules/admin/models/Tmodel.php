@@ -10,7 +10,7 @@ namespace app\modules\admin\models;
 use yii\db\ActiveRecord;
 
 
-class Testmodel extends ActiveRecord
+class Tmodel extends ActiveRecord
 {
 //    public static function tableName()
 //    {

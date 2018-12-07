@@ -14,7 +14,6 @@ class TableBaseAsset extends AssetBundle
   ];
 
   public $js = [
-//      '/js/bootstrap.min.js',
       '/dataTable/js/datatable.all.js',
   ];
 

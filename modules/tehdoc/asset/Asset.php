@@ -11,7 +11,6 @@ class Asset extends AssetBundle
 
   public $css = [
       'css/tehdoc.css'
-//      'css/tehd.css'
   ];
 
   public $js = [

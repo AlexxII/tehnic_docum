@@ -4,7 +4,6 @@ namespace app\modules\admin\controllers;
 
 
 use app\modules\admin\models\Category;
-use app\modules\tehdoc\models\Equipment;
 use yii\web\Controller;
 
 class CategoryController extends Controller

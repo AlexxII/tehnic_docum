@@ -3,6 +3,7 @@
 namespace app\modules\vks\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "vks_sessions_tbl".
@@ -49,10 +50,7 @@ class VksSessions extends \yii\db\ActiveRecord
     {
         return [
             [['vks_date', 'vks_type', 'vks_employee_receive_msg', 'vks_receive_msg_datetime', 'vks_employee_send_msg'], 'required'],
-            [['vks_date', 'vks_teh_time_start', 'vks_teh_time_end', 'vks_work_time_start', 'vks_work_time_end', 'vks_order_date', 'vks_receive_msg_datetime', 'vks_record_create', 'vks_record_ipdate'], 'safe'],
-            [['vks_duration_teh', 'vks_duration_work', 'vks_type', 'vks_place', 'vks_order', 'vks_equipment', 'vks_remarks', 'vks_employee', 'vks_employee_receive_msg', 'vks_employee_send_msg'], 'integer'],
-            [['vks_comments'], 'string'],
-            [['vks_subscriber_office', 'vks_subscriber_name', 'vks_order_number'], 'string', 'max' => 255],
+            [['vks_date', 'vks_teh_time_start', 'vks_teh_time_end', 'vks_work_time_start', 'vks_work_time_end', 'vks_order_date', 'vks_record_create', 'vks_record_ipdate'], 'safe'],
         ];
     }
 
@@ -89,5 +87,40 @@ class VksSessions extends \yii\db\ActiveRecord
             'vks_record_create' => 'Vks Record Create',
             'vks_record_ipdate' => 'Vks Record Ipdate',
         ];
+    }
+
+    public function getVksTypesList()
+    {
+        $sql = "SELECT C1.id, C1.name, C2.name as gr from vks_types_tbl C1 LEFT JOIN 
+        vks_types_tbl C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
+        return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
+    }
+
+    public function getVksPlacesList()
+    {
+        $sql = "SELECT C1.id, C1.name, C2.name as gr from vks_places_tbl C1 LEFT JOIN 
+        vks_places_tbl C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
+        return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
+    }
+
+    public function getVksSubscribesList()
+    {
+        $sql = "SELECT C1.id, C1.name, C2.name as gr from vks_subscribes_tbl C1 LEFT JOIN 
+        vks_subscribes_tbl C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
+        return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
+    }
+
+    public function getVksOrdersList()
+    {
+        $sql = "SELECT C1.id, C1.name, C2.name as gr from vks_orders_tbl C1 LEFT JOIN 
+        vks_orders_tbl C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
+        return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
+    }
+
+    public function getVksEmployeesList()
+    {
+        $sql = "SELECT C1.id, C1.name, C2.name as gr from vks_employees_tbl C1 LEFT JOIN 
+        vks_employees_tbl C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
+        return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
     }
 }

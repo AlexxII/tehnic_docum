@@ -25,7 +25,6 @@ class AppAsset extends AssetBundle
       'css/fotorama.css',
       'css/site.css',
       'css/w3.css',
-
   ];
 
   public $jsOptions = ['position' => \yii\web\View::POS_HEAD];

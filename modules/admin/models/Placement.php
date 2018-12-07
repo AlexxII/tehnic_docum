@@ -12,14 +12,14 @@ class Placement extends ActiveRecord
   public function behaviors() {
     return [
         'tree' => [
-            'class' => NestedSetsBehavior::class,
+            'class' => NestedSetsBehavior::className(),
             'treeAttribute' => 'root',
             'leftAttribute' => 'lft',
             'rightAttribute' => 'rgt',
             'depthAttribute' => 'lvl',
         ],
         'htmlTree'=>[
-            'class' => \wokster\treebehavior\NestedSetsTreeBehavior::class
+            'class' => \wokster\treebehavior\NestedSetsTreeBehavior::className()
         ]
     ];
   }
