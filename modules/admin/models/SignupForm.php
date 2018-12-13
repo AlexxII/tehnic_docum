@@ -12,12 +12,12 @@ class SignupForm extends Model
   public $password;
   public $username;
   public $social_group;
+  public $role;
 
 
   public function rules()
   {
     return [
-        ['username', 'trim'],
         ['username', 'trim'],
         ['login', 'trim'],
         ['login', 'required'],
@@ -25,13 +25,8 @@ class SignupForm extends Model
         ['login', 'string', 'min' => 2, 'max' => 255],
         ['social_group', 'trim'],
         ['social_group', 'required'],
-//        ['email', 'trim'],
-//        ['email', 'required'],
-//        ['email', 'email'],
-//        ['email', 'string', 'max' => 255],
-//        ['email', 'unique', 'targetClass' => '\app\modules\admin\models\User', 'message' => 'This email address has already been taken.'],
-        ['password', 'safe'],
-        ['password', 'string', 'min' => 6, 'message' => 'Пароль должен содержать не менее 6 символов'],
+        [['password', 'role'], 'safe'],
+        ['password', 'string', 'min' => 6, 'message' => 'Пароль должен содержать не менее 6 символов']
     ];
   }
 
@@ -42,7 +37,8 @@ class SignupForm extends Model
         'username' => 'Пользователь:',
         'password' => 'Пароль:',
         'login' => 'Логин:',
-        'social_group' => 'Социальная группа:'
+        'social_group' => 'Социальная группа:',
+        'role' => 'Роль'
     ];
   }
 

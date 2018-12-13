@@ -3,6 +3,7 @@
 namespace app\modules\vks\controllers\control;
 
 use app\modules\vks\models\VksEmployees;
+use app\modules\vks\models\VksSessions;
 use yii\web\Controller;
 
 class VksEmployeeController extends Controller
@@ -58,7 +59,7 @@ class VksEmployeeController extends Controller
         return true;
     }
 
-    public function actionMove($item, $action, $second)
+    public function actionMove($item, $action, $second, $parent)
     {
         $item_model = VksEmployees::findOne($item);
         $second_model = VksEmployees::findOne($second);
@@ -73,9 +74,10 @@ class VksEmployeeController extends Controller
                 $item_model->appendTo($second_model);
                 break;
         }
-        $parent = VksEmployees::findOne($second);
+        $parent = VksEmployees::findOne(['name' => $parent]);
+        $item_model->parent_id = $parent->id;
         if ($item_model->save()) {
-            return true;
+            return false;
         }
         return false;
     }
@@ -98,5 +100,6 @@ class VksEmployeeController extends Controller
         }
         $root->deleteWithChildren();
     }
+
 
 }

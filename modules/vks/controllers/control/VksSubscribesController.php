@@ -99,4 +99,23 @@ class VksSubscribesController extends Controller
         $root->deleteWithChildren();
     }
 
+    public function actionSurnames($id)
+    {
+        $model = VksSubscribes::findOne(['id' => $id]);
+        return json_encode($model->surnames);
+    }
+
+    public function actionSurnamesSave()
+    {
+        if (!empty($_POST)) {
+            $id = $_POST['id'];
+            $model = VksSubscribes::findOne(['id' => $id]);
+            $model->surnames = $_POST['Data'];
+            if ($model->save()){
+                return true;
+            }
+            return false;
+        }
+    }
+
 }

@@ -32,7 +32,6 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new SignupForm();
-
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 $auth = Yii::$app->authManager;

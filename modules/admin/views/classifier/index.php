@@ -754,7 +754,6 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
             columns.sort(function(a, b){                      // сортировка отображения
                 return a.order - b.order;                     // форм
             });
-            console.log(columns);
             columns.forEach(function (item, i, arr) {
                 switch (item.typeName){
                     case 'input':

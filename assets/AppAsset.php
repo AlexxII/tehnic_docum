@@ -21,20 +21,13 @@ class AppAsset extends AssetBundle
   public $baseUrl = '@web';
   public $css = [
       'lib/awesome/css/font-awesome.min.css',
-      'css/bootstrap-datepicker.min.css',
-      'css/fotorama.css',
-      'css/site.css',
-      'css/w3.css',
+      'css/site.css'
   ];
 
   public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
 
   public $js = [
       'js/jQuery_mini.js',
-      'js/bootstrap-datepicker.min.js',
-      'js/bootstrap-datepicker.ru.min.js',
-      'js/moment-with-locales.min.js',
-      'js/fotorama.js',
       'js/tether.min.js'
   ];
 

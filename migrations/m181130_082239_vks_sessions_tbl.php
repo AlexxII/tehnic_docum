@@ -24,12 +24,17 @@ class m181130_082239_vks_sessions_tbl extends Migration
             'vks_duration_work' => $this->integer(),
 
             'vks_type' => $this->integer()->notNull(),
+            'vks_type_text' => $this->string(255),
             'vks_place' => $this->integer(),
+            'vks_place_text' => $this->string(255),
 
             'vks_subscriber_office' => $this->integer(),
+            'vks_subscriber_office_text' => $this->string(255),
             'vks_subscriber_name' => $this->string(255),
 
             'vks_order' => $this->integer(),
+            'vks_order_text' => $this->string(255),                               // колонка с текстовым содержанием
+
             'vks_order_number' => $this->string(255),
             'vks_order_date' => $this->date(),
 
@@ -39,16 +44,18 @@ class m181130_082239_vks_sessions_tbl extends Migration
             'vks_employee' => $this->integer(),                                         // сотрудник спецсвязи, участв. в приеме
 
             'vks_subscriber_mur_office' => $this->integer(),
+            'vks_subscriber_mur_office_text' => $this->string(),
             'vks_subscriber_mur_name' => $this->string(255),
 
-            'vks_employee_receive_msg' => $this->integer(),
+            'vks_employee_receive_msg' => $this->string(255),
             'vks_receive_msg_datetime' => $this->dateTime(),
             'vks_employee_send_msg' => $this->integer(),
+            'vks_employee_send_msg_text' => $this->string(255),
 
             'vks_comments' => $this->text(),
 
             'vks_record_create' => $this->dateTime(),
-            'vks_record_ipdate' => $this->dateTime(),
+            'vks_record_update' => $this->dateTime(),
 
             'vks_upcoming_session' => $this->boolean()                                  // предстоящий сеанс ВКС
         ], $tableOptions);

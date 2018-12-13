@@ -50,7 +50,12 @@ class VksSessions extends \yii\db\ActiveRecord
     {
         return [
             [['vks_date', 'vks_type', 'vks_employee_receive_msg', 'vks_receive_msg_datetime', 'vks_employee_send_msg'], 'required'],
-            [['vks_date', 'vks_teh_time_start', 'vks_teh_time_end', 'vks_work_time_start', 'vks_work_time_end', 'vks_order_date', 'vks_record_create', 'vks_record_ipdate'], 'safe'],
+            ['vks_remarks', 'trim'],
+            [['vks_date', 'vks_place', 'vks_teh_time_start', 'vks_teh_time_end',
+                'vks_work_time_start', 'vks_work_time_end', 'vks_order_date',
+                'vks_record_create', 'vks_record_ipdate', 'vks_subscriber_office',
+                'vks_subscriber_name','vks_order', 'vks_order_number', 'vks_order_date', 'vks_equipment',
+                'vks_type_text', 'vks_place_text', 'vks_order_text', 'vks_subscriber_office_text', 'vks_subscriber_mur_office_text', 'vks_employee_send_msg_text'], 'safe'],
         ];
     }
 
@@ -64,10 +69,10 @@ class VksSessions extends \yii\db\ActiveRecord
             'vks_date' => 'Дата проведения ВКС:',
             'vks_teh_time_start' => 'Время начала техн.:',
             'vks_teh_time_end' => 'Время окончания техн:',
-            'vks_duration_teh' => 'Vks Duration Teh',
+            'vks_duration_teh' => 'Длительность техн.',
             'vks_work_time_start' => 'Время начала рабоч.:',
             'vks_work_time_end' => 'Время окончания рабоч:',
-            'vks_duration_work' => 'Vks Duration Work',
+            'vks_duration_work' => 'Длительность рабоч.',
             'vks_type' => 'Тип ВКС:',
             'vks_place' => 'Место проведения ВКС:',
             'vks_subscriber_office' => 'Абонент:',
@@ -84,8 +89,8 @@ class VksSessions extends \yii\db\ActiveRecord
             'vks_receive_msg_datetime' => 'Дата сообщения:',
             'vks_employee_send_msg' => 'Передавший сообщение:',
             'vks_comments' => 'Примечание:',
-            'vks_record_create' => 'Vks Record Create',
-            'vks_record_ipdate' => 'Vks Record Ipdate',
+            'vks_record_create' => 'Запись создана',
+            'vks_record_ipdate' => 'Запись обновлена',
         ];
     }
 
@@ -123,4 +128,128 @@ class VksSessions extends \yii\db\ActiveRecord
         vks_employees_tbl C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
         return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
     }
+
+    public function getVksEmployees4List()
+    {
+        $sql = 'SELECT id, username FROM tehdoc.user';
+        return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'username');
+    }
+
+
+    public function getVksType()
+    {
+
+        return $this->hasOne(VksTypes::class, ['id' => 'vks_type']);
+    }
+
+    public function getVksPlace()
+    {
+        return $this->hasOne(VksPlaces::class, ['id' => 'vks_place']);
+    }
+
+    public function getVksSubscriber()
+    {
+        return $this->hasOne(VksSubscribes::class, ['id' => 'vks_subscriber_office']);
+    }
+
+    public function getVksOrder()
+    {
+        return $this->hasOne(VksOrders::class, ['id' => 'vks_order']);
+    }
+
+    public function getVksSendMsg()
+    {
+        return $this->hasOne(VksEmployees::class, ['id' => 'vks_employee_send_msg']);
+    }
+
+    public function getType()
+    {
+        $depth = 1; // сколько уровней
+        if ($this->vksType){
+            $full = $this->vksType;
+            $parentCount = $full->parents()->count();
+            $parent = $full->parents($parentCount - $depth)->all();
+            $fullname = '';
+            foreach ($parent as $p) {
+                $fullname .= $p->name . ' ->';
+            }
+            return $fullname . ' ' . $this->vksType->name;
+        } else {
+            return '-';
+        }
+    }
+
+    public function getPlace()
+    {
+        $depth = 1; // сколько уровней
+        if ($this->vksPlace){
+            $full = $this->vksPlace;
+            $parentCount = $full->parents()->count();
+            $parent = $full->parents($parentCount - $depth)->all();
+            $fullname = '';
+            foreach ($parent as $p) {
+                $fullname .= $p->name . ' ->';
+            }
+            return $fullname . ' ' . $this->vksPlace->name;
+        } else {
+            return '-';
+        }
+    }
+
+    public function getSubscriber()
+    {
+        $depth = 1; // сколько уровней
+        if ($this->vksSubscriber){
+            $full = $this->vksSubscriber;
+            $parentCount = $full->parents()->count();
+            $parent = $full->parents($parentCount - $depth)->all();
+            $fullname = '';
+            foreach ($parent as $p) {
+                $fullname .= $p->name . ' ->';
+            }
+            return $fullname . ' ' . $this->vksSubscriber->name . " -> ". $this->vks_subscriber_name;
+        } else {
+            return '-';
+        }
+    }
+
+    public function getOrder()
+    {
+        $depth = 1; // сколько уровней
+        if ($this->vksOrder){
+            $full = $this->vksOrder;
+            $parentCount = $full->parents()->count();
+            $parent = $full->parents($parentCount - $depth)->all();
+            $fullname = '';
+            foreach ($parent as $p) {
+                $fullname .= $p->name . ' ->';
+            }
+            return $fullname . ' ' . $this->vksOrder->name;
+        } else {
+            return '-';
+        }
+    }
+
+    public function getSendMsg()
+    {
+        $depth = 1; // сколько уровней
+        if ($this->vksSendMsg){
+            $full = $this->vksSendMsg;
+            $parentCount = $full->parents()->count();
+            $parent = $full->parents($parentCount - $depth)->all();
+            $fullname = '';
+            foreach ($parent as $p) {
+                $fullname .= $p->name . ' ->';
+            }
+            return $fullname . ' ' . $this->vksSendMsg->name;
+        } else {
+            return '-';
+        }
+    }
+
+
+
+
+
+
 }

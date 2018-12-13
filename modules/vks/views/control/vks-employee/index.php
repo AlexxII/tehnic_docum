@@ -109,10 +109,11 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                     return true;
                 }'),
                             'dragDrop' => new \yii\web\JsExpression('function(node, data) {
-                    $.get("/vks/control/vks-employee/move", {item: data.otherNode.data.id, action: data.hitMode, second:
-                    node.data.id},function(){
-                    data.otherNode.moveTo(node, data.hitMode);
-                    })
+                    $.get("/vks/control/vks-employee/move", 
+                        {item: data.otherNode.data.id, action: data.hitMode, second:node.data.id, parent:node.title},
+                        function(){
+                            data.otherNode.moveTo(node, data.hitMode);
+                        })
                 }'),
                         ],
                         'filter' => [
@@ -212,6 +213,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             </div>
         </div>
     </div>
+
 
 
     <div class="col-lg-5 col-md-5">

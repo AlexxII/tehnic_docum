@@ -9,10 +9,15 @@ namespace app\modules\vks\assets;
 
 use yii\web\AssetBundle;
 
-class MaskedInputAsset extends AssetBundle
+class FormAsset extends AssetBundle
 {
     public $sourcePath = '@app/modules/vks/lib';
+    public $css = [
+        'css/jquery-ui.min.css'
+    ];
+
     public $js = [
         'js/jquery.maskedinput.js',
+        'js/jquery-ui.min.js',
     ];
 }

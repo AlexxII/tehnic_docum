@@ -157,7 +157,7 @@ class User extends ActiveRecord implements IdentityInterface
         return $role->description;
       }
     } else {
-      echo '-';
+      return '-';
     }
   }
 

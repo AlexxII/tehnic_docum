@@ -131,7 +131,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
                             $(".classif").hide();
                             $(".sendbtn").hide();
                             var node = data.node;
-                            var table = $("#example").DataTable();
                             if (node.key == -999){
                                 $(".add-subcategory").hide();
                                 return;

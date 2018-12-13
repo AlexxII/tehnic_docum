@@ -25,12 +25,15 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
         font-size: 18px;
         color: #1e6887;
     }
+
     .fa {
         font-size: 15px;
     }
+
     ul.fancytree-container {
         font-size: 14px;
     }
+
     input {
         color: black;
     }
@@ -178,29 +181,45 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
         }')
                         ],
                         'activate' => new \yii\web\JsExpression('function(node, data) {
-                        var node = data.node;
-                        var lvl = node.data.lvl;
-                        if (node.key == -999){
-                            $(".add-subcategory").hide();
-                            return;
-                        } else {
-                            $(".add-subcategory").show();
-                        }
-                        if (lvl > 1){
-                            $(".add-subcategory").hide();
-                        }
-                        if (lvl == 0){
-                            $(".del-node").hide();
-                            $(".del-multi-nodes").hide();
-                        } else {
-                            if (node.hasChildren()){
-                                $(".del-multi-nodes").show();
+                            var node = data.node;
+                            var lvl = node.data.lvl;
+                            if (node.key == -999){
+                                $(".add-subcategory").hide();
+                                return;
                             } else {
-                                $(".del-multi-nodes").hide();
+                                $(".add-subcategory").show();
                             }
-                            $(".del-node").show();
-                        }
-        }'),
+                            if (lvl > 1){
+                                $(".add-subcategory").hide();
+                            }
+                            if (lvl == 0){
+                                $(".del-node").hide();
+                                $(".del-multi-nodes").hide();
+                            } else {
+                                if (node.hasChildren()){
+                                    $(".del-multi-nodes").show();
+                                } else {
+                                    $(".del-multi-nodes").hide();
+                                }
+                                $(".del-node").show();
+                            }
+                            var id = node.data.id;
+                            if (lvl == 2) {
+                                $("#surnames-control").prop("disabled", false);
+                            } else {
+                                $("#surnames-control").prop("disabled", true);
+                                
+                            }
+                            $(".save-btn").prop("disabled", true);
+                            var url = "/vks/control/vks-subscribes/surnames"; 
+                            $.get(url, {id:id}, function(data){
+                                if (data){
+                                    var surnames = JSON.parse(data);
+                                    $("#surnames-control").val(surnames);
+                                    window.nodeId = id;
+                                }
+                            })                        
+                        }'),
                         'renderNode' => new \yii\web\JsExpression('function(node, data) {
                         if (data.node.key == -999){
                             $(".add-category").show();
@@ -213,18 +232,34 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
         </div>
     </div>
 
-
-    <div class="col-lg-5 col-md-5">
+    <div class="col-lg-5 col-md-5" style="margin-bottom: 10px">
         <div class="alert alert-warning">
             <a href="#" class="close" data-dismiss="alert">&times;</a>
-            <strong>Внимание!</strong> Будьте внимательны!
+            <strong>Внимание!</strong> Выберите ведомство в каталоге и укажите фамилии. Будьте внимательны!
         </div>
     </div>
 
+    <div class="col-lg-5 col-md-5 about">
+        <div class="about-info"></div>
+        <form action="create-table" method="post" class="input-add">
+            <div class="about-main">
+                <input id="node-id" style="display: none" readonly>
+                <label>Фамилии и инициалы сотрудников:</label>
+                <textarea type="text" id="surnames-control" class="form-control" name="surnames"
+                          style="resize: vertical" rows=5 disabled></textarea>
+                <label style="font-weight:400;font-size: 10px">Фамилии перечиляются через ";". Например: Шойгу С.К.;
+                    Герасимов В.В.</label>
+            </div>
+            <div class="about-footer"></div>
+            <button type="submit" onclick="saveClick(event)" class="btn btn-primary save-btn" disabled>Сохранить</button>
+        </form>
+    </div>
 </div>
 
 
 <script>
+    var nodeId;
+
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
@@ -234,7 +269,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             event.preventDefault();
             var node = $(".ui-draggable-handle").fancytree("getActiveNode");
             if (!node) {
-                alert("Выберите родительскую категорию");
+                alert("Выберите родительский элемент");
                 return;
             }
             if (node.data.lvl <= 1) {
@@ -268,40 +303,16 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             event.preventDefault();
             var tree = $(".ui-draggable-handle").fancytree("getTree");
             tree.reload();
-            $(".del-root").hide();
             $(".del-node").hide();
             $(".del-multi-nodes").hide();
+            $(".save-btn").prop("disabled", true);
+            $("#surnames-control").prop("disabled", true);
         })
     });
 
     $(document).ready(function () {
-        $('.del-root').click(function (event) {
-            var csrf = $('meta[name=csrf-token]').attr("content");
-            if (confirm('Вы уверены, что хотите удалить выбранный классификатор вместе с вложениями?')) {
-                event.preventDefault();
-                var node = $(".ui-draggable-handle").fancytree("getActiveNode");
-                if (!node){
-                    alert('Выберите родительский классификатор');
-                    return;
-                }
-                $.ajax({
-                    url: "/vks/control/vks-subscribes/delete-root",
-                    type: "post",
-                    data: {id: node.data.id, _csrf: csrf}
-                })
-                    .done(function () {
-                        node.remove();
-                        restoreInputs(false, false);
-                        $('.about-info').html('');
-                        $('.del-root').hide();
-                    })
-                    .fail(function () {
-                        alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
-                    });
-            }
-        });
         $('.del-node').click(function (event) {
-            if (confirm('Вы уверены, что хотите удалить выбранный классификатор?')) {
+            if (confirm('Вы уверены, что хотите удалить выбранный элемент?')) {
                 event.preventDefault();
                 var csrf = $('meta[name=csrf-token]').attr("content");
                 var node = $(".ui-draggable-handle").fancytree("getActiveNode");
@@ -320,9 +331,8 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                     });
             }
         });
-
         $('.del-multi-nodes').click(function (event) {
-            if (confirm('Вы уверены, что хотите удалить выбранный классификатор вместе с вложениями?')) {
+            if (confirm('Вы уверены, что хотите удалить выбраннyю ветку вместе с вложениями?')) {
                 event.preventDefault();
                 var csrf = $('meta[name=csrf-token]').attr("content");
                 var node = $(".ui-draggable-handle").fancytree("getActiveNode");
@@ -386,7 +396,27 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
         $("span#matches").text("");
         var tree = $(".ui-draggable-handle").fancytree("getTree");
         tree.clearFilter();
+
     }).attr("disabled", true);
+
+    function goodAlert(text) {
+        var div = ''+
+            '<div id="w3-success-0" class="alert-success alert fade in">'+
+            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+            text +
+            '</div>';
+        return div;
+    }
+
+    function badAlert(text) {
+        var div = ''+
+            '<div id="w3-success-0" class="alert-danger alert fade in">'+
+            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+            text +
+            '</div>';
+        return div;
+    }
+
 
     $(document).ready(function () {
         $("input[name=search]").keyup(function (e) {
@@ -396,6 +426,38 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             }
         })
     });
+
+    $(document).ready(function () {
+        $("textarea").on('keyup mouseclick', function () {
+            $(".save-btn").prop("disabled", this.value.length == "" ? true : false);
+        });
+    });
+
+    function saveClick(e) {
+        e.preventDefault();
+        var csrf = $('meta[name=csrf-token]').attr("content");
+        var nodeId = window.nodeId;
+        var surnames = $("textarea").val();
+        $.ajax({
+            url: "/vks/control/vks-subscribes/surnames-save",
+            type: "post",
+            data: {Data: surnames, _csrf: csrf, id: nodeId},
+            success: function (result) {
+                if (result){
+
+                    $('.about-info').hide().html(goodAlert('Записи добавлены в БД.')).fadeIn('slow');
+                } else {
+                    $('.about-info').hide().html(badAlert('Записи не сохранены в БД. Попробуйте перезагрузить страницу и попробовап' +
+                        'снова. При повторных ошибках обратитесь к разработчику.')).fadeIn('slow');
+                }
+            },
+            error: function () {
+                $('.about-info').hide().html(badAlert('Записи не сохранены в БД. Попробуйте перезагрузить страницу и попробовап' +
+                    'снова. При повторных ошибках обратитесь к разработчику.')).fadeIn('slow');
+            }
+        });
+
+    }
 
 
 </script>

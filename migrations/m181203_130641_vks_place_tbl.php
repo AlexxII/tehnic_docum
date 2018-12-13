@@ -29,7 +29,7 @@ class m181203_130641_vks_place_tbl extends Migration
         ], $tableOptions);
 
         $sql = 'INSERT INTO' . self::TABLE_NAME . '(id, root, lft, rgt, lvl, name, parent_id) 
-                VALUES (1, 1, 1, 2, 0, "Места проведения ВКС", 1)';
+                VALUES (1, 1, 1, 2, 0, "Студии проведения ВКС", 1)';
         \Yii::$app->db->createCommand($sql)->execute();
     }
 

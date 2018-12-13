@@ -10,11 +10,13 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\modules\tehdoc\asset\TehdocAsset;
 
 ?>
 <?php
 
 AppAsset::register($this);    // регистрация ресурсов всего приложения
+TehdocAsset::register($this);
 
 ?>
 <?php $this->beginPage() ?>
@@ -81,6 +83,8 @@ AppAsset::register($this);    // регистрация ресурсов все�
 
 <?php $this->beginBody() ?>
 
+<noscript><strong>Откючен JavaScript</strong> . Корректаная работа приложения невозможна.</noscript>
+
 <div class="wrap">
     <?php
     NavBar::begin([
@@ -103,8 +107,8 @@ AppAsset::register($this);    // регистрация ресурсов все�
                     ['label' => 'Добавить прошедший сеанс', 'url' => ['/vks/sessions/confirm']],
                     '<li class="divider"></li>',
                     '<li class="dropdown-header" style="font-size: 10px">Статистика</li>',
-                    ['label' => 'Архив сеансов', 'url' => ['/vks/sessions/archive']],
-                    ['label' => 'Переработка', 'url' => ['/vks/sessions/']],
+                    ['label' => 'Архив сеансов ВКС', 'url' => ['/vks/sessions/archive']],
+                    ['label' => 'Переработка сотр.', 'url' => ['/vks/sessions/']],
                 ],
             ],
             [
@@ -112,7 +116,7 @@ AppAsset::register($this);    // регистрация ресурсов все�
                 'items' => [
                     '<li class="dropdown-header" style="font-size: 10px">Системные</li>',
                     ['label' => 'Тип ВКС', 'url' => ['/vks/control/vks-type']],
-                    ['label' => 'Места проведения вкс', 'url' => ['/vks/control/vks-place']],
+                    ['label' => 'Студии проведения ВКС', 'url' => ['/vks/control/vks-place']],
                     ['label' => 'Абоненты', 'url' => ['/vks/control/vks-subscribes']],
                     ['label' => 'Распоряжения', 'url' => ['/vks/control/vks-order']],
                     ['label' => 'Сотрудники', 'url' => ['/vks/control/vks-employee']],

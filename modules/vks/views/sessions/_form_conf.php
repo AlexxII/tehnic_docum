@@ -142,17 +142,7 @@ $vks_equipment_hint = '3';
         <?= $form->field($model, 'vks_employee', [
             'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
                 data-toggle="tooltip" data-placement="top" title="' . $vks_employee_hint . '"></sup>{input}{hint}{error}'
-        ])->widget(\kartik\tree\TreeViewInput::class, [
-                'query' => \app\modules\admin\models\PlacementTbl::find()->addOrderBy('root, lft'),
-                'name' => 'placement_kv',
-                'asDropdown' => true,
-                'multiple' => false,
-                'fontAwesome' => true,
-                'rootOptions' => [
-                    'label' => '<i class="fa fa-tree"></i>',
-                ]
-            ]
-        )->hint('', ['class' => ' w3-label-under']);
+        ])->dropDownList($model->vksEmployees4List, ['prompt' => ['text' => 'Выберите', 'options' => ['value' => 'none', 'disabled' => 'true', 'selected' => 'true']]])->hint('', ['class' => ' w3-label-under']);
         ?>
     </div>
 
@@ -255,50 +245,6 @@ $vks_equipment_hint = '3';
             $('.fact-date').val(d);
         });
     });
-
-    $(document).ready(function () {
-        var variable = [];
-        var cats, leaves, del = [];
-        $.ajax("/admin/category/get-leaves")
-            .done(function (data) {
-                data = jQuery.parseJSON(data);
-                cats = data.cat;
-                leaves = data.leaves;
-                for (var i = 0; i < cats.length; i++) {
-                    variable[i] = cats[i].id;
-                }
-                for (var i = 0; i < leaves.length; i++) {
-                    del[i] = leaves[i].id;
-                }
-                variable.forEach(function (t) {
-                    if (contains(del, t)) {
-                        return;
-                    }
-                    var element = $("select option[value='" + t + "']");
-                    $("select option[value='" + t + "']").attr('disabled', true);
-                    $("select option[value='" + t + "']").css({
-                        "background-color": '#e8e8e8',
-                        "font-weight": 700
-                    });
-                });
-            })
-            .fail(function () {
-//                alert( "Произошда ошибка в выводе категорий." );
-            })
-            .always(function () {
-//                alert( "complete" );
-            });
-
-    });
-
-    function contains(arr, elem) {
-        for (var i = 0; i < arr.length; i++) {
-            if (arr[i] === elem) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 </script>
 

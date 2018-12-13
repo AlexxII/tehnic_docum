@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
 
 
-$this->title = 'Место проведения ВКС';
+$this->title = 'Студии проведения ВКС';
 $this->params['breadcrumbs'][] = ['label' => 'ВКС', 'url' => ['/vks']];
 $this->params['breadcrumbs'][] = ['label' => 'Журнал', 'url' => ['/vks/sessions']];
 $this->params['breadcrumbs'][] = $this->title;
