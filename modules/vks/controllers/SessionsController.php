@@ -41,8 +41,9 @@ class SessionsController extends Controller
                 'formatter' => function ($d, $row) { //TODO разобраться с форматом отображения даты
                     if ($d != null) {
                         $month = date('m', strtotime($d));
+                        $year = date('Y г.', strtotime($d));
                         $dates = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-                        return $dates[$month - 1];
+                        return $dates[$month - 1] . ' ' . $year;
                     } else {
                         return '-';
                     }
@@ -191,15 +192,7 @@ class SessionsController extends Controller
                 $newArrayOfNames[$i]['label'] = $temp;
             }
         }
-//        return var_dump($arrayOfNames);
-//        return var_dump($newArrayOfNames);
         return json_encode(array_splice($newArrayOfNames, 0));
-        return json_encode($arrayOfNames);
-
-//        return var_dump(VksSubscribes::find()->select(['surnames'])->asArray()->all());
-
-//        $array = ["Гуцан А.В.", "Голодец О.Ю.", "Жорж З.Д"];
-//        return json_encode($array);
     }
 
     public function actionView($id)

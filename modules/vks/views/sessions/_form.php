@@ -270,15 +270,6 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
                         }
                     });
                 });
-
-                // var names = [];
-                // var allNames = [];
-                // newData.forEach(function (item, i, arr) {
-                //     names[arr[i].id] = arr[i].surnames.split(';');
-                // });
-                // names.forEach(function (item, i , arr) {
-                //     allNames = names.concat(arr[i]);
-                // });
             },
             error: function (data) {
                 console.log('error occure');

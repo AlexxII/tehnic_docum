@@ -87,9 +87,9 @@ $dell_hint = 'Удалить выделенные сеансы';
 
 
 <script>
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+    // $(document).ready(function () {
+    //     $('[data-toggle="tooltip"]').tooltip();
+    // });
 
     // ************************* Работа таблицы **************************************
 
@@ -198,6 +198,7 @@ $dell_hint = 'Удалить выделенные сеансы';
                     "orderable": false,
                     "targets": -2,
                     "data": null,
+                    "width": '70px',
                     "defaultContent":
                         "<a href='#' class='fa fa-edit edit' style='padding-right: 5px' title='Обновить' data-placement='top' data-toggle='tooltip'></a>" +
                         "<a href='#' class='fa fa-info view' title='Подробности' style='padding-right: 5px'></a>" +
@@ -307,4 +308,9 @@ $dell_hint = 'Удалить выделенные сеансы';
             }
         })
     });
+
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
 </script>

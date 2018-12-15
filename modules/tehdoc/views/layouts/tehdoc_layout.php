@@ -96,8 +96,17 @@ TehdocAsset::register($this);       // регистрация ресурсов �
         'options' => ['class' => 'navbar-nav navbar-right'],
         'encodeLabels' => false,
         'items' => [
-            ['label' => 'Списание', 'url' => ['/tehdoc/']],
-            ['label' => 'Приемка', 'url' => ['/tehdoc/']],
+            [
+                'label' => 'Движение',
+                'items' => [
+                    '<li class="dropdown-header" style="font-size: 10px">Движение оборудования</li>',
+                    ['label' => 'Списание', 'url' => ['/tehdoc/']],
+                    ['label' => 'Приемка', 'url' => ['/tehdoc/']],
+                    '<li class="divider"></li>',
+                    '<li class="dropdown-header" style="font-size: 10px">Учет</li>',
+                    ['label' => 'Неисправности', 'url' => ['/tehdoc/']],
+                ],
+            ],
             [
                 'label' => 'Представления',
                 'items' => [

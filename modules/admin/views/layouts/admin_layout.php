@@ -101,14 +101,15 @@ TehdocAsset::register($this);       // регистрация ресурсов �
                 ]
             ],
             [
-                'label' => 'Представления',
+                'label' => 'Настройки',
                 'items' => [
-                    '<li class="dropdown-header" style="font-size: 10px">Системные</li>',
+                    '<li class="dropdown-header" style="font-size: 10px">Представления</li>',
                     ['label' => 'Категории', 'url' => ['/admin/category/index']],
                     ['label' => 'Места размещения', 'url' => ['/admin/placement/index']],
-                    '<li class="divider"></li>',
-                    '<li class="dropdown-header" style="font-size: 10px">Пользовательские</li>',
                     ['label' => 'Классификаторы', 'url' => ['/admin/classifier/index']],
+                    '<li class="divider"></li>',
+                    '<li class="dropdown-header" style="font-size: 10px">Инфтерфейса</li>',
+                    ['label' => 'Производитель/модель', 'url' => ['/admin/interface/index']],
                 ],
             ],
             Yii::$app->user->isGuest ? (
@@ -157,11 +158,6 @@ TehdocAsset::register($this);       // регистрация ресурсов �
 </div>
 
 <?php $this->endBody() ?>
-<script src="/js/kv-tree.min.js"></script>
-<script src="/js/bootstrap-dialog.js"></script>
-<script src="/js/dialog-yii.min.js"></script>
-<script src="/js/kv-widgets.min.js"></script>
-<script src="/js/kv-tree-input.js"></script>
 </body>
 </html>
 <?php $this->endPage() ?>

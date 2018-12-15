@@ -241,7 +241,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 
     <div class="col-lg-5 col-md-5 about">
         <div class="about-info"></div>
-        <form action="create-table" method="post" class="input-add">
+        <form action="create" method="post" class="input-add">
             <div class="about-main">
                 <input id="node-id" style="display: none" readonly>
                 <label>Фамилии и инициалы сотрудников:</label>

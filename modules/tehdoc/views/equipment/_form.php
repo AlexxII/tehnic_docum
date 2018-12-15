@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use kartik\file\FileInput;
 use app\modules\tehdoc\models\Equipment;
+use app\modules\tehdoc\asset\TehFormAsset;
 
 // TODO Добавить checkbox - возвращаться в данную форму после сохранения.
 
@@ -26,7 +27,10 @@ use app\modules\tehdoc\models\Equipment;
     }
 </style>
 
-<?php $cat_hint = 'Обязательное! Необходима для классификации оборудования.';
+<?php
+TehFormAsset::register($this);
+
+$cat_hint = 'Обязательное! Необходима для классификации оборудования.';
 $title_hint = 'Обязательное! Необходимо для отображения в таблице.';
 $place_hint = 'Обязательное! Укажите точное размещение оборудования. На эти данные будут опираться другие таблицы.';
 $date_hint = 'Если не известен месяц, выберите январь известного года.';
@@ -61,10 +65,10 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
     </div>
     <div class="form-group">
         <div class="form-group col-md-6 col-lg-6">
-            <?= $form->field($model, 'eq_manufact')->textInput()->hint('Например: HP, ACER', ['class' => ' w3-label-under']); ?>
+            <?= $form->field($model, 'eq_manufact')->textInput(['id' => 'manufact'])->hint('Например: HP, ACER', ['class' => ' w3-label-under']); ?>
         </div>
         <div class="form-group col-md-6 col-lg-6">
-            <?= $form->field($model, 'eq_model')->textInput()->hint('Например: LJ 1022', ['class' => ' w3-label-under']); ?>
+            <?= $form->field($model, 'eq_model')->textInput(['id' => 'models'])->hint('Например: LJ 1022', ['class' => ' w3-label-under']); ?>
         </div>
     </div>
     <div class="form-group">
@@ -216,7 +220,7 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
                 });
             })
             .fail(function () {
-//                alert( "Произошда ошибка в выводе категорий." );
+//                alert( "Произошла ошибка в выводе категорий." );
             })
             .always(function () {
 //                alert( "complete" );
@@ -232,6 +236,45 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
         }
         return false;
     }
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'get',
+            url: '/admin/interface/manufact',
+            autoFocus: true,
+            success: function (data) {
+                var manufact = $.parseJSON(data);
+                $(function() {
+                    $("#manufact").autocomplete({
+                        source: manufact,
+                    });
+                });
+            },
+            error: function (data) {
+                console.log('error');
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'get',
+            url: '/admin/interface/models',
+            autoFocus: true,
+            success: function (data) {
+                var models = $.parseJSON(data);
+                $(function() {
+                    $("#models").autocomplete({
+                        source: models,
+                    });
+                });
+            },
+            error: function (data) {
+                console.log('error');
+            }
+        });
+    });
+
 
 
     // $(document).ready(function () {
