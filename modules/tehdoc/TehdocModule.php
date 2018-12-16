@@ -8,7 +8,7 @@ class TehdocModule extends \yii\base\Module
 {
 
   public $layout = 'tehdoc_layout.php';
-  public $defaultRoute = '/equipment';
+//  public $defaultRoute = '/equipment';
 
   
   public function init()

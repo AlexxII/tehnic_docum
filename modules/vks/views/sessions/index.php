@@ -203,7 +203,7 @@ $dell_hint = 'Удалить выделенные сеансы';
                         "<a href='#' class='fa fa-edit edit' style='padding-right: 5px' title='Обновить' data-placement='top' data-toggle='tooltip'></a>" +
                         "<a href='#' class='fa fa-info view' title='Подробности' style='padding-right: 5px'></a>" +
                         "<a href='#' class='fa fa-calendar-check-o confirm' title='Подтвердить сеанс' style='padding-right: 5px'></a>" +
-                        "<a href='#' class='fa fa-calendar-minus-o confirm' title='Отменить сеанс'></a>"
+                        "<a href='#' class='fa fa-calendar-minus-o abort' title='Отменить сеанс'></a>"
 
                 }, {
                     "orderable": false,
@@ -256,6 +256,11 @@ $dell_hint = 'Удалить выделенные сеансы';
             var data = table.row($(this).parents('tr')).data();
             var href = "/vks/sessions/view?id=" + data[0];
             window.open(href);
+        });
+        $('#main-table tbody').on('click', '.confirm', function (e) {
+            e.preventDefault();
+            var data = table.row($(this).parents('tr')).data();
+            location.href = "/vks/sessions/confirm?id=" + data[0];
         });
     });
 

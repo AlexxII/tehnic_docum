@@ -108,6 +108,7 @@ TehdocAsset::register($this);
                     '<li class="divider"></li>',
                     '<li class="dropdown-header" style="font-size: 10px">Статистика</li>',
                     ['label' => 'Архив сеансов ВКС', 'url' => ['/vks/sessions/archive']],
+                    ['label' => 'Анализ сеансов ВКС', 'url' => ['/vks/sessions/analysis']],
                     ['label' => 'Переработка сотр.', 'url' => ['/vks/sessions/']],
                 ],
             ],

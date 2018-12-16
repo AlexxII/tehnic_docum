@@ -9,7 +9,7 @@ namespace app\modules\vks\assets;
 
 use yii\web\AssetBundle;
 
-class FormAsset extends AssetBundle
+class   FormAsset extends AssetBundle
 {
     public $sourcePath = '@app/modules/vks/lib';
     public $css = [

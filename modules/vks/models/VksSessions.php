@@ -31,7 +31,7 @@ use yii\helpers\ArrayHelper;
  * @property int $vks_employee_send_msg
  * @property string $vks_comments
  * @property string $vks_record_create
- * @property string $vks_record_ipdate
+ * @property string $vks_record_update
  */
 class VksSessions extends \yii\db\ActiveRecord
 {
@@ -53,7 +53,7 @@ class VksSessions extends \yii\db\ActiveRecord
             ['vks_remarks', 'trim'],
             [['vks_date', 'vks_place', 'vks_teh_time_start', 'vks_teh_time_end',
                 'vks_work_time_start', 'vks_work_time_end', 'vks_order_date',
-                'vks_record_create', 'vks_record_ipdate', 'vks_subscriber_office',
+                'vks_record_create', 'vks_record_update', 'vks_subscriber_office',
                 'vks_subscriber_name','vks_order', 'vks_order_number', 'vks_order_date', 'vks_equipment',
                 'vks_type_text', 'vks_place_text', 'vks_order_text', 'vks_subscriber_office_text', 'vks_subscriber_mur_office_text', 'vks_employee_send_msg_text'], 'safe'],
         ];
@@ -90,7 +90,7 @@ class VksSessions extends \yii\db\ActiveRecord
             'vks_employee_send_msg' => 'Передавший сообщение:',
             'vks_comments' => 'Примечание:',
             'vks_record_create' => 'Запись создана',
-            'vks_record_ipdate' => 'Запись обновлена',
+            'vks_record_update' => 'Запись обновлена',
         ];
     }
 
@@ -108,10 +108,17 @@ class VksSessions extends \yii\db\ActiveRecord
         return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
     }
 
-    public function getVksSubscribesList()
+    public function getVksMskSubscribesList()
     {
         $sql = "SELECT C1.id, C1.name, C2.name as gr from vks_subscribes_tbl C1 LEFT JOIN 
-        vks_subscribes_tbl C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
+        vks_subscribes_tbl C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 AND C1.root = 1 ORDER BY C1.lft";
+        return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
+    }
+
+    public function getVksRegionSubscribesList()
+    {
+        $sql = "SELECT C1.id, C1.name, C2.name as gr from vks_subscribes_tbl C1 LEFT JOIN 
+        vks_subscribes_tbl C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 AND C1.root = 2 ORDER BY C1.lft";
         return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
     }
 

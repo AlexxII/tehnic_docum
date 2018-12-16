@@ -107,7 +107,7 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
                 <?= $form->field($model, 'vks_subscriber_office', [
                     'template' => '{label} <sup class="h-title fa fa-info-circle nonreq" aria-hidden="true"
                 data-toggle="tooltip" data-placement="top" title="' . $vks_subscrof_hint . '"></sup>{input}{hint}'
-                ])->dropDownList($model->vksSubscribesList, ['id' => 'subscriber-office', 'data-name' => 'vks_subscriber_office', 'prompt' => ['text' => 'Выберите', 'options' => ['value' => 'none', 'disabled' => 'true', 'selected' => 'true']]])->hint('', ['class' => ' w3-label-under']);
+                ])->dropDownList($model->vksMskSubscribesList, ['id' => 'subscriber-office', 'data-name' => 'vks_subscriber_office', 'prompt' => ['text' => 'Выберите', 'options' => ['value' => 'none', 'disabled' => 'true', 'selected' => 'true']]])->hint('', ['class' => ' w3-label-under']);
                 ?>
                 <input name="VksSessions[vks_subscriber_office_text]" id="vks_subscriber_office_text"
                        style="display: none">

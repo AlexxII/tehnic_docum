@@ -77,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'vks_comments',
                 'vks_record_create',
-                'vks_record_ipdate'
+                'vks_record_update'
             ]
         ]) ?>
     </div>
