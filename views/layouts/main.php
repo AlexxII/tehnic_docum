@@ -86,8 +86,8 @@ $exit_hint = 'Выход ';
       'items' => [
           ['label' => 'ТехДок', 'url' => ['/tehdoc']],
           ['label' => 'ВКС', 'url' => ['/vks']],
-          ['label' => 'ТО', 'url' => ['/to']],
           ['label' => 'Админ панель', 'url' => ['/admin']],
+          ['label' => 'Учеба', 'url' => ['site/j-study']],
           Yii::$app->user->isGuest ? (
           ['label' => 'Войти', 'url' => ['/site/login']]
           ) : ([
@@ -119,7 +119,7 @@ $exit_hint = 'Выход ';
   NavBar::end();
   ?>
 
-  <div class="container">
+  <div class="container" style="padding-top: 80px">
     <?= Breadcrumbs::widget([
         'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
     ]) ?>

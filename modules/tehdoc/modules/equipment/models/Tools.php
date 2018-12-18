@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\tehdoc\models;
+namespace app\modules\tehdoc\modules\equipment\models;
 
 use app\modules\admin\models\Placement;
 use app\modules\tehdoc\models\Images;
@@ -24,7 +24,7 @@ use yii\helpers\ArrayHelper;
  * @property int $quantity
  * @property int $valid Оборудование по умолчанию будет отображаться
  */
-class Equipment extends \yii\db\ActiveRecord
+class Tools extends \yii\db\ActiveRecord
 {
   /**
    * @inheritdoc

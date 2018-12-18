@@ -37,8 +37,32 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="row">
     <div class="col-xs-6 col-sm-3 placeholder">
         <a href="#"></a>
-        <h2>АРМ</h2>
-        <span class="text-muted" style="font-size: 20px">Добавить АРМ</span>
+        <h2>Оборудование</h2>
+        <span class="text-muted" style="font-size: 20px">Перечень оборудования</span>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 placeholder">
+        <a href="#"></a>
+        <h2>Документация</h2>
+        <span class="text-muted" style="font-size: 20px">Перечень документации</span>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 placeholder">
+        <a href="#"></a>
+        <h2>Схемы</h2>
+        <span class="text-muted" style="font-size: 20px">Перечень схем</span>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 placeholder">
+        <a href="#"></a>
+        <h2>ТО</h2>
+        <span class="text-muted" style="font-size: 20px">Техническое обслуживание</span>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 placeholder">
+        <a href="#"></a>
+        <h2></h2>
+        <span class="text-muted" style="font-size: 20px">Техническое обслуживание</span>
     </div>
 
 </div>

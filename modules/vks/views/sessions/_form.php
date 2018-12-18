@@ -4,8 +4,6 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use kartik\file\FileInput;
-use app\modules\tehdoc\models\Equipment;
 use app\modules\vks\assets\FormAsset;
 
 ?>
@@ -31,6 +29,7 @@ use app\modules\vks\assets\FormAsset;
     .control-label {
         font-size: 14px;
     }
+
 </style>
 
 <?php
@@ -50,33 +49,35 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
 ?>
 
 <div>
-    <div class="col-lg-7 col-md-7" style="border-radius:2px;padding-top:10px">
+    <div class="col-lg-7 col-md-8" style="border-radius:2px;padding-top:10px">
         <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data', 'class' => '']]); ?>
 
         <div class="form-group">
-            <div class="form-group col-md-7 col-lg-7">
-                <?= $form->field($model, 'vks_date', [
-                    'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
+            <div class="form-group col-md-12 col-lg-9" style="padding: 0px">
+                <div class="form-group col-md-6 col-lg-6">
+                    <?= $form->field($model, 'vks_date', [
+                        'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
                 data-toggle="tooltip" data-placement="top" title="' . $vks_date_hint . '"></sup>{input}{hint}'
-                ])->textInput([
-                    'class' => 'vks-date form-control'
-                ])->hint('', ['class' => ' w3-label-under']); ?>
+                    ])->textInput([
+                        'class' => 'vks-date form-control'
+                    ])->hint('', ['class' => ' w3-label-under']); ?>
+                </div>
             </div>
         </div>
 
         <div class="form-group">
-            <div class="form-group col-md-7 col-lg-7">
-                <?= $form->field($model, 'vks_teh_time_start')->textInput(['class' => 'time-mask form-control'])->hint('', ['class' => ' w3-label-under']); ?>
-            </div>
-            <div class="form-group col-md-6 col-lg-6">
+            <div class="form-group col-md-12 col-lg-9" style="padding: 0px">
+                <div class="form-group col-md-6 col-lg-6">
+                    <?= $form->field($model, 'vks_teh_time_start')->textInput(['class' => 'time-mask form-control'])->hint('', ['class' => ' w3-label-under']); ?>
+                </div>
             </div>
         </div>
 
         <div class="form-group">
-            <div class="form-group col-md-7 col-lg-7">
-                <?= $form->field($model, 'vks_work_time_start')->textInput(['class' => 'time-mask form-control'])->hint(' ', ['class' => ' w3-label-under']); ?>
-            </div>
-            <div class="form-group col-md-6 col-lg-6">
+            <div class="form-group col-md-12 col-lg-9" style="padding: 0px">
+                <div class="form-group col-md-6 col-lg-6">
+                    <?= $form->field($model, 'vks_work_time_start')->textInput(['class' => 'time-mask form-control'])->hint(' ', ['class' => ' w3-label-under']); ?>
+                </div>
             </div>
         </div>
 
@@ -116,7 +117,7 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
                 <?= $form->field($model, 'vks_subscriber_name', [
                     'template' => '{label} <sup class="h-title fa fa-info-circle nonreq" aria-hidden="true"
                 data-toggle="tooltip" data-placement="top" title="' . $vks_subscr_hint . '"></sup>{input}'
-                ])->textInput(['id'=> 'subscriber-name'])->hint('', ['class' => ' w3-label-under']); ?>
+                ])->textInput(['id' => 'subscriber-name'])->hint('', ['class' => ' w3-label-under']); ?>
             </div>
         </div>
 
@@ -133,7 +134,8 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
             <?= $form->field($model, 'vks_comments')->textArea(array('style' => 'resize:vertical', 'rows' => '5')) ?>
         </div>
     </div>
-    <div class="col-lg-5 col-md-5" style="border-radius:4px;padding-top:10px;padding-bottom: 10px; margin-bottom: 15px;border: dashed 1px">
+    <div class="col-lg-5 col-md-4"
+         style="border-radius:4px;padding-top:10px;padding-bottom: 10px; margin-bottom: 15px;border: dashed 1px">
         <h3>Служебное</h3>
         <div class="form-group col-md-12 col-lg-12">
             <?php
@@ -250,16 +252,16 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
             autoFocus: true,
             success: function (data) {
                 var mskNames = $.parseJSON(data);
-                $(function() {
+                $(function () {
                     $("#subscriber-name").autocomplete({
                         source: mskNames,
-                        focus: function(event, ui) {
+                        focus: function (event, ui) {
                             // prevent autocomplete from updating the textbox
                             event.preventDefault();
                             // manually update the textbox
                             $(this).val(ui.item.label);
                         },
-                        select: function(event, ui) {
+                        select: function (event, ui) {
                             // prevent autocomplete from updating the textbox
                             event.preventDefault();
                             // manually update the textbox and hidden field

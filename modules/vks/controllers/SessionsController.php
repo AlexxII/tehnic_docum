@@ -2,7 +2,7 @@
 
 namespace app\modules\vks\controllers;
 
-use app\modules\tehdoc\models\SSP;
+use app\modules\tehdoc\modules\equipment\models\SSP;
 use app\modules\vks\models\VksSessions;
 use app\modules\vks\models\VksSessionsS;
 use app\modules\vks\models\VksSubscribes;
@@ -311,7 +311,7 @@ class SessionsController extends Controller
 
     public function actionSubscribersMsk()
     {
-        $sql = "SELECT id as value, surnames as label FROM vks_subscribes_tbl where surnames IS NOT NULL and surnames != ''";
+        $sql = "SELECT id as value, surnames as label FROM vks_subscribes_tbl where surnames IS NOT NULL and surnames != '' AND root = 1";
         $arrayOfNames = VksSubscribes::findBySql($sql)->asArray()->all();
         $newArrayOfNames = [];
         $tempArrayOfNames = [];

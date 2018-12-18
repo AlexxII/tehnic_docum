@@ -184,4 +184,9 @@ class SiteController extends Controller
         $auth->revoke($item, $user->getId());
     }
 
+    public function actionJStudy()
+    {
+        return $this->render('study');
+    }
+
 }

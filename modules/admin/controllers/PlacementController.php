@@ -4,7 +4,6 @@ namespace app\modules\admin\controllers;
 
 
 use app\modules\admin\models\Placement;
-use app\modules\tehdoc\modules\kernel\models\Equipment;
 use yii\web\Controller;
 
 class PlacementController extends Controller

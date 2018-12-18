@@ -197,7 +197,7 @@ $this->params['breadcrumbs'][] = $this->title;
             "serverSide": true,
             "responsive": true,
             "ajax": $.fn.dataTable.pipeline({
-                url: '/tehdoc/equipment/server-side',
+                url: '/tehdoc/equipment/tools/server-side',
                 pages: 2 // number of pages to cache
             }),
             "columnDefs": [{
@@ -227,12 +227,12 @@ $this->params['breadcrumbs'][] = $this->title;
         $('#main-table tbody').on('click', '.edit', function (e) {
             e.preventDefault();
             var data = table.row($(this).parents('tr')).data();
-            location.href = "/tehdoc/equipment/update?id=" + data[0];
+            location.href = "/tehdoc/equipment/tools/update?id=" + data[0];
         });
         $('#main-table tbody').on('click', '.view', function (e) {
             e.preventDefault();
             var data = table.row($(this).parents('tr')).data();
-            var href = "/tehdoc/equipment/view?id=" + data[0];
+            var href = "/tehdoc/equipment/tools/view?id=" + data[0];
             window.open(href);
         });
     });
@@ -271,7 +271,7 @@ $this->params['breadcrumbs'][] = $this->title;
             if (confirm('Вы действительно хотите удалить выделенное оборудование? Выделено ' + data.length + '!!!  ')) {
                 $(".modal").modal("show");
                 $.ajax({
-                    url: "/tehdoc/equipment/delete",
+                    url: "/tehdoc/equipment/tools/delete",
                     type: "post",
                     dataType: "JSON",
                     data: {jsonData: ar, _csrf: csrf},

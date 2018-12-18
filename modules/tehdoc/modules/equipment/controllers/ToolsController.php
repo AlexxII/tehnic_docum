@@ -1,12 +1,12 @@
 <?php
 
-namespace app\modules\tehdoc\controllers;
+namespace app\modules\tehdoc\modules\equipment\controllers;
 
 use app\modules\admin\models\Category;
 use app\modules\admin\models\Classifier;
 use app\modules\admin\models\Placement;
-use app\modules\tehdoc\models\Equipment;
-use app\modules\tehdoc\models\SSP;
+use app\modules\tehdoc\modules\equipment\models\Tools;
+use app\modules\tehdoc\modules\equipment\models\SSP;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -15,7 +15,7 @@ use yii\web\UploadedFile;
 use yii\db\mssql\PDO;
 use yii\base\DynamicModel;
 
-class EquipmentController extends Controller
+class ToolsController extends Controller
 {
     public function actionIndex()
     {
@@ -24,7 +24,7 @@ class EquipmentController extends Controller
 
     public function actionCreate()
     {
-        $model = new Equipment();
+        $model = new Tools();
         $fUpload = new Images();
         $model->quantity = 1;                             // По умолчанию, кол-во оборудования - 1
 
@@ -99,7 +99,7 @@ class EquipmentController extends Controller
 
     protected function findModel($id)
     {
-        if (($model = Equipment::find()->where(['id_eq' => $id])->limit(1)->all()) !== null) {
+        if (($model = Tools::find()->where(['id_eq' => $id])->limit(1)->all()) !== null) {
             if (!empty($model)) {
                 return $model[0];
             }

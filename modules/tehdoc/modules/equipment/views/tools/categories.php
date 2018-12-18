@@ -223,7 +223,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
 
-
         $('.hideMenu-button').click(function (e) {
             var indexes;
             e.preventDefault();

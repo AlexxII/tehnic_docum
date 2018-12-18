@@ -121,7 +121,7 @@ TehdocAsset::register($this);
                     ['label' => 'Абоненты', 'url' => ['/vks/control/vks-subscribes']],
                     ['label' => 'Распоряжения', 'url' => ['/vks/control/vks-order']],
                     ['label' => 'Сотрудники', 'url' => ['/vks/control/vks-employee']],
-                    ['label' => 'Оборудование', 'url' => ['/vks/control/vks-equipment']],
+                    ['label' => 'Оборудование', 'url' => ['/vks/control/vks-tools']],
                 ],
             ],
             Yii::$app->user->isGuest ? (

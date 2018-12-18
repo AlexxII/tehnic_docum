@@ -116,7 +116,7 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
         foreach ($model->photos as $k => $photo) {
             $allImages[] = "<img src='" . $photo->getImageUrl() . "' class='file-preview-image' style='max-width:100%;max-height:100%'>";
             $previewImagesConfig[] = [
-                'url' => Url::toRoute(ArrayHelper::merge(['/tehdoc/kernel/equipment/remove-image'], ['id' => $photo->id, '_csrf' => Html::csrfMetaTags()])),
+                'url' => Url::toRoute(ArrayHelper::merge(['/tehdoc/kernel/tools/remove-image'], ['id' => $photo->id, '_csrf' => Html::csrfMetaTags()])),
                 'key' => $photo->id
             ];
         }
@@ -159,7 +159,7 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
         $('#w1-tree-input-menu').on('change', function (e) {
             var text = $('#w1-tree-input').text();
             console.log(text);
-            $('#equipment-eq_title').val(text);
+            $('#tools-eq_title').val(text);
         });
     });
 
@@ -274,23 +274,6 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
             }
         });
     });
-
-
-
-    // $(document).ready(function () {
-    //     $("#equipment-category_id option").each(function () {
-    //         a = document.createElement("DIV");
-    //         b = document.createElement("DIV");
-    //         a.setAttribute("class", "select-selected");
-    //         a.appendChild(b);
-    //         b.textContent = '';
-    //         $(b).css({
-    //             color: "red"
-    //         });
-    //         this.appendChild(a);
-    //     });
-    // });
-
 
 </script>
 

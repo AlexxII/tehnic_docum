@@ -506,7 +506,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
 
     var headerInput = ''+
         '<label style="font-size: 14px">Название классификатора:</label>'+
-        '<input class="form-control node-id" name="node-id" readonly hidden>'+
+        '<input class="form-control node-id" name="node-id" readonly style="display:none">'+
         '<input class="form-control clsf-name" disabled name="clsf-name"'+
         'title="Вводите имя в колонке дерева классификаторов. Клавиша F2 или двойной щелчок мыши"'+
         'data-toggle="tooltip" data-placement="top">';
