@@ -2,16 +2,10 @@
 
 use yii\db\Migration;
 
-/**
- * Class m181203_130641_vks_place_tbl
- */
 class m181203_130641_vks_place_tbl extends Migration
 {
     const TABLE_NAME = '{{%vks_places_tbl}}';
 
-    /**
-     * @inheritdoc
-     */
     public function up()
     {
         $tableOptions = null;
@@ -36,5 +30,6 @@ class m181203_130641_vks_place_tbl extends Migration
     public function down()
     {
         $this->dropTable(self::TABLE_NAME);
+        return false;
     }
 }

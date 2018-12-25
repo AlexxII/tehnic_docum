@@ -33,7 +33,7 @@ class Placement extends ActiveRecord
 
   public static function tableName()
   {
-    return 'placement_tbl';
+    return 'teh_placement_tbl';
   }
 
   public static function find()

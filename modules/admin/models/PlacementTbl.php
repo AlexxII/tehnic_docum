@@ -11,6 +11,6 @@ class PlacementTbl extends \kartik\tree\models\Tree
    */
   public static function tableName()
   {
-    return 'placement_tbl';
+    return 'teh_placement_tbl';
   }
 }

@@ -12,11 +12,6 @@ use yii\db\ActiveRecord;
 
 class Tmodel extends ActiveRecord
 {
-//    public static function tableName()
-//    {
-//        return 'clsf_18353201_tbl';
-//    }
-
     private static $tableName;
 
     public function __construct($tableName = null) {

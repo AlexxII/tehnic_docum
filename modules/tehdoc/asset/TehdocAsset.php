@@ -11,7 +11,7 @@ class TehdocAsset extends AssetBundle
 
   public $css = [
       'css/tehdoc.css',
-      'css/bootstrap-datepicker.min.css'
+      'css/bootstrap-datepicker.min.css',
   ];
 
   public $js = [

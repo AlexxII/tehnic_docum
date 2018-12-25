@@ -54,12 +54,6 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
           'data-toggle' => 'tooltip',
           'data-placement' => 'top'
       ]) ?>
-      <?= Html::a('<i class="fa fa-tree" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm add-category',
-          'style' => ['margin-top' => '5px'],
-          'title' => $add_tree_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
       <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
           'style' => ['margin-top' => '5px'],
           'title' => $refresh_hint,
@@ -69,12 +63,6 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
       <?= Html::a('<i class="fa fa-trash" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-node',
           'style' => ['margin-top' => '5px', 'display' => 'none'],
           'title' => $del_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
-      <?= Html::a('</i><i class="fa fa-tree" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-root',
-          'style' => ['margin-top' => '5px', 'display' => 'none'],
-          'title' => $del_root_hint,
           'data-toggle' => 'tooltip',
           'data-placement' => 'top'
       ]) ?>
@@ -193,14 +181,18 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                 ],
                 'activate' => new \yii\web\JsExpression('function(node, data) {
                         var node = data.node;
+                        var lvl = node.data.lvl;
                         if (node.key == -999){
                             $(".add-subcategory").hide();
                             return;
                         } else {
                             $(".add-subcategory").show();
                         }
-                        if (node.data.lvl == 0){
-                            $(".del-root").show();
+                        if (lvl > 1){
+                            $(".add-subcategory").hide();
+                        }
+                        if (lvl == 0){
+//                            $(".del-root").show();
                             $(".del-node").hide();
                             $(".del-multi-nodes").hide();
                         } else {
@@ -209,7 +201,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
                             } else {
                                 $(".del-multi-nodes").hide();
                             }
-                            $(".del-root").hide();
+//                            $(".del-root").hide();
                             $(".del-node").show();
                         }
         }'),
@@ -245,11 +237,16 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
         $('.add-subcategory').click(function (event) {
             event.preventDefault();
             var node = $(".ui-draggable-handle").fancytree("getActiveNode");
-            if (!node) {
+             if (!node) {
                 alert("Выберите родительскую категорию");
                 return;
             }
-            node.editCreateNode("child", " ");
+            if (node.data.lvl <= 1) {
+                node.editCreateNode("child", " ");
+            } else {
+                alert("Нельзя создавать вложенность более 3х");
+                return;
+            }
         })
     });
 

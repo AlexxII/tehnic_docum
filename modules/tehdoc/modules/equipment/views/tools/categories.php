@@ -8,6 +8,7 @@ use app\modules\admin\models\ClassifierTbl;
 
 
 $this->title = 'Оборудование по категориям';
+$this->params['breadcrumbs'][] = ['label' => 'Тех.документация', 'url' => ['/tehdoc']];
 $this->params['breadcrumbs'][] = ['label' => 'Перечень оборудования', 'url' => ['/tehdoc']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -203,10 +204,13 @@ $classif_hint = 'Присвоить выделенному оборудован�
             </thead>
         </table>
     </div>
+
+
 </div>
 
 
 <script>
+
     // Глобальные переменные
 
     var nodeid;

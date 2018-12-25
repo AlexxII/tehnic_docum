@@ -7,7 +7,7 @@ $this->params['breadcrumbs'][] = ['label' => 'ВКС', 'url' => ['/vks']];
 $this->params['breadcrumbs'][] = "Журнал";
 
 $about = "Журнал предстоящих сеансов видеосвязи";
-$add_hint = 'Добавить сеанс';
+$add_hint = 'Добавить предстоящий сеанс';
 $dell_hint = 'Удалить выделенные сеансы';
 
 ?>

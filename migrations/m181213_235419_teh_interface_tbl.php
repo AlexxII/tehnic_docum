@@ -27,5 +27,6 @@ class m181213_235419_teh_interface_tbl extends Migration
     public function down()
     {
         $this->dropTable(self::TABLE_NAME);
+        return false;
     }
 }

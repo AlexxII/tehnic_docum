@@ -2,9 +2,6 @@
 
 use yii\db\Migration;
 
-/**
- * Handles the creation of table `user`.
- */
 class m180830_105442_create_user_table extends Migration
 {
     const TABLE_NAME = '{{%user}}';
@@ -34,5 +31,6 @@ class m180830_105442_create_user_table extends Migration
     public function down()
     {
         $this->dropTable(self::TABLE_NAME);
+        return false;
     }
 }

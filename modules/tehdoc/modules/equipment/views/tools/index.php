@@ -1,22 +1,17 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-use app\modules\tehdoc\asset;
 
-/* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+$this->title = 'Перечень всего оборудования';
+$this->params['breadcrumbs'][] = ['label' => 'Тех.документация', 'url' => ['/tehdoc']];
+$this->params['breadcrumbs'][] = $this->title;
 
-
-$this->title = 'Перечень оборудования';
 $about = 'На представленные данные опирается все приложение.
 Корректность этих данных - залог успешной работы системы.';
-
 $add_hint = 'Добавить оборудование';
 $dell_hint = 'Удалить выделенное оборудование';
 $classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
 
-$this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="to-schedule-archive">
@@ -28,15 +23,10 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <style>
-  /*td {*/
-  /*text-align: center;*/
-  /*}*/
-
   .h-title {
     font-size: 18px;
     color: #1e6887;
   }
-
 </style>
 
 
@@ -94,7 +84,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <input class="csrf" value="<?= Yii::$app->request->getCsrfToken() ?>" style="display: none">
 </div>
-<br>
 
 
 <script>

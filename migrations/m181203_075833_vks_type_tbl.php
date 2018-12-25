@@ -2,16 +2,10 @@
 
 use yii\db\Migration;
 
-/**
- * Class m181203_075833__vks_type_tbl
- */
 class m181203_075833_vks_type_tbl extends Migration
 {
     const TABLE_NAME = '{{%vks_types_tbl}}';
 
-    /**
-     * @inheritdoc
-     */
     public function up()
     {
         $tableOptions = null;
@@ -28,16 +22,14 @@ class m181203_075833_vks_type_tbl extends Migration
             'parent_id' => $this->integer()
         ], $tableOptions);
 
-        $sql = 'INSERT INTO vks_types_tbl (id, root, lft, rgt, lvl, name) 
-                VALUES (1, 1, 1, 2, 0, "Тип ВКС")';
+        $sql = 'INSERT INTO vks_types_tbl (id, root, lft, rgt, lvl, name, parent_id) 
+                VALUES (1, 1, 1, 2, 0, "Тип ВКС", 1)';
         \Yii::$app->db->createCommand($sql)->execute();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function down()
     {
         $this->dropTable(self::TABLE_NAME);
+        return false;
     }
 }

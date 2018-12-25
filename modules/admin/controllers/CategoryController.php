@@ -41,18 +41,23 @@ class CategoryController extends Controller
                 $item_model->appendTo($second_model);
                 break;
         }
-        $parent = Category::findOne($second);
-        if (!$parent->children()->one()) {
-            $parent->disabled = 0;
-            $parent->save();
-        } else {
-            $parent->disabled = 1;
-            $parent->save();
-        }
         if ($item_model->save()) {
             return true;
         }
         return false;
+    }
+
+    public function actionCreateRoot($title)
+    {
+        \Yii::$app->db->schema->refresh();
+        $newRoot = new Category(['name' => $title]);
+        $result = $newRoot->makeRoot();
+        if ($result){
+            $data['acceptedTitle'] = $title;
+            return json_encode($data);
+        } else {
+            return var_dump('0');
+        }
     }
 
     public function actionCreate($parentTitle, $title)
@@ -61,19 +66,8 @@ class CategoryController extends Controller
         $category = Category::findOne(['name' => $parentTitle]);
         $newSubcat = new Category(['name' => $title]);
         $newSubcat->root = $category->id;
+        $newSubcat->parent_id = $category->id;
         $newSubcat->appendTo($category);
-        if ($parent = $newSubcat->parents(1)->one()) {
-            $parent->disabled = 1;
-            $parent->save();
-        }
-        $data['acceptedTitle'] = $title;
-        return json_encode($data);
-    }
-
-    public function actionCreateRoot($title)
-    {
-        $newRoot = new Category(['name' => $title]);
-        $newRoot->makeRoot();
         $data['acceptedTitle'] = $title;
         return json_encode($data);
     }
@@ -92,15 +86,7 @@ class CategoryController extends Controller
             // TODO: удаление или невидимый !!!!!!!
             $id = $_POST['id'];
             $category = Category::findOne(['id' => $id]);
-            $parent = $category->parents(1)->one();
             $category->delete();
-            if (!$parent->children()->one()) {
-                $parent->disabled = 0;
-                $parent->save();
-            } else {
-                $parent->disabled = 1;
-                $parent->save();
-            }
         }
     }
 
@@ -113,19 +99,6 @@ class CategoryController extends Controller
         $root->deleteWithChildren();
     }
 
-    public function actionTests()
-    {
-        $array = array();
-        $leaves = Category::find()->select('id')->leaves()->orderBy('lft')->asArray()->all();
-        $categories = Category::find()->select('id')->where(['!=', 'lvl', '0'])->orderBy('lft')->asArray()->all();
-        $array['leaves'] = $leaves;
-        $array['cat'] = $categories;
-        return $this->render('tests', [
-            'model' => json_encode($array)
-        ]);
-    }
-
-
     public function actionGetLeaves()
     {
         $array = array();
@@ -135,5 +108,6 @@ class CategoryController extends Controller
         $array['cat'] = $categories;
         return json_encode($array);
     }
+
 
 }

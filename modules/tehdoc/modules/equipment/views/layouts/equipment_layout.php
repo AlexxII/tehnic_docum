@@ -99,13 +99,8 @@ TehdocAsset::register($this);       // регистрация ресурсов �
             [
                 'label' => 'Оборудование',
                 'items' => [
-                    ['label' => 'Автомат.рабочие места', 'url' => ['/tehdoc/equipment/arms']],
-                    ['label' => 'Средства ВКС', 'url' => ['/tehdoc/equipment/']],
-                    ['label' => 'Прогр.аппаратные комплексы', 'url' => ['/tehdoc/']],
+                    ['label' => 'Комплекты', 'url' => ['/tehdoc/equipment/complex']],
                     ['label' => 'Все средства', 'url' => ['/tehdoc/equipment/tools']],
-                    ['label' => 'ИБП', 'url' => ['/tehdoc/equipment/tools']],
-                    ['label' => 'Принтеры', 'url' => ['/tehdoc/equipment/tools']],
-                    ['label' => 'Картриджи', 'url' => ['/tehdoc/equipment/tools']],
                 ],
             ],
             [
@@ -196,27 +191,6 @@ TehdocAsset::register($this);       // регистрация ресурсов �
                         <h5 class="modal-title" id="ModalLabel">Присвоение классификатора.</h5>
                         <div class="modal-header-select-place">
                             <hr>
-                            <?= \kartik\tree\TreeViewInput::widget([
-                                'query' => \app\modules\admin\models\ClassifierTbl::find()->addOrderBy('root, lft'),
-                                'id' => 'classifier',
-                                'name' => 'id',                  // input name
-                                'asDropdown' => true,            // will render the tree input widget as a dropdown.
-                                'headingOptions' => ['label' => 'Классификаторы'],
-                                'value' => false,
-                                'multiple' => false,              // set to false if you do not need multiple selection
-                                'fontAwesome' => true,           // render font awesome icons
-                                'rootOptions' => [
-                                    'label' => '<i class="fa fa-tree"></i>',
-                                ],
-                                'dropdownConfig' => [
-                                    'input' => [
-                                        'placeholder' => 'Выберите классификатор...'
-                                    ]
-                                ],
-                                'options' => [
-                                    'class' => 'classifier-cl'
-                                ]
-                            ]); ?>
 
                         </div>
                     </div>

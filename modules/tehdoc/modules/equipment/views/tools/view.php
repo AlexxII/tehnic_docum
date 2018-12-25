@@ -5,13 +5,9 @@ use yii\grid\GridView;
 use app\modules\tehdoc\asset;
 use yii\widgets\DetailView;
 
-
-/* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-
 $this->title = 'Просмотр';
 
+$this->params['breadcrumbs'][] = ['label' => 'Тех.документация', 'url' => ['/tehdoc']];
 $this->params['breadcrumbs'][] = ['label' => 'Перечень оборудования', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

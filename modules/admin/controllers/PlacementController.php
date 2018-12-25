@@ -41,14 +41,6 @@ class PlacementController extends Controller
                 $item_model->appendTo($second_model);
                 break;
         }
-        $parent = Placement::findOne($second);
-        if (!$parent->children()->one()) {
-            $parent->disabled = 0;
-            $parent->save();
-        } else {
-            $parent->disabled = 1;
-            $parent->save();
-        }
         if ($item_model->save()) {
             return true;
         }
@@ -61,11 +53,8 @@ class PlacementController extends Controller
         $category = Placement::findOne(['name' => $parentTitle]);
         $newSubcat = new Placement(['name' => $title]);
         $newSubcat->root = $category->id;
+        $newSubcat->parent_id = $category->id;
         $newSubcat->appendTo($category);
-        if ($parent = $newSubcat->parents(1)->one()) {
-            $parent->disabled = 1;
-            $parent->save();
-        }
         $data['acceptedTitle'] = $title;
         return json_encode($data);
     }
@@ -92,15 +81,7 @@ class PlacementController extends Controller
             // TODO: удаление или невидимый !!!!!!!
             $id = $_POST['id'];
             $category = Placement::findOne(['id' => $id]);
-            $parent = $category->parents(1)->one();
             $category->delete();
-            if (!$parent->children()->one()) {
-                $parent->disabled = 0;
-                $parent->save();
-            } else {
-                $parent->disabled = 1;
-                $parent->save();
-            }
         }
     }
 
@@ -112,19 +93,6 @@ class PlacementController extends Controller
         }
         $root->deleteWithChildren();
     }
-
-    public function actionTests()
-    {
-        $array = array();
-        $leaves = Placement::find()->select('id')->leaves()->orderBy('lft')->asArray()->all();
-        $categories = Placement::find()->select('id')->where(['!=', 'lvl', '0'])->orderBy('lft')->asArray()->all();
-        $array['leaves'] = $leaves;
-        $array['cat'] = $categories;
-        return $this->render('tests', [
-            'model' => json_encode($array)
-        ]);
-    }
-
 
     public function actionGetLeaves()
     {

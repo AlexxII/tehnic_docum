@@ -81,29 +81,38 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
             </div>
         </div>
 
-
-        <div class="form-group col-md-12 col-lg-12">
-            <?php
-            echo $form->field($model, 'vks_type', [
-                'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
-                data-toggle="tooltip" data-placement="top" title="' . $vks_type_hint . '"></sup>{input}{hint}'
-            ])->dropDownList($model->vksTypesList, ['data-name' => 'vks_type', 'prompt' => ['text' => 'Выберите', 'options' => [
-                'value' => 'none', 'disabled' => 'true', 'selected' => 'true'
-            ]]])->hint('', ['class' => ' w3-label-under']);
-            ?>
-            <input name="VksSessions[vks_type_text]" id="vks_type_text" style="display: none">
-        </div>
-
-        <div class="form-group col-md-12 col-lg-12">
-            <?= $form->field($model, 'vks_place', [
-                'template' => '{label} <sup class="h-title fa fa-info-circle nonreq" aria-hidden="true"
-                data-toggle="tooltip" data-placement="top" title="' . $vks_place_hint . '"></sup>{input}{hint}'
-            ])->dropDownList($model->vksPlacesList, ['data-name' => 'vks_place', 'prompt' => ['text' => 'Выберите', 'options' => ['value' => 'none', 'disabled' => 'true', 'selected' => 'true']]])->hint('', ['class' => ' w3-label-under']);
-            ?>
-            <input name="VksSessions[vks_place_text]" id="vks_place_text" style="display: none">
-        </div>
-
         <div class="form-group">
+            <div class="form-group col-md-5 col-lg-5">
+                <?php
+                echo $form->field($model, 'vks_type', [
+                    'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
+                data-toggle="tooltip" data-placement="top" title="' . $vks_type_hint . '"></sup>{input}{hint}'
+                ])->dropDownList($model->vksTypesList, ['data-name' => 'vks_type', 'prompt' => ['text' => 'Выберите', 'options' => [
+                    'value' => 'none', 'disabled' => 'true', 'selected' => 'true'
+                ]]])->hint('', ['class' => ' w3-label-under']);
+                ?>
+                <input name="VksSessions[vks_type_text]" id="vks_type_text" style="display: none">
+            </div>
+
+            <div class="form-group col-md-7 col-lg-7">
+                <?= $form->field($model, 'vks_place', [
+                    'template' => '{label} <sup class="h-title fa fa-info-circle nonreq" aria-hidden="true"
+                data-toggle="tooltip" data-placement="top" title="' . $vks_place_hint . '"></sup>{input}{hint}'
+                ])->dropDownList($model->vksPlacesList, ['data-name' => 'vks_place', 'prompt' => ['text' => 'Выберите', 'options' => ['value' => 'none', 'disabled' => 'true', 'selected' => 'true']]])->hint('', ['class' => ' w3-label-under']);
+                ?>
+                <input name="VksSessions[vks_place_text]" id="vks_place_text" style="display: none">
+            </div>
+        </div>
+
+        <div class="col-md-12 col-lg-12"
+             style="border: dashed 1px #0c0c0c;border-radius: 4px;padding: 20px 0px 10px 0px;margin-bottom: 10px;position: relative">
+            <span class="text-muted"  style="position: absolute;top:5px;right:10px;font-size: 10px">Старший абонент</span>
+            <div class="form-group col-md-5 col-lg-5">
+                <?= $form->field($model, 'vks_subscriber_name', [
+                    'template' => '{label} <sup class="h-title fa fa-info-circle nonreq" aria-hidden="true"
+                data-toggle="tooltip" data-placement="top" title="' . $vks_subscr_hint . '"></sup>{input}'
+                ])->textInput(['id' => 'subscriber-name'])->hint('', ['class' => ' w3-label-under']); ?>
+            </div>
             <div class="form-group col-md-7 col-lg-7">
                 <?= $form->field($model, 'vks_subscriber_office', [
                     'template' => '{label} <sup class="h-title fa fa-info-circle nonreq" aria-hidden="true"
@@ -112,12 +121,6 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
                 ?>
                 <input name="VksSessions[vks_subscriber_office_text]" id="vks_subscriber_office_text"
                        style="display: none">
-            </div>
-            <div class="form-group col-md-5 col-lg-5">
-                <?= $form->field($model, 'vks_subscriber_name', [
-                    'template' => '{label} <sup class="h-title fa fa-info-circle nonreq" aria-hidden="true"
-                data-toggle="tooltip" data-placement="top" title="' . $vks_subscr_hint . '"></sup>{input}'
-                ])->textInput(['id' => 'subscriber-name'])->hint('', ['class' => ' w3-label-under']); ?>
             </div>
         </div>
 
@@ -135,8 +138,8 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
         </div>
     </div>
     <div class="col-lg-5 col-md-4"
-         style="border-radius:4px;padding-top:10px;padding-bottom: 10px; margin-bottom: 15px;border: dashed 1px">
-        <h3>Служебное</h3>
+         style="border-radius:4px;padding: 25px 10px 10px 10px ; margin-bottom: 15px;border: dashed 1px;position: relative">
+        <span class="text-muted" style="position: absolute;top:5px;right:10px;font-size: 15px">Служебное</span>
         <div class="form-group col-md-12 col-lg-12">
             <?php
             echo $form->field($model, 'vks_employee_receive_msg')->textInput(['readonly' => true, 'value' => $model->isNewRecord ? Yii::$app->user->identity->username : null])->hint('', ['class' => ' w3-label-under']);

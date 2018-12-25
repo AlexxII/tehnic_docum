@@ -6,6 +6,7 @@ use yii\bootstrap\Modal;
 
 
 $this->title = 'Пользовательские классификаторы';
+$this->params['breadcrumbs'][] = ['label' => 'Тех.документация', 'url' => ['/tehdoc']];
 $this->params['breadcrumbs'][] = ['label' => 'Перечень оборудования', 'url' => ['/tehdoc']];
 $this->params['breadcrumbs'][] = $this->title;
 

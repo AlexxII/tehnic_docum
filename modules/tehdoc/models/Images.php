@@ -15,7 +15,7 @@ class Images extends ActiveRecord        // модель для добавлен
 
   public static function tableName()
   {
-    return 'image_tbl';
+    return 'teh_image_tbl';
   }
 
 

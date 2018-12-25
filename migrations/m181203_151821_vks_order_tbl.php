@@ -2,16 +2,10 @@
 
 use yii\db\Migration;
 
-/**
- * Class m181203_151821_vks_order_tbl
- */
 class m181203_151821_vks_order_tbl extends Migration
 {
     const TABLE_NAME = '{{%vks_orders_tbl}}';
 
-    /**
-     * @inheritdoc
-     */
     public function up()
     {
         $tableOptions = null;
@@ -33,11 +27,9 @@ class m181203_151821_vks_order_tbl extends Migration
         \Yii::$app->db->createCommand($sql)->execute();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function down()
     {
         $this->dropTable(self::TABLE_NAME);
+        return false;
     }
 }

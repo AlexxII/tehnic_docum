@@ -73,7 +73,6 @@ class VksPlaceController extends Controller
                 $item_model->appendTo($second_model);
                 break;
         }
-        $parent = VksPlaces::findOne($second);
         if ($item_model->save()) {
             return true;
         }

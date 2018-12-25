@@ -36,7 +36,7 @@ class CategoryTblEx extends \kartik\tree\models\Tree
 
     public static function tableName()
     {
-        return 'category_tbl';
+        return 'teh_category_tbl';
     }
 
     public static function findOnlyParents()

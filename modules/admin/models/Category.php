@@ -33,7 +33,7 @@ class Category extends ActiveRecord
 
   public static function tableName()
   {
-    return 'category_tbl';
+    return 'teh_category_tbl';
   }
 
   public static function find()

@@ -124,7 +124,7 @@ class ToolsController extends Controller
 
     public function actionServerSide()
     {
-        $table = 'equipment_tbl';
+        $table = 'teh_equipment_tbl';
         $primaryKey = 'id';
         $columns = array(
             array('db' => 'id_eq', 'dt' => 0),
@@ -209,7 +209,7 @@ class ToolsController extends Controller
     public function actionServerSideEx($id)
     {
         $sql_details = \Yii::$app->params['sql_details'];
-        $table = 'equipment_tbl';                                 // основная таблица с оборудованием
+        $table = 'teh_equipment_tbl';                                 // основная таблица с оборудованием
         $primaryKey = 'id_eq';
         $clsf = Classifier::findOne($id);
         $tableScheme = json_decode($clsf->clsf_table_scheme);

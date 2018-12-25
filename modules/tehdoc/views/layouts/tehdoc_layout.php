@@ -100,12 +100,8 @@ TehdocAsset::register($this);       // регистрация ресурсов �
                 'label' => 'Оборудование и ТО',
                 'items' => [
                     '<li class="dropdown-header" style="font-size: 10px">Оборудование</li>',
-                    ['label' => 'Перечень техники', 'url' => ['/tehdoc/equipment']],
-                    ['label' => 'АРМ', 'url' => ['/tehdoc/equipment/arm']],
-                    ['label' => 'ВКС', 'url' => ['/tehdoc/']],
-                    ['label' => 'ИБП', 'url' => ['/tehdoc/']],
-                    ['label' => 'Принтеры', 'url' => ['/tehdoc/']],
-                    ['label' => 'Картриджи', 'url' => ['/tehdoc/']],
+                    ['label' => 'Комплекты', 'url' => ['/tehdoc/equipment/complex']],
+                    ['label' => 'Перечень техники', 'url' => ['/tehdoc/equipment/tools']],
                     '<li class="divider"></li>',
                     '<li class="dropdown-header" style="font-size: 10px">Тех.обслуживание</li>',
                     ['label' => 'График ТО', 'url' => ['/tehdoc/']],
@@ -187,29 +183,8 @@ TehdocAsset::register($this);       // регистрация ресурсов �
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h5 class="modal-title" id="ModalLabel">Присвоение классификатора.</h5>
                         <div class="modal-header-select-place">
-                            <hr>
-                            <?= \kartik\tree\TreeViewInput::widget([
-                                'query' => \app\modules\admin\models\ClassifierTbl::find()->addOrderBy('root, lft'),
-                                'id' => 'classifier',
-                                'name' => 'id',                  // input name
-                                'asDropdown' => true,            // will render the tree input widget as a dropdown.
-                                'headingOptions' => ['label' => 'Классификаторы'],
-                                'value' => false,
-                                'multiple' => false,              // set to false if you do not need multiple selection
-                                'fontAwesome' => true,           // render font awesome icons
-                                'rootOptions' => [
-                                    'label' => '<i class="fa fa-tree"></i>',
-                                ],
-                                'dropdownConfig' => [
-                                    'input' => [
-                                        'placeholder' => 'Выберите классификатор...'
-                                    ]
-                                ],
-                                'options' => [
-                                    'class' => 'classifier-cl'
-                                ]
-                            ]); ?>
 
+                            <hr>
                         </div>
                     </div>
                     <div id="modal-form">
