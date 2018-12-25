@@ -3,12 +3,11 @@
 use yii\db\Migration;
 
 /**
- * Class m181031_200539_create_image_tbl
+ * Class m181225_083610_tehdoc_image_tbl
  */
-class m181031_200539_create_image_tbl extends Migration
+class m181225_083610_tehdoc_image_tbl extends Migration
 {
-
-    const TABLE_NAME = '{{%image_tbl}}';
+    const TABLE_NAME = '{{%teh_image_tbl}}';
 
     public function up()
     {
@@ -26,6 +25,6 @@ class m181031_200539_create_image_tbl extends Migration
     public function down()
     {
         $this->dropTable(self::TABLE_NAME);
+        return false;
     }
-
 }

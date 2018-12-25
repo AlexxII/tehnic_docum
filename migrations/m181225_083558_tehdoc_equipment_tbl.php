@@ -2,9 +2,12 @@
 
 use yii\db\Migration;
 
-class m181216_204037_create_complex_tbl extends Migration
+/**
+ * Class m181225_083558_tehdoc_equipment_tbl
+ */
+class m181225_083558_tehdoc_equipment_tbl extends Migration
 {
-    const TABLE_NAME = '{{%complex_tbl}}';
+    const TABLE_NAME = '{{%teh_equipment_tbl}}';
 
     public function safeUp()
     {
@@ -27,14 +30,9 @@ class m181216_204037_create_complex_tbl extends Migration
         ], $tableOptions);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function safeDown()
     {
-        $this->dropTable('user');
+        $this->dropTable(self::TABLE_NAME );
         return false;
     }
-
-
 }
