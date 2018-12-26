@@ -503,7 +503,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
                     var lft = $(".lft").text();
                     var rgt = $(".rgt").text();
                     return {
-                        'db_tbl': 'placement_tbl',
+                        'db_tbl': 'teh_placement_tbl',
                         'identifier': 'place_id',
                         'root': root,
                         'lft': lft,

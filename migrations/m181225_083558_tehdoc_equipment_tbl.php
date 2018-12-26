@@ -25,7 +25,8 @@ class m181225_083558_tehdoc_equipment_tbl extends Migration
             'eq_serial' => $this->string(255),
             'eq_factdate' => $this->date(),
             'place_id' => $this->integer()->notNull(),
-            'quantity' => $this->smallInteger()->notNull()->defaultValue(1),
+            'quantity' => $this->smallInteger()->notNull(),
+            'eq_comments' => $this->text(),
             'valid' => $this->boolean()->defaultValue(1)
         ], $tableOptions);
     }

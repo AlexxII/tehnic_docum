@@ -36,43 +36,34 @@ TehdocAsset::register($this);       // регистрация ресурсов �
     .fa {
         font-size: 18px;
     }
-
     .navbar-inverse .navbar-nav > .active > a {
         background-color: #0000aa;
     }
-
     .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
         background-color: #0000aa;
         color: white;
     }
-
     .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
         background-color: #0000aa;
         color: white;
     }
-
     .navbar-inverse .btn-link:hover, .navbar-inverse .btn-link:focus {
         text-decoration: none;
     }
-
     .navbar-nav > li > .dropdown-menu {
         background-color: #014993;
         color: white;
     }
-
     .dropdown-menu > li > a {
         color: white;
     }
-
     .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
         background-color: #05226f;
         color: white;
     }
-
     .dropdown-header {
         color: white;
     }
-
     a:hover {
         text-decoration: none;
     }
@@ -103,7 +94,8 @@ TehdocAsset::register($this);       // регистрация ресурсов �
                     ['label' => 'Все средства', 'url' => ['/tehdoc/equipment/tools']],
                 ],
             ],
-            [
+/*            // В разработке
+           [
                 'label' => 'Движение',
                 'items' => [
                     '<li class="dropdown-header" style="font-size: 10px">Движение оборудования</li>',
@@ -112,6 +104,7 @@ TehdocAsset::register($this);       // регистрация ресурсов �
                     ['label' => 'Списание', 'url' => ['/tehdoc/']],
                 ],
             ],
+*/
             [
                 'label' => 'Представления',
                 'items' => [

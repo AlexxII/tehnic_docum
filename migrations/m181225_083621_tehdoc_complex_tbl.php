@@ -21,9 +21,11 @@ class m181225_083621_tehdoc_complex_tbl extends Migration
             'complex_title' => $this->string(255)->notNull(),
             'complex_serial' => $this->string(255),
             'complex_manufact' => $this->string(255),
+            'complex_model' => $this->string(255),
             'complex_factdate' => $this->date(),
             'place_id' => $this->integer()->notNull(),
             'quantity' => $this->smallInteger()->notNull()->defaultValue(1),
+            'complex_comments' => $this->text(),
             'valid' => $this->boolean()->defaultValue(1)
         ], $tableOptions);
     }

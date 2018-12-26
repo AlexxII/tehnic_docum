@@ -40,4 +40,12 @@ class Model extends \yii\base\Model
 
     return $models;
   }
+
+  public static function loadRandom($models)
+  {
+    foreach ($models as $key => $model){
+      $model->id_eq = rand();
+    }
+    return true;
+  }
 }
