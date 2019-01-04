@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             [
                 'label' => 'Категория:',
-                'value' => $model->SubcategoryTitle,
+                'value' => $model->categoryTitle,
             ],
             'eq_title',
             'eq_manufact',
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'eq_serial',
             [
                 'label' => 'Место размещения:',
-                'value' => $model->place,
+                'value' => $model->placementTitle,
             ],
             [
                 'label' => 'Изображения:',

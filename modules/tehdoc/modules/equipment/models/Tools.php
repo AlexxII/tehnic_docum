@@ -60,7 +60,7 @@ class Tools extends \yii\db\ActiveRecord
       'eq_title' => 'Наименование:',
       'eq_manufact' => 'Производитель:',
       'eq_model' => 'Модель:',
-      'eq_serial' => 'Серийный номер:',
+      'eq_serial' => 's/n:',
       'eq_factdate' => 'Дата производства:',
       'place_id' => 'Место нахождения:',
       'quantity' => 'Количество:',
@@ -69,10 +69,40 @@ class Tools extends \yii\db\ActiveRecord
     ];
   }
 
+  public function fields()
+  {
+    return [
+
+    ];
+  }
 
   public function getPhotos()
   {
-    return $this->hasMany(Images::class, ['eq_id' => 'id']);
+    return $this->hasMany(Images::class, ['eq_id' => 'id_eq']);
+  }
+
+
+  public function getCategory()
+  {
+    return $this->hasOne(Category::class, ['id' => 'category_id']);
+  }
+
+  public function getCategoryTitle()
+  {
+    // TODO: Возможно необходимо сделать переменную $depth настраиваемой
+    $depth = 1; // сколько уровней
+    if ($this->category) {
+      $full = $this->category;
+      $parentCount = $full->parents()->count();
+      $parent = $full->parents($parentCount - $depth)->all();
+      $fullname = '';
+      foreach ($parent as $p) {
+        $fullname .= $p->name . ' ->';
+      }
+      return $fullname . ' ' . $this->category->name;
+    } else {
+      return '-';
+    }
   }
 
   public function getPlacement()
@@ -80,42 +110,35 @@ class Tools extends \yii\db\ActiveRecord
     return $this->hasOne(Placement::class, ['id' => 'place_id']);
   }
 
-  // Доступ к свойствам
+  public function getPlacementTitle()
+  {
+    // TODO: Возможно необходимо сделать переменную $depth настраиваемой
+    $depth = 1; // сколько уровней
+    if ($this->placement) {
+      $full = $this->placement;
+      $parentCount = $full->parents()->count();
+      $parent = $full->parents($parentCount - $depth)->all();
+      $fullname = '';
+      foreach ($parent as $p) {
+        $fullname .= $p->name . ' ->';
+      }
+      return $fullname . ' ' . $this->placement->name;
+    } else {
+      return '-';
+    }
+  }
+
+
+  // Доступ к свойствам объекта
   public function getId()
   {
     return $this->id;
-  }
-
-  public function getSubcategoryTitle()
-  {
-    if ($this->subcategory) {
-      return $this->subcategory->name;
-    } else {
-      return '-';
-    }
-  }
-
-  public function getCategoryTitle()
-  {
-    if ($title = $this->subcategory) {
-      $subCat = Category::findOne(['name' => $title]);
-      $parent = $subCat->parents(1)->one();
-      return $parent->name;
-    } else {
-      return '-';
-    }
-  }
-
-  public function getSubcategory()
-  {
-    return $this->hasOne(Category::class, ['id' => 'category_id']);
   }
 
   public function getClsf($table)
   {
     return $this->hasMany(Classifier::class, ['eq_id' => 'id_eq']);
   }
-
 
   public function getEqTitle()
   {
@@ -146,24 +169,6 @@ class Tools extends \yii\db\ActiveRecord
     }
   }
 
-  public function getPlace()
-  {
-    // TODO: Возможно необходимо сделать переменную $depth настраиваемой
-    $depth = 2; // сколько уровней
-    if ($this->placement) {
-      $full = $this->placement;
-      $parentCount = $full->parents()->count();
-      $parent = $full->parents($parentCount - $depth)->all();
-      $fullname = '';
-      foreach ($parent as $p) {
-        $fullname .= $p->name . ' ->';
-      }
-      return $fullname . ' ' . $this->placement->name;
-    } else {
-      return '-';
-    }
-  }
-
   public function getQuantity()
   {
     $ar = array();
@@ -173,7 +178,9 @@ class Tools extends \yii\db\ActiveRecord
     }
     return $ar;
   }
+//======================================================================================================================
 
+  // DropDown lists
   public function getToolPlacesList()
   {
     $sql = "SELECT C1.id, C1.name, C2.name as gr from " . self::PLACEMENT_TABLE . " C1 LEFT JOIN "
@@ -184,10 +191,11 @@ class Tools extends \yii\db\ActiveRecord
   public function getToolCategoryList()
   {
     $sql = "SELECT C1.id, C1.name, C2.name as gr from " . self::CATEGORY_TABLE . " C1 LEFT JOIN "
-      . self::CATEGORY_TABLE . " C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
+      . self::CATEGORY_TABLE . " C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 AND C1.root = 1 ORDER BY C1.lft";
     return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
   }
 
+//======================================================================================================================
   /*  public function beforeSave($insert)
     {
       if (parent::beforeSave($insert)) {

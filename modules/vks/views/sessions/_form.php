@@ -59,7 +59,7 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
             'template' => '{label} <sup class="h-title fa fa-info-circle" aria-hidden="true"
                 data-toggle="tooltip" data-placement="top" title="' . $vks_date_hint . '"></sup>{input}{hint}'
           ])->textInput([
-            'class' => 'vks-date form-control'
+            'class' => 'vks-date form-control fact-date'
           ])->hint('', ['class' => ' w3-label-under']); ?>
         </div>
       </div>
@@ -158,7 +158,7 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
     </div>
 
     <div class="form-group col-md-12 col-lg-12">
-      <?= $form->field($model, 'vks_comments')->textArea(array('style' => 'resize:vertical', 'rows' => '5')) ?>
+      <?= $form->field($model, 'vks_comments')->textArea(array('style' => 'resize:vertical', 'rows' => '3')) ?>
     </div>
   </div>
   <div class="col-lg-5 col-md-4"
@@ -259,10 +259,10 @@ $vks_employee_hint = 'Обязательное поле! Укажите ';
   });
 
   $(document).ready(function () {
-    var date = $('.vks-date').val();
-    if (date) {
+    if ($('.fact-date').val()) {
+      var date = new Date($('.fact-date').val());
       moment.locale('ru');
-      $('.vks-date').datepicker('update', date)
+      $('.fact-date').datepicker('update', moment(date).format('D MM YYYY'));
     }
   });
 

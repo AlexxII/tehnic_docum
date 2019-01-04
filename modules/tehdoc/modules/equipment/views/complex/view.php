@@ -1,11 +1,11 @@
 <?php
 use yii\helpers\Html;
 //use yii\widgets\DetailView;
-use kartik\detail\DetailView;
+use yii\widgets\DetailView;
 
 $this->title = $modelComplex->complex_title;
 $this->params['breadcrumbs'][] = ['label' => 'Тех.документация', 'url' => ['/tehdoc']];
-$this->params['breadcrumbs'][] = ['label' => 'Оборудование', 'url' => ['/tehdoc/equipment/complex']];
+$this->params['breadcrumbs'][] = ['label' => 'Комплекты', 'url' => ['/tehdoc/equipment/complex']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -27,45 +27,65 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <?= DetailView::widget([
     'model' => $modelComplex,
-    'labelColOptions' => [
-      'style' => 'width: 26.3%'
-    ],
     'attributes' => [
       'id',
       'complex_title',
       [
         'label' => 'Категория',
-        'value' => $modelComplex->category ? $modelComplex->category->cat_title : '-',
+        'value' => $modelComplex->category ? $modelComplex->category->name : '-',
       ],
+      'complex_serial',
+      'complex_manufact',
+      'complex_model',
+      [
+        'label' => 'Дата производства:',
+        'format' => 'raw',
+        'value' => function($data){
+          if ($data->complex_factdate != null) {
+            return date('jS M y', strtotime($data->complex_factdate));
+          } else {
+            return '-';
+          }
+        }
+      ],
+
     ],
   ]) ?>
 
   <?php
   if (!empty($modelsTool)) {
-    echo '<div class="w3-row">';
-    echo '<h2>В состав АРМ входят:</h2>';
+    echo '<div class="tool-view">';
+    echo '<h2>В состав Комплекта входят:</h2>';
     foreach ($modelsTool as $modelTool) {
-      echo '<div class="w3-col l7 m7 container">';
+      echo '<div class="container-fluid col-lg-6 col-md-6">';
       echo DetailView::widget([
         'model' => $modelTool,
-        'labelColOptions' => [
-          'style' => 'width: 45%'
-        ],
         'attributes' => [
           "eq_title",
           [
-            'label' => 'Категория',
-            'value' => $modelTool->category ? $modelTool->category->cat_title : '-',
+            'label' => 'Категория:',
+            'value' => $modelTool->categoryTitle,
           ],
           "eq_manufact",
           "eq_model",
           "eq_serial",
           [
-            'label' => 'Место нахождения',
-            'value' => $modelTool->place ? $modelTool->place->place_title : '-',
+            'label' => 'Дата производства:',
+            'format' => 'raw',
+            'value' => function($data){
+              if ($data->eq_factdate != null) {
+                return date('jS M y', strtotime($data->eq_factdate));
+              } else {
+                return '-';
+              }
+            }
           ],
           [
-            'label' => 'Изображения',
+            'label' => 'Место размещения:',
+            'value' => $modelTool->placementTitle,
+          ],
+          [
+            'label' => 'Изображения:',
             'format' => 'raw',
             'value' => $modelTool->photos ? '<a href="#" style="color: #3f51b5">' . count($modelTool->photos) . ' штук(и)' . '</a>' : 'отсутствуют',
           ]
@@ -78,17 +98,6 @@ $this->params['breadcrumbs'][] = $this->title;
         foreach ($photos as $photo) {
           $ph[] = ['img' => $photo->getImageUrl()];
         }
-        echo \metalguardian\fotorama\Fotorama::widget(
-          [
-            'items' => $ph,
-            'options' => [
-              'nav' => 'thumbs',
-              'allowfullscreen' => true,
-              'maxwidth' => '100%',
-              'maxheight' => '350px',
-            ]
-          ]
-        );
       }
       echo '<hr>';
       echo '</div>';

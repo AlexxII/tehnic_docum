@@ -103,8 +103,8 @@ TehdocAsset::register($this);
                 'items' => [
                     '<li class="dropdown-header" style="font-size: 10px">Сеансы ВКС</li>',
                     ['label' => 'Предстоящие сеансы', 'url' => ['/vks/sessions']],
-                    ['label' => 'Добавить сеанс', 'url' => ['/vks/sessions/create']],
-                    ['label' => 'Добавить прошедший сеанс', 'url' => ['/vks/sessions/confirm']],
+                    ['label' => 'Добавить сеанс', 'url' => ['/vks/sessions/create-up-session']],
+                    ['label' => 'Добавить прошедший сеанс', 'url' => ['/vks/sessions/create-session']],
                     '<li class="divider"></li>',
                     '<li class="dropdown-header" style="font-size: 10px">Статистика</li>',
                     ['label' => 'Архив сеансов ВКС', 'url' => ['/vks/sessions/archive']],

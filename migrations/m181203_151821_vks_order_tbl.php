@@ -23,7 +23,7 @@ class m181203_151821_vks_order_tbl extends Migration
         ], $tableOptions);
 
         $sql = 'INSERT INTO' . self::TABLE_NAME . '(id, root, lft, rgt, lvl, name, parent_id) 
-                VALUES (1, 1, 1, 2, 0, "Распоряжения", 1)';
+                VALUES (1.php, 1.php, 1.php, 2, 0, "Распоряжения", 1.php)';
         \Yii::$app->db->createCommand($sql)->execute();
     }
 

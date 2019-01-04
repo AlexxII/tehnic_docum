@@ -26,7 +26,7 @@ class ToolsController extends Controller
   {
     $model = new Tools();
     $fUpload = new Images();
-    $model->quantity = 1;                             // По умолчанию, кол-во оборудования - 1
+    $model->quantity = 1;                             // По умолчанию, кол-во оборудования - 1.php
 
     if ($model->load(Yii::$app->request->post())) {
       $model->id_eq = rand();

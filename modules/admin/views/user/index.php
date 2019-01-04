@@ -57,7 +57,7 @@ $dell_hint = 'Удалить выделенных пользователей';
         <table id="main-table" class="display no-wrap cell-border" style="width:100%">
           <thead>
             <tr>
-              <th data-priority="1">№ п.п.</th>
+              <th data-priority="1.php">№ п.п.</th>
               <th data-priority="2">Пользователь</th>
               <th >Логин</th>
               <th >Роль</th>

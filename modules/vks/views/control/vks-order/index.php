@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
 
+\wbraganca\fancytree\FancytreeAsset::register($this);
+
 
 $this->title = 'Распоряжения на проведение ВКС';
 $this->params['breadcrumbs'][] = ['label' => 'ВКС', 'url' => ['/vks']];
@@ -88,127 +90,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 
         <div class="row" style="padding: 0 15px">
             <div style="border-radius:2px;padding-top:40px">
-
-                <?php
-                echo \wbraganca\fancytree\FancytreeWidget::widget([
-                    'options' => [
-                        'source' => [
-                            'url' => '/vks/control/vks-order/orders',
-                        ],
-                        'extensions' => ['dnd', 'edit', 'filter'],
-                        'quicksearch' => true,
-                        'minExpandLevel' => 2,
-                        'dnd' => [
-                            'preventVoidMoves' => true,
-                            'preventRecursiveMoves' => true,
-                            'autoCollapse' => true,
-                            'dragStart' => new \yii\web\JsExpression('function(node, data) {
-                    return true;
-                }'),
-                            'dragEnter' => new \yii\web\JsExpression('function(node, data) {
-                    return true;
-                }'),
-                            'dragDrop' => new \yii\web\JsExpression('function(node, data) {
-                    $.get("/vks/control/vks-order/move", {item: data.otherNode.data.id, action: data.hitMode, second:
-                    node.data.id},function(){
-                    data.otherNode.moveTo(node, data.hitMode);
-                    })
-                }'),
-                        ],
-                        'filter' => [
-                            'autoApply' => true,   // Re-apply last filter if lazy data is loaded
-                            'autoExpand' => false, // Expand all branches that contain matches while filtered
-                            'counter' => true,     // Show a badge with number of matching child nodes near parent icons
-                            'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
-                            'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
-                            'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
-                            'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
-                            'leavesOnly' => true, // Match end nodes only
-                            'nodata' => true,      // Display a 'no data' status node if result is empty
-                            'mode' => "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-                        ],
-
-                        'edit' => [
-                            'inputCss' => [
-                                'minWidth' => "10em"
-                            ],
-                            'triggerStart' => ["clickActive", "dblclick", "f2", "mac+enter", "shift+click"],
-                            'beforeEdit' => new \yii\web\JsExpression('function(event, data){
-                      // Return false to prevent edit mode
-        }'),
-                            'edit' => new \yii\web\JsExpression('function(event, data){
-                      // Editor was opened (available as data.input)
-        }'),
-                            'beforeClose' => new \yii\web\JsExpression('function(event, data){
-                      data.save;
-        }'),
-                            'save' => new \yii\web\JsExpression('function(event, data){
-                        var node = data.node;
-                        if (data.isNew){
-                            $.ajax({
-                              url: "/vks/control/vks-order/vks-order-create",
-                              data: { parentTitle: node.parent.title, title: data.input.val() }
-                            }).done(function(result){
-      //                          node.setTitle(result.acceptedTitle);
-                            }).fail(function(result){
-                                node.setTitle(data.orgTitle);
-                            }).always(function(){
-                                data.input.removeClass("pending");
-                            });
-                        } else {
-                            $.ajax({
-                              url: "/vks/control/vks-order/update",
-                              data: { id: node.data.id, title: data.input.val() }
-                            }).done(function(result){
-      //                          node.setTitle(result.acceptedTitle);
-                            }).fail(function(result){
-                                node.setTitle(data.orgTitle);
-                            }).always(function(){
-                                data.input.removeClass("pending");
-                            });
-                        }
-                        return true;
-        }'),
-                            'close' => new \yii\web\JsExpression('function(event, data){
-                        // Editor was removed
-                        if( data.save ) {
-                          // Since we started an async request, mark the node as preliminary
-                          $(data.node.span).addClass("pending");
-                        }
-        }')
-                        ],
-                        'activate' => new \yii\web\JsExpression('function(node, data) {
-                        var node = data.node;
-                        var lvl = node.data.lvl;
-                        if (node.key == -999){
-                            $(".add-subcategory").hide();
-                            return;
-                        } else {
-                            $(".add-subcategory").show();
-                        }
-                        if (lvl > 1){
-                            $(".add-subcategory").hide();
-                        }
-                        if (lvl == 0){
-                            $(".del-node").hide();
-                            $(".del-multi-nodes").hide();
-                        } else {
-                            if (node.hasChildren()){
-                                $(".del-multi-nodes").show();
-                            } else {
-                                $(".del-multi-nodes").hide();
-                            }
-                            $(".del-node").show();
-                        }
-        }'),
-                        'renderNode' => new \yii\web\JsExpression('function(node, data) {
-                        if (data.node.key == -999){
-                            $(".add-category").show();
-                            $(".add-subcategory").hide();
-                        } 
-            }'),
-                    ]
-                ]); ?>
+              <div id="fancyree_w0" class="ui-draggable-handle"></div>
             </div>
         </div>
     </div>
@@ -396,6 +278,146 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             }
         })
     });
+
+
+
+    // отображение и логика работа дерева
+    jQuery(function ($) {
+      var main_url = '/vks/control/vks-order/orders';
+      var move_url = '/vks/control/vks-order/move';
+      var create_url = '/vks/control/vks-order/vks-order-create';
+      var update_url = '/vks/control/vks-order/update';
+
+      $("#fancyree_w0").fancytree({
+        source: {
+          url: main_url,
+        },
+        extensions: ['dnd', 'edit', 'filter'],
+        quicksearch: true,
+        minExpandLevel: 2,
+        dnd: {
+          preventVoidMoves: true,
+          preventRecursiveMoves: true,
+          autoCollapse: true,
+          dragStart: function (node, data) {
+            return true;
+          },
+          dragEnter: function (node, data) {
+            return true;
+          },
+          dragDrop: function (node, data) {
+            console.log(data.node.title);
+            $.get(move_url, {
+              item: data.otherNode.data.id,
+              action: data.hitMode,
+              second: node.data.id,
+              parent: data.node.parent.title
+            }, function () {
+              data.otherNode.moveTo(node, data.hitMode);
+            })
+          }
+        },
+        filter: {
+          autoApply: true,                                    // Re-apply last filter if lazy data is loaded
+          autoExpand: true,                                   // Expand all branches that contain matches while filtered
+          counter: true,                                      // Show a badge with number of matching child nodes near parent icons
+          fuzzy: false,                                       // Match single characters in order, e.g. 'fb' will match 'FooBar'
+          hideExpandedCounter: true,                          // Hide counter badge if parent is expanded
+          hideExpanders: true,                                // Hide expanders if all child nodes are hidden by filter
+          highlight: true,                                    // Highlight matches by wrapping inside <mark> tags
+          leavesOnly: true,                                   // Match end nodes only
+          nodata: true,                                       // Display a 'no data' status node if result is empty
+          mode: 'hide'                                        // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+        },
+        edit: {
+          inputCss: {
+            minWidth: '10em'
+          },
+          triggerStart: ['clickActive', 'dbclick', 'f2', 'mac+enter', 'shift+click'],
+          beforeEdit: function (event, data) {
+            return true;
+          },
+          edit: function (event, data) {
+            return true;
+          },
+          beforeClose: function (event, data) {
+            data.save
+          },
+          save: function (event, data) {
+            var node = data.node;
+            if (data.isNew) {
+              $.ajax({
+                url: create_url,
+                data: {
+                  parentTitle: node.parent.title,
+                  title: data.input.val()
+                }
+              }).done(function (result) {
+//                           node.setTitle(result.acceptedTitle);
+              }).fail(function (result) {
+                node.setTitle(data.orgTitle);
+              }).always(function () {
+                // data.input.removeClass("pending")
+              });
+            } else {
+              console.log(data);
+              $.ajax({
+                url: update_url,
+                data: {
+                  id: node.data.id,
+                  title: data.input.val()
+                }
+              }).done(function (result) {
+//                           node.setTitle(result.acceptedTitle);
+              }).fail(function (result) {
+                node.setTitle(data.orgTitle);
+              }).always(function () {
+                // data.input.removeClass("pending")
+              });
+            }
+            return true;
+          },
+          close: function (event, data) {
+            if (data.save) {
+              // Since we started an async request, mark the node as preliminary
+              $(data.node.span).addClass("pending")
+            }
+          }
+        },
+        activate: function (node, data) {
+          var node = data.node;
+          var lvl = node.data.lvl;
+          if (node.key == -999) {
+            $(".add-subcategory").hide();
+            return;
+          } else {
+            $(".add-subcategory").show();
+          }
+          if (lvl > 1) {                            // ограничение на вложенность
+            $(".add-subcategory").hide();
+          }
+          if (lvl == 0) {
+            $(".del-root").show();
+            $(".del-node").hide();
+            $(".del-multi-nodes").hide();
+          } else {
+            if (node.hasChildren()) {
+              $(".del-multi-nodes").show();
+            } else {
+              $(".del-multi-nodes").hide();
+            }
+            $(".del-root").hide();
+            $(".del-node").show();
+          }
+        },
+        renderNode: function (node, data) {
+          if (data.node.key == -999) {
+            $(".add-category").show();
+            $(".add-subcategory").hide();
+          }
+        }
+      });
+    })
 
 
 </script>

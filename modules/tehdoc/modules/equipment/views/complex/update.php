@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 $this->title = 'Обновить данные';
 $this->params['breadcrumbs'][] = ['label' => 'Тех.документация', 'url' => ['/tehdoc']];
-$this->params['breadcrumbs'][] = ['label' => 'Оборудование', 'url' => ['/tehdoc/equipment/complex']];
+$this->params['breadcrumbs'][] = ['label' => 'Комплекты', 'url' => ['/tehdoc/equipment/complex']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -17,8 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <?= $this->render('_form', [
     'modelComplex' => $modelComplex,
-    'models' => $modelsTool,
-    'fUpload' => $fUpload,
+    'modelsTool' => $modelsTool,
+    'fupload' => $fUpload,
   ]) ?>
 
 </div>

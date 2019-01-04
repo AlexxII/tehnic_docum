@@ -45,7 +45,7 @@ class Category extends ActiveRecord
   {
     $models = Category::find()->select('id, name, lvl')->orderBy('lft')->where(['>', 'lvl', 0])->asArray()->all();
     if (!$models) {
-      return ['1' => 'Добавьте категории в панели администрирования'];
+      return ['1.php' => 'Добавьте категории в панели администрирования'];
     }
     $array = array();
     foreach ($models as $model) {

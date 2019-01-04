@@ -6,13 +6,7 @@ use yii\bootstrap\Modal;
 
 \wbraganca\fancytree\FancytreeAsset::register($this);
 
-
-$this->title = 'Сотрудники других подразделений';
-$this->params['breadcrumbs'][] = ['label' => 'ВКС', 'url' => ['/vks']];
-$this->params['breadcrumbs'][] = ['label' => 'Журнал', 'url' => ['/vks/sessions']];
-$this->params['breadcrumbs'][] = $this->title;
-
-$about = "Панель управления сотрудниками других подразделений Центра и сторонних организаций. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
+$about = "Панель управления. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
 $add_hint = 'Добавить новый узел';
 $add_tree_hint = 'Добавить дерево';
 $refresh_hint = 'Перезапустить форму';
@@ -27,27 +21,17 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
     font-size: 18px;
     color: #1e6887;
   }
-
   .fa {
     font-size: 15px;
   }
-
   ul.fancytree-container {
     font-size: 14px;
   }
-
   input {
     color: black;
   }
 </style>
 
-<div class="admin-category-pannel">
-
-  <h1><?= Html::encode($this->title) ?>
-    <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
-         data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
-  </h1>
-</div>
 <div class="row">
   <div class="">
     <div class="container-fluid" style="margin-bottom: 10px">
@@ -79,7 +63,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 
   </div>
 
-  <div class="col-lg-7 col-md-7" style="padding-bottom: 10px">
+  <div class="col-lg-4 col-md-4" style="padding-bottom: 10px">
     <div style="position: relative">
       <div class="container-fuid" style="float:left; width: 100%">
         <input class="form-control form-control-sm" autocomplete="off" name="search" placeholder="Поиск...">
@@ -99,10 +83,15 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
   </div>
 
 
-  <div class="col-lg-5 col-md-5">
-    <div class="alert alert-warning">
-      <a href="#" class="close" data-dismiss="alert">&times;</a>
-      <strong>Внимание!</strong> Будьте внимательны!
+  <div class="col-lg-8 col-md-8">
+    <ul class="nav nav-tabs" id="myTab">
+      <li class="active"><a href="#home" data-toggle="tab" data-url="main">Главная</a></li>
+      <li><a href="#messages" data-toggle="tab" data-url="files">Файлы</a></li>
+      <li><a href="#profile" data-toggle="tab" data-url="wiki">Wiki</a></li>
+      <li><a href="#messages" data-toggle="tab" data-url="log">Лог</a></li>
+    </ul>
+    <div class="about-content" style="margin-top: 15px">
+
     </div>
   </div>
 
@@ -116,19 +105,16 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 
   $(document).ready(function () {
     $('.add-subcategory').click(function (event) {
-      event.preventDefault();
-      var node = $(".ui-draggable-handle").fancytree("getActiveNode");
-      if (!node) {
-        alert("Выберите родительскую категорию");
-        return;
-      }
-      if (node.data.lvl <= 1) {
+        event.preventDefault();
+        var node = $(".ui-draggable-handle").fancytree("getActiveNode");
+        if (!node) {
+          alert("Выберите родительскую категорию");
+          return;
+        }
         node.editCreateNode("child", " ");
-      } else {
-        alert("Нельзя создавать вложенность более 3х");
         return;
       }
-    })
+    )
   });
 
   $(document).ready(function () {
@@ -285,10 +271,10 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 
   // отображение и логика работа дерева
   jQuery(function ($) {
-    var main_url = '/vks/control/vks-employee/employees';
-    var move_url = "/vks/control/vks-employee/move";
-    var create_url = '/vks/control/vks-employee/vks-employee-create';
-    var update_url = '/vks/control/vks-employee/update';
+    var main_url = '/tehdoc/equipment/complex/complex-ex';
+    var move_url = "/tehdoc/equipment/complex/move";
+    var create_url = '/tehdoc/equipment/complex/complex-ex-create';
+    var update_url = '/tehdoc/equipment/complex/update-node';
 
     $("#fancyree_w0").fancytree({
       source: {
@@ -393,9 +379,6 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
         } else {
           $(".add-subcategory").show();
         }
-        if (lvl > 1) {
-          $(".add-subcategory").hide();
-        }
         if (lvl == 0) {
           $(".del-node").hide();
           $(".del-multi-nodes").hide();
@@ -415,6 +398,23 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
         }
       }
     });
-  })
+  });
+
+  $('#myTab a').click(function (e) {
+    e.preventDefault();
+    var mainUrl = "/tehdoc/equipment/complex/";
+    var u = $(this).data('url');
+    $.ajax({
+      url: mainUrl + u,
+    })
+      .done(function (result) {
+        $('.about-content').html(result);
+        $(this).tab('show');
+      })
+      .fail(function () {
+        alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
+      });
+  });
+
 
 </script>

@@ -17,12 +17,14 @@ class m181225_083621_tehdoc_complex_tbl extends Migration
         }
         $this->createTable(self::TABLE_NAME, [
             'id' => $this->primaryKey(),
+            'id_complex' => $this->integer()->notNull(),
             'category_id' => $this->integer()->notNull(),
             'complex_title' => $this->string(255)->notNull(),
             'complex_serial' => $this->string(255),
             'complex_manufact' => $this->string(255),
             'complex_model' => $this->string(255),
             'complex_factdate' => $this->date(),
+            'parent_id' => $this->integer()->notNull(),
             'place_id' => $this->integer()->notNull(),
             'quantity' => $this->smallInteger()->notNull()->defaultValue(1),
             'complex_comments' => $this->text(),

@@ -34,12 +34,18 @@ use app\modules\tehdoc\asset\TehFormAsset;
 
 <?php
 TehFormAsset::register($this);
+
+// текст к подсказкам
 $cat_hint = 'Обязательное! Необходима для классификации оборудования.';
 $title_hint = 'Обязательное! Необходимо для отображения в таблице.';
-$place_hint = 'Обязательное! Укажите точное размещение оборудования. На эти данные будут опираться другие таблицы.';
+$serial_hint = 'Укажите серийный номер (s/n), на некоторых моделях оборудования указывается только производственный номер (p/n), 
+                  тогда укажите его.';
+$place_hint = 'Обязательное! Укажите точное размещение оборудования.';
 $date_hint = 'Если не известен месяц, выберите январь известного года.';
-$quantity_hint = 'Внимание! Указывайте отличную от 1 цифру 
-ТОЛЬКО для идентичного оборудования и расходных материалов. Например: офисная бумага, батарейки. Будьте ВНИМАТЕЛЬНЫ, не вводите себя в заблуждение.';
+$quantity_hint = 'Внимание! Указывайте отличную от 1.php цифру 
+ТОЛЬКО для идентичного оборудования и расходных материалов. Например: офисная бумага, батарейки. 
+Будьте ВНИМАТЕЛЬНЫ, не вводите себя в заблуждение.';
+
 ?>
 
 <div class="col-lg-7 col-md-7" style="border-radius:2px;padding-top:10px">
@@ -57,7 +63,6 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
             'selected' => 'true'
           ]]])->hint('Выберите категорию', ['class' => ' w3-label-under']);
       ?>
-      <input name="VksSessions[vks_type_text]" id="vks_type_text" style="display: none">
     </div>
     <div class="form-group col-md-12 col-lg-12">
       <?= $form->field($model, 'eq_title', [
@@ -77,7 +82,11 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
     </div>
     <div class="form-group">
       <div class="form-group col-md-6 col-lg-6">
-        <?= $form->field($model, 'eq_serial')->textInput()->hint('Например: MTC3T32231', ['class' => ' w3-label-under']); ?>
+        <?= $form->field($model, 'eq_serial', [
+          'template' => '{label} <sup class="h-title fa fa-info-circle nonreq" aria-hidden="true"
+                data-toggle="tooltip" data-placement="top" title="' . $serial_hint . '"></sup>{input}{hint}'
+        ])->textInput()->hint('Например: HRUEO139UI92', ['class' => ' w3-label-under']); ?>
+
       </div>
       <div class="form-group col-md-6 col-lg-6">
         <?= $form->field($model, 'eq_factdate', [
@@ -101,7 +110,6 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
             'selected' => 'true'
           ]]])->hint('Выберите место нахождения оборудования', ['class' => ' w3-label-under']);
         ?>
-        <input name="VksSessions[vks_type_text]" id="vks_type_text" style="display: none">
       </div>
       <div class="form-group col-md-4">
         <?= $form->field($model, 'quantity', [
@@ -114,9 +122,13 @@ $quantity_hint = 'Внимание! Указывайте отличную от 1
     <?php
     if (!empty($model->photos)) {
       foreach ($model->photos as $k => $photo) {
-        $allImages[] = "<img src='" . $photo->getImageUrl() . "' class='file-preview-image' style='max-width:100%;max-height:100%'>";
+        $allImages[] = "<img src='" . $photo->getImageUrl() . "' class='file-preview-image' 
+                          style='max-width:100%;max-height:100%'>";
         $previewImagesConfig[] = [
-          'url' => Url::toRoute(ArrayHelper::merge(['/tehdoc/kernel/tools/remove-image'], ['id' => $photo->id, '_csrf' => Html::csrfMetaTags()])),
+          'url' => Url::toRoute(ArrayHelper::merge(['/tehdoc/kernel/tools/remove-image'], [
+            'id' => $photo->id,
+            '_csrf' => Html::csrfMetaTags()
+          ])),
           'key' => $photo->id
         ];
       }

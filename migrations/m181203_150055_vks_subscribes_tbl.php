@@ -24,7 +24,7 @@ class m181203_150055_vks_subscribes_tbl extends Migration
         ], $tableOptions);
 
         $sql = 'INSERT INTO' . self::TABLE_NAME . '(id, root, lft, rgt, lvl, name, parent_id) 
-                VALUES (1, 1, 1, 2, 0, "Старшие абоненты", 1), (2, 2, 3, 4, 0, "Абоненты в субъекте", 2)';
+                VALUES (1.php, 1.php, 1.php, 2, 0, "Старшие абоненты", 1.php), (2, 2, 3, 4, 0, "Абоненты в субъекте", 2)';
         \Yii::$app->db->createCommand($sql)->execute();
     }
 

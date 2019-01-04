@@ -546,7 +546,7 @@ class ClassifierController extends Controller
         $uploaddir = \Yii::$app->params['uploadPath'];
         $tmpClmnName = '';
         $pattern = '/([A-Za-z_]+)(\|[0-9]+)/i';                     // Регулярное для выделения имени колонки
-        $replacement = '${1}';
+        $replacement = '${1.php}';
         $columns = '';
         $values = '';
         $subvalues = '';

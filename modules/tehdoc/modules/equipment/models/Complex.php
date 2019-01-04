@@ -2,6 +2,7 @@
 
 namespace app\modules\tehdoc\modules\equipment\models;
 
+use app\modules\admin\models\Category;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -45,9 +46,24 @@ class Complex extends \yii\db\ActiveRecord
 
   public function getTools()
   {
-    return $this->hasOne(Tools::class, ['id' => 'complex_id']);
+    return $this->hasMany(Tools::class, ['parent_id' => 'id_complex']);
   }
 
+  public function getCategory()
+  {
+    return $this->hasOne(Category::class, ['id' => 'category_id']);
+  }
+
+  public function getCategoryTitle()
+  {
+    if ($title = $this->category) {
+      $subCat = Category::findOne(['name' => $title]);
+      $parent = $subCat->parents(1)->one();
+      return $parent->name;
+    } else {
+      return '-';
+    }
+  }
 
   public function getToolPlacesList()
   {
@@ -59,7 +75,7 @@ class Complex extends \yii\db\ActiveRecord
   public function getToolCategoryList()
   {
     $sql = "SELECT C1.id, C1.name, C2.name as gr from " . self::CATEGORY_TABLE . " C1 LEFT JOIN "
-      . self::CATEGORY_TABLE . " C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
+      . self::CATEGORY_TABLE . " C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 AND C1.root = 2 ORDER BY C1.lft";
     return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
   }
 

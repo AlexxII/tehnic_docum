@@ -26,7 +26,7 @@ class m181225_083505_tehdoc_category_tbl extends Migration
         ], $tableOptions);
 
         $sql = 'INSERT INTO' . self::TABLE_NAME . '(id, root, lft, rgt, lvl, name, parent_id) 
-                VALUES (1, 1, 1, 2, 0, "Категории", 1)';
+                VALUES (1, 1, 1, 2, 0, "Категории всех средств", 1), (2, 2, 3, 4, 0, "Категории комплектов", 2)';
         \Yii::$app->db->createCommand($sql)->execute();
     }
 

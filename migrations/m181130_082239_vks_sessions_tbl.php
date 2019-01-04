@@ -16,11 +16,11 @@ class m181130_082239_vks_sessions_tbl extends Migration
             'id' => $this->primaryKey(),
             'vks_date' => $this->date()->notNull(),
 
-            'vks_teh_time_start' => $this->dateTime(),
-            'vks_teh_time_end' => $this->dateTime(),
+            'vks_teh_time_start' => $this->string(25),
+            'vks_teh_time_end' => $this->string(25),
             'vks_duration_teh' => $this->integer(),
-            'vks_work_time_start' => $this->dateTime(),
-            'vks_work_time_end' => $this->dateTime(),
+            'vks_work_time_start' => $this->string(25),
+            'vks_work_time_end' => $this->string(25),
             'vks_duration_work' => $this->integer(),
 
             'vks_type' => $this->integer()->notNull(),
@@ -43,9 +43,9 @@ class m181130_082239_vks_sessions_tbl extends Migration
 
             'vks_employee' => $this->integer(),                                         // сотрудник спецсвязи, участв. в приеме
 
-            'vks_subscriber_mur_office' => $this->integer(),
-            'vks_subscriber_mur_office_text' => $this->string(),
-            'vks_subscriber_mur_name' => $this->string(255),
+            'vks_subscriber_reg_office' => $this->integer(),                            // региональный абонент
+            'vks_subscriber_reg_office_text' => $this->string(),
+            'vks_subscriber_reg_name' => $this->string(255),
 
             'vks_employee_receive_msg' => $this->string(255),
             'vks_receive_msg_datetime' => $this->dateTime(),

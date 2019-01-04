@@ -10,7 +10,7 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Вход';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login" style="padding-top: 20px">
+<div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>Пожалуйста, заполните следующие поля для входа:</p>
@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'layout' => 'horizontal',
         'fieldConfig' => [
             'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
+            'labelOptions' => ['class' => 'col-lg-1.php control-label'],
         ],
     ]); ?>
 
@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'password')->passwordInput() ?>
 
         <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+            'template' => "<div class=\"col-lg-offset-1.php col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
         ]) ?>
 
         <div class="form-group">

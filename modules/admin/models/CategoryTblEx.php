@@ -12,10 +12,10 @@ class CategoryTblEx extends \kartik\tree\models\Tree
 //    public function isDisabled()
 //    {
 //        $res = $this->parse('disabled');
-//        if ($res == 1) {
+//        if ($res == 1.php) {
 //            return 0;
 //        } else {
-//            return 1;
+//            return 1.php;
 //        }
 //    }
 
