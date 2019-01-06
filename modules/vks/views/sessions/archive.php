@@ -58,12 +58,8 @@ $dell_hint = 'Удалить выделенные сеансы';
               <th >Дата</th>
               <th >Месяц</th>
               <th >Время</th>
-              <th >Время</th>
-              <th >Время</th>
-              <th >Время</th>
               <th >Тип ВКС</th>
               <th >Студии</th>
-              <th >Абонент</th>
               <th >Абонент</th>
               <th >Распоряжение</th>
               <th data-priority="3">Action</th>
@@ -179,7 +175,10 @@ $dell_hint = 'Удалить выделенные сеансы';
       "serverSide": true,
       "responsive": true,
       "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-        console.log(aData[12] + ' - ' + aData[13]);
+        if (aData[12] <= 0 || aData[13] <= 0){
+          console.log($(nRow.cells[1]));
+          $('td', nRow).css('background-color', '#fff1ef' );
+        }
       },
       "ajax": $.fn.dataTable.pipeline({
         url: '/vks/sessions/server-side-ex',
@@ -215,30 +214,14 @@ $dell_hint = 'Удалить выделенные сеансы';
           "targets": 3,
           "width": '95px',
           "render": function (data, type, row) {
-            return row[3] + ' - ' + row[4] + ' /т' + "<br> " + row[5] + ' - ' + row[6] + ' /р';
+            return row[15] + ' - ' + row[16] + ' /т' + "<br> " + row[17] + ' - ' + row[18] + ' /р';
           }
-        },
-        {
-          "targets": 4,
-          "visible": false
-        },
-        {
-          "targets": 5,
-          "visible": false
         },
         {
           "targets": 6,
-          "visible": false
-        },
-        {
-          "targets": 9,
           "render": function (data, type, row) {
-            return row[9] + "<br> " + row[10];
+            return row[6] + "<br> " + row[14];
           }
-        },
-        {
-          "targets": 10,
-          "visible": false
         },
       ],
       select: {

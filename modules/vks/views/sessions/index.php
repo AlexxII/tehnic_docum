@@ -189,7 +189,7 @@ Yii::$app->cache->flush();
         var today = new Date();
         var date = aData[1];
         var pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
-        var dt = new Date(date.replace(pattern,'$3-$2-$1'));        // изменение цвета фона от даты сеанса
+        var dt = new Date(date.replace(pattern,'$3-$2-$1'));
         if ( moment(today).isAfter(dt, 'day') )
         {
           $('td', nRow).css('background-color', '#f2dede' );

@@ -57,6 +57,7 @@ class VksSessions extends \yii\db\ActiveRecord
       'vks_place', 'vks_place_text',
       'vks_teh_time_start', 'vks_work_time_start',
       'vks_subscriber_office', 'vks_subscriber_name', 'vks_subscriber_office_text',
+      'vks_duration_teh', 'vks_duration_work',
       'vks_order', 'vks_order_text',
       'vks_employee_receive_msg', 'vks_receive_msg_datetime', 'vks_employee_send_msg',
       'vks_comments', 'vks_record_create', 'vks_record_update'
@@ -70,6 +71,7 @@ class VksSessions extends \yii\db\ActiveRecord
       'vks_order', 'vks_order_text',
       'vks_place', 'vks_place_text',
       'vks_equipment', 'vks_comments',
+      'vks_duration_teh', 'vks_duration_work',
       'vks_employee',
       'vks_employee_receive_msg', 'vks_receive_msg_datetime', 'vks_employee_send_msg_text',
       'vks_subscriber_reg_office', 'vks_subscriber_reg_office_text',

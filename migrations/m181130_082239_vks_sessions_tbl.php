@@ -42,6 +42,7 @@ class m181130_082239_vks_sessions_tbl extends Migration
             'vks_remarks' => $this->boolean()->defaultValue(0),                   // замечания
 
             'vks_employee' => $this->integer(),                                         // сотрудник спецсвязи, участв. в приеме
+            'vks_employee_text' => $this->string(255),
 
             'vks_subscriber_reg_office' => $this->integer(),                            // региональный абонент
             'vks_subscriber_reg_office_text' => $this->string(),
@@ -57,7 +58,10 @@ class m181130_082239_vks_sessions_tbl extends Migration
             'vks_record_create' => $this->dateTime(),
             'vks_record_update' => $this->dateTime(),
 
-            'vks_upcoming_session' => $this->boolean()                                  // предстоящий сеанс ВКС
+            'vks_upcoming_session' => $this->boolean(),                                  // предстоящий сеанс ВКС
+
+            'vks_cancel' => $this->boolean(),                                            // отмена сеанса
+            'vks_cancel_reason' => $this->string(255)
         ], $tableOptions);
     }
 

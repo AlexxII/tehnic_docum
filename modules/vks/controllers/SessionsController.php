@@ -100,29 +100,18 @@ class SessionsController extends Controller
           }
         }
       ),
-      array(
-        'db' => 'vks_teh_time_start',
-        'dt' => 3
-      ),
-      array(
-        'db' => 'vks_teh_time_end',
-        'dt' => 4
-      ),
-      array(
-        'db' => 'vks_work_time_start',
-        'dt' => 5
-      ),
-      array(
-        'db' => 'vks_work_time_end',
-        'dt' => 6
-      ),
-      array('db' => 'vks_type_text', 'dt' => 7),
-      array('db' => 'vks_place_text', 'dt' => 8),
-      array('db' => 'vks_subscriber_office_text', 'dt' => 9),
-      array('db' => 'vks_subscriber_name', 'dt' => 10),
-      array('db' => 'vks_order_text', 'dt' => 11),
-      array('db' => 'vks_duration_teh', 'dt' => 12),
-      array('db' => 'vks_duration_work', 'dt' => 13),
+      array('db' => 'vks_type_text', 'dt' => 4),
+      array('db' => 'vks_place_text', 'dt' => 5),
+      array('db' => 'vks_subscriber_office_text', 'dt' => 6),
+      array('db' => 'vks_order_text', 'dt' => 7),
+
+      array('db' => 'vks_subscriber_name', 'dt' => 14),
+      array('db' => 'vks_teh_time_start','dt' => 15),
+      array('db' => 'vks_teh_time_end', 'dt' => 16),
+      array('db' => 'vks_work_time_start', 'dt' => 17),
+      array('db' => 'vks_work_time_end', 'dt' => 18),
+      array('db' => 'vks_duration_teh', 'dt' => 19),
+      array('db' => 'vks_duration_work', 'dt' => 20)
     );
     $sql_details = \Yii::$app->params['sql_details'];
     $where = 'vks_upcoming_session = 0';

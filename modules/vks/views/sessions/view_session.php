@@ -56,11 +56,17 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
           'label' => 'Время:',
-          'value' => $model->vks_teh_time_start . ' - ' . $model->vks_teh_time_end
+          'value' => function ($data) {
+            $duration = $data->vks_duration_teh ?  ' (' . $data->vks_duration_teh . ' мин.)' : '';
+            return $data->vks_teh_time_start . ' - ' . $data->vks_teh_time_end . $duration;
+          },
         ],
         [
           'label' => 'Время:',
-          'value' => $model->vks_work_time_start . ' - ' . $model->vks_work_time_end
+          'value' => function ($data) {
+            $duration = $data->vks_duration_work ?  ' (' . $data->vks_duration_work . ' мин.)' : '';
+            return $data->vks_work_time_start . ' - ' . $data->vks_work_time_end . $duration;
+          },
         ],
         [
           'label' => 'Тип сеанса ВКС:',

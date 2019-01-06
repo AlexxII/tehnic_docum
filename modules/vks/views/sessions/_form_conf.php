@@ -186,6 +186,7 @@ $vks_tools_hint = 'Обязательное поле! Укажите обору�
                 'selected' => 'true'
               ]]])->hint('', ['class' => ' w3-label-under']);
         ?>
+        <input name="VksSessions[vks_employee_text]" id="vks_employee_text" style="display: none">
       </div>
     </div>
 
@@ -269,7 +270,21 @@ $vks_tools_hint = 'Обязательное поле! Укажите обору�
             $(this).next('.time-mask').focus();
             var attr = $(this).attr('id');
             if (attr == 'teh-start' || attr == 'teh-end'){
-
+              if ($('#teh-start').val() != '' && $('#teh-end').val() != '') {
+                var tehStart = (moment($('#teh-start').val(), 'HH:mm'));
+                var tehEnd = (moment($('#teh-end').val(), 'HH:mm'));
+                var duration = moment.duration(tehEnd.diff(tehStart)).asMinutes();
+                var label = $(this).parent().find('label');
+                if (duration > 0) {
+                  $(this).css('border-color', 'lightgrey');
+                  $(label).css('color', '#333');
+                  $('#vks-duration-teh').val(duration);
+                } else {
+                  $(this).css('border-color', '#c72e26');
+                  $(label).css('color', '#a94442');
+                  $('#vks-duration-teh').val('');
+                }
+              }
             } else if (attr == 'work-start' || attr == 'work-end'){
               if ($('#work-start').val() != '' && $('#work-end').val() != '') {
                 var workStart = (moment($('#work-start').val(), 'HH:mm'));
