@@ -7,17 +7,20 @@ use kartik\tree\TreeViewInput;
 use app\modules\admin\models\ClassifierTbl;
 
 \wbraganca\fancytree\FancytreeAsset::register($this);
+\app\modules\vks\assets\VksFormAsset::register($this);
+\app\modules\vks\assets\AnalyticsAsset::register($this);
 
-$this->title = 'Оборудование по категориям';
-$this->params['breadcrumbs'][] = ['label' => 'Тех.документация', 'url' => ['/tehdoc']];
-$this->params['breadcrumbs'][] = ['label' => 'Перечень оборудования', 'url' => ['/tehdoc']];
+$this->title = 'Анализ сеансов ВКС';
+$this->params['breadcrumbs'][] = ['label' => 'ВКС', 'url' => ['/vks']];
+$this->params['breadcrumbs'][] = ['label' => 'Журнал', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$about = "Панель отображения оборудования по категориям. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
+
+$about = "Панель ";
+$date_about = "Выберите период для анализа";
 $refresh_hint = 'Перезапустить форму';
-$dell_hint = 'Удалить выделенное оборудование из ОСНОВНОЙ таблицы. БУДЬТЕ ВНИМАТЕЛЬНЫ, данные будут удалены безвозвратно.';
+$dell_hint = 'Удалить выделенные сеансы ВКС. БУДЬТЕ ВНИМАТЕЛЬНЫ, данные будут удалены безвозвратно.';
 $send_hint = 'Передать выделенные строки в подробную версию таблицы';
-$classif_hint = 'Присвоить выделенному оборудованию пользовательский классификатор';
 
 ?>
 
@@ -62,7 +65,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
 </style>
 
-<div class="eq-category-pannel">
+<div class="analytics-pannel">
   <h1><?= Html::encode($this->title) ?>
     <sup class="h-title fa fa-question-circle-o" aria-hidden="true"
          data-toggle="tooltip" data-placement="right" title="<?php echo $about ?>"></sup>
@@ -71,14 +74,18 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
 <div class="row">
   <div class="col-lg-4 col-md-4 fancy-tree" style="padding-bottom: 5px">
-    <div class="row" style="margin-bottom: 10px;padding-left: 15px">
+    <div class="row" style="margin-bottom: 10px;padding-left: 15px;position: relative">
       <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
         'style' => ['margin-top' => '5px'],
         'title' => $refresh_hint,
         'data-toggle' => 'tooltip',
         'data-placement' => 'top'
       ]) ?>
+      <div class="row" style="position: absolute;top:0px; left: 70px; width: 82%">
+        <select id="vars-control" class="form-control input-sm" style="margin-top: 5px"></select>
+      </div>
     </div>
+
 
     <div style="position: relative">
       <div class="hideMenu-button hidden-sm hidden-xs" style="position: absolute;top: 5px;right: -20px">
@@ -105,7 +112,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
 
 
   <div class="col-lg-8 col-md-8 about about-padding" style="position: relative;">
-    <div class="control-buttons-wrap" style="position: absolute;top: 0px;width: 300px">
+    <div class="control-buttons-wrap" style="position: absolute;top: 0px;width: 100%">
       <?= Html::a('Удалить',
         [''], [
           'class' => 'btn btn-danger btn-sm hiddendel',
@@ -122,18 +129,22 @@ $classif_hint = 'Присвоить выделенному оборудован�
           'data-placement' => "top",
           'title' => $send_hint,
         ]) ?>
-      <?= Html::a('Классиф-тор',
-        [''], [
-          'class' => 'btn btn-info btn-sm classif',
-          'style' => ['margin-top' => '5px', 'display' => 'none'],
-          'data-toggle' => "tooltip",
-          'data-placement' => "top",
-          'title' => $classif_hint,
-        ]) ?>
+      <div style="position: absolute;top:0px;right:30px;width:185px">
+        <label class="h-title fa fa-info-circle" data-toggle="tooltip" data-placement="left"
+               title="<?php echo $date_about ?>"
+               style="position: absolute;top:13px;right:190px"></label>
+        <input class="form-control input-sm" id="vks-dates" style="margin-top:5px;po" type="text" data-range="true"
+               data-multiple-dates-separator=" - " placeholder="Выберите период"/>
+      </div>
     </div>
     <input class="root" style="display: none">
     <input class="lft" style="display: none">
     <input class="rgt" style="display: none">
+    <input class="tbl" style="display: none">
+    <input class="ident" style="display: none">
+    <input class="start-date" style="display: none">
+    <input class="end-date" style="display: none">
+
     <div class="table-wrapper" style="min-height:40px">
     </div>
     <div class="about-header" style="font-size:18px;"></div>
@@ -141,12 +152,10 @@ $classif_hint = 'Присвоить выделенному оборудован�
       <thead>
       <tr>
         <th></th>
-        <th data-priority="1">Наименование</th>
-        <th data-priority="5">Производитель/Модель</th>
-        <th>Модель</th>
-        <th data-priority="6">s/n</th>
-        <th>Дата производства</th>
-        <th data-priority="4" title="Количество">Кол.</th>
+        <th data-priority="1">Дата</th>
+        <th data-priority="5">Тип ВКС</th>
+        <th>Место проведения</th>
+        <th data-priority="6">Абонент</th>
         <th data-priority="2">Action</th>
         <th data-priority="3"></th>
       </tr>
@@ -165,7 +174,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
   var nodeid;
   var treeId;
 
-
   //************************ Работа над стилем ****************************
 
   var showMenuBtn =
@@ -174,6 +182,50 @@ $classif_hint = 'Присвоить выделенному оборудован�
     '</div>';
 
   $(document).ready(function () {
+
+    $('#vks-dates').datepicker({
+      clearButton: true,
+      onHide: function (dp, animationCompleted) {
+        if (animationCompleted) {
+          var range = $('#vks-dates').val();
+          var stDate = range.substring(6,10) + '-' + range.substring(3,5) + '-' + range.substring(0,2);
+          var eDate = range.substring(19,24) + '-' + range.substring(16,18) + '-' + range.substring(13,15);
+          $(".start-date").val(stDate);
+          $(".end-date").val(eDate);
+          $("#main-table").DataTable().clearPipeline().draw();
+        }
+      }
+    });
+
+    var url = '/vks/analytics/list';
+    $(document).ready(function () {
+      $('.tbl').val('vks_types_tbl');                             // поля при начальной инициализации
+      $('.ident').val('vks_type');
+      $.getJSON(url, function (result) {
+        var optionsValues = '<select class="form-control input-sm" id="vars-control" style="margin-top: 5px">';
+        $.each(result, function (index, obj) {
+          optionsValues += '<option value="' + obj.table + '" data-identifier="' + obj.ident + '" data-tree="'+ obj.tree +'">'
+            + obj.title + '</option>';
+        });
+        optionsValues += '</select>';
+        var options = $('#vars-control');
+        options.replaceWith(optionsValues);
+        $('#vars-control').on('change', function (e) {
+          var tbl = $(this).val();
+          var identifier = $(this).find(':selected').data('identifier');
+          var treeUrl = $(this).find(':selected').data('tree');
+          $('.tbl').val(tbl);
+          $('.ident').val(identifier);
+          var u = '/vks/analytics/';
+          $("#main-table").DataTable().clearPipeline().draw();
+          var tree = $(window.treeId).fancytree("getTree");
+          tree.reload({
+            url: u + treeUrl
+          });
+        })
+      });
+    });
+
     $('[data-toggle="tooltip"]').tooltip();
 
     $('.hideMenu-button').click(function (e) {
@@ -292,6 +344,7 @@ $classif_hint = 'Присвоить выделенному оборудован�
       event.preventDefault();
       var tree = $(window.treeId).fancytree("getTree");
       tree.reload();
+      $('#vars-control').val("vks_types_tbl").change();
       $(".about-header").text("");
       $(".about-main").html('');
       $(".del-node").hide();
@@ -445,24 +498,42 @@ $classif_hint = 'Присвоить выделенному оборудован�
   });
 
   $(document).ready(function () {
+    var main_url = 'server-side';
+    // var main_url = '/tehdoc/equipment/tools/server-side';                     // TODO URL
     var table = $('#main-table').DataTable({
       "processing": true,
       "serverSide": true,
       "responsive": true,
       "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
       "ajax": $.fn.dataTable.pipeline({
-        url: 'server-side',
+        url: main_url,
         pages: 2, // number of pages to cache
         data: function () {
           var root = $(".root").text();
           var lft = $(".lft").text();
           var rgt = $(".rgt").text();
+          var tbl = $(".tbl").val();
+          var ident = $(".ident").val();
+          var stDt = $(".start-date").val();
+          var eDt = $(".end-date").val();
+          if (stDt != '--'){
+            var startDate = stDt;
+          } else {
+            var startDate = '1970-01-01';
+          }
+          if (eDt != '--'){
+            var endDate = eDt;
+          } else {
+            var endDate = '2099-12-31';
+          }
           return {
-            'db_tbl': 'teh_category_tbl',
-            'identifier': 'category_id',
+            'db_tbl': tbl,
+            'identifier': ident,
             'root': root,
             'lft': lft,
-            'rgt': rgt
+            'rgt': rgt,
+            'stDate' : startDate,
+            'eDate' : endDate
           }
         }
       }),
@@ -481,15 +552,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
         "targets": 0,
         "data": null,
         "visible": false
-      }, {
-        "targets": 3,
-        "data": null,
-        "visible": false
-      }, {
-        "targets": 2,
-        "render": function (data, type, row) {
-          return row[2] + " " + row[3];
-        }
       }],
       select: {
         style: 'os',
@@ -503,20 +565,20 @@ $classif_hint = 'Присвоить выделенному оборудован�
       e.preventDefault();
       var data = table.row($(this).parents('tr')).data();
       if (e.ctrlKey) {
-        var href = "/tehdoc/equipment/update?id=" + data[0];
+        var href = "/vks/sessions/update-session?id=" + data[0];
         window.open(href);
       } else {
-        location.href = "/tehdoc/equipment/update?id=" + data[0];
+        location.href = "/vks/sessions/update-session?id=" + data[0];
       }
     });
     $('#main-table tbody').on('click', '.view', function (e) {
       e.preventDefault();
       var data = table.row($(this).parents('tr')).data();
       if (e.ctrlKey) {
-        var href = "/tehdoc/equipment/view?id=" + data[0];
+        var href = "/vks/sessions/view-session?id=" + data[0];
         window.open(href);
       } else {
-        location.href = "/tehdoc/equipment/view?id=" + data[0];
+        location.href = "/vks/sessions/view-session?id=" + data[0];
       }
     });
   });
@@ -555,10 +617,10 @@ $classif_hint = 'Присвоить выделенному оборудован�
       for (var i = 0; i < count; i++) {
         ar[i] = data[i][0];
       }
-      if (confirm('Вы действительно хотите удалить выделенное оборудование? Выделено ' + data.length)) {
+      if (confirm('Вы действительно хотите удалить выделенные строки? Выделено ' + data.length)) {
         $(".freeztime").modal("show");
         $.ajax({
-          url: "/tehdoc/equipment/delete",
+          url: "/tehdoc/equipment/delete",                                        // TODO URL
           type: "post",
           dataType: "JSON",
           data: {jsonData: ar, _csrf: csrf},
@@ -577,97 +639,6 @@ $classif_hint = 'Присвоить выделенному оборудован�
       }
     })
   });
-
-  //************************** Добавление классификатора **********************************
-
-  $(document).ready(function () {
-    $('.classif').click(function (e) {
-      e.preventDefault();
-      var kartikVal = $('#classifier').val();
-      var csrf = $("meta[name=csrf-token]").attr("content");
-      var table = $("#main-table").DataTable();
-      var data = table.rows({selected: true}).data();
-      var idArray = [];
-      var count = data.length;
-      for (var i = 0; i < count; i++) {
-        idArray[i] = data[i][0];
-      }
-      $("#classifier-modal").modal("show");
-      if (kartikVal != '') {
-        loadForm(csrf, idArray);
-      }
-      $('#classifier').on('change', function () {
-        loadForm(csrf, idArray);
-      });
-    });
-  });
-
-  function loadForm(crsf, idArray) {
-    var val = $('#classifier').val();
-    var data;
-    if (val != '') {
-      $.ajax({
-        url: "/admin/classifier/extended-data-form?id=" + val,
-        type: "GET",
-        success: function (result) {
-          if (result == 'Error_01') {
-            $("#assign-classifier-btn").attr("disabled", "disabled");
-            $("#classifier-body").html('Таблица базы данных не создана, создайте ее в панеле Администратора.');
-            return;
-          }
-          $("#classifier-body").html(result);
-          $("#assign-classifier-btn").removeAttr('disabled');
-
-
-          $("input[type=file]").on('change', function () {
-            var input = this;
-            var inputHmlt;
-            var count = this.files.length;
-            var files = this.files;
-            for (var i = 0, file; file = files[i]; i++) {
-              inputHmlt = '' +
-                '<label style="font-size: 16px;color: #000;" class="label">Наименование документа</label>' +
-                '<input label="Vtnrf" type=text class="form-control" name="' + file.name + '">';
-              $(input).after(inputHmlt + '<br>');
-            }
-          });
-
-          $("#form-classifier").off('submit').on('submit', function (e) {
-            e.preventDefault();
-            var formData = $("#form-classifier").serializefiles();
-            formData.append('ids', idArray);                                    // массив с id из таблицы
-            $.ajax({
-              url: "/admin/classifier/files-load",
-              type: "POST",
-              dataType: "JSON",
-              data: formData,
-              enctype: 'multipart/form-data',
-              cache: false,
-              processData: false,
-              contentType: false,
-              success: function (result) {
-                $("#form-classifier")[0].reset();
-                $("#classifier-modal").modal("hide");
-              },
-              error: function () {
-                console.log("Ошибка cat_1! Обратитесь к разработчику.");
-                $("#form-classifier")[0].reset();
-                $("#classifier-modal").modal("hide");
-              }
-            });
-          })
-        },
-        error: function () {
-          console.log("Ошибка cat_2! Обратитесь к разработчику.");
-          $("#classifier-modal").modal("hide");
-        }
-      });
-    } else {
-      $("#classifier-body").html('');
-      $("#assign-classifier-btn").attr("disabled", "disabled");
-    }
-
-  }
 
   (function ($) {
     $.fn.serializefiles = function () {
@@ -688,12 +659,12 @@ $classif_hint = 'Присвоить выделенному оборудован�
     };
   })(jQuery);
 
+  // -********************************* Дерево *****************************************
   jQuery(function ($) {
-    var main_url = '/admin/category/categories';
-
+    var main_url = '/vks/analytics/default';
     $("#fancyree_w0").fancytree({
       source: {
-        url: main_url,
+        url: main_url,                                          // TODO URL
       },
       extensions: ['filter'],
       quicksearch: true,

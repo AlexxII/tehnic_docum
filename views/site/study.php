@@ -11,7 +11,8 @@ $this->title = 'Обучение и тренировка по JS и JQuery';
   </div>
 
   <?php
-
+    echo mt_rand();
+  Yii::$app->cache->flush();
   ?>
 
 

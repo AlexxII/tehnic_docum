@@ -26,13 +26,14 @@ class VksTypeController extends Controller
     return json_encode($roots);
   }
 
-  public function actionVksTypeCreate($parentTitle, $title)
+  public function actionVksTypeCreate($parentId, $title)
   {
     $data = [];
-    $category = VksTypes::findOne(['name' => $parentTitle]);
-    $newSubcat = new VksTypes(['name' => $title]);
-    $newSubcat->parent_id = $category->id;
-    $newSubcat->appendTo($category);
+    $parentType = VksTypes::findOne($parentId);
+    $newType = new VksTypes(['name' => $title]);
+    $newType->parent_id = $parentType->ref;
+    $newType->ref = mt_rand();                              // генерация случайного числа
+    $newType->appendTo($parentType);
     $data['acceptedTitle'] = $title;
     return json_encode($data);
   }
@@ -52,13 +53,13 @@ class VksTypeController extends Controller
 
   public function actionUpdate($id, $title)
   {
-    $category = VksTypes::findOne(['id' => $id]);
-    $category->name = $title;
-    $category->save();
+    $type = VksTypes::findOne(['id' => $id]);
+    $type->name = $title;
+    $type->save();
     return true;
   }
 
-  public function actionMove($item, $action, $second, $parent)
+  public function actionMove($item, $action, $second, $parentId)
   {
     $item_model = VksTypes::findOne($item);
     $second_model = VksTypes::findOne($second);
@@ -73,8 +74,8 @@ class VksTypeController extends Controller
         $item_model->appendTo($second_model);
         break;
     }
-    $parent = VksTypes::findOne(['name' => $parent]);
-    $item_model->parent_id = $parent->id;
+    $parent = VksTypes::findOne($parentId);
+    $item_model->parent_id = $parent->ref;
     if ($item_model->save()) {
       return true;
     }
@@ -86,8 +87,8 @@ class VksTypeController extends Controller
     if (!empty($_POST)) {
       // TODO: удаление или невидимый !!!!!!!
       $id = $_POST['id'];
-      $category = VksTypes::findOne(['id' => $id]);
-      $category->delete();
+      $type = VksTypes::findOne(['id' => $id]);
+      $type->delete();
     }
   }
 

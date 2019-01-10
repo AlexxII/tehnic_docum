@@ -26,13 +26,14 @@ class VksPlaceController extends Controller
     return json_encode($roots);
   }
 
-  public function actionVksPlaceCreate($parentTitle, $title)
+  public function actionVksPlaceCreate($parentId, $title)
   {
     $data = [];
-    $category = VksPlaces::findOne(['name' => $parentTitle]);
-    $newSubcat = new VksPlaces(['name' => $title]);
-    $newSubcat->parent_id = $category->id;
-    $newSubcat->appendTo($category);
+    $parentPlace = VksPlaces::findOne($parentId);
+    $newPlace = new VksPlaces(['name' => $title]);
+    $newPlace->parent_id = $parentPlace->ref;
+    $newPlace->ref = mt_rand();
+    $newPlace->appendTo($parentPlace);
     $data['acceptedTitle'] = $title;
     return json_encode($data);
   }
@@ -52,13 +53,13 @@ class VksPlaceController extends Controller
 
   public function actionUpdate($id, $title)
   {
-    $category = VksPlaces::findOne(['id' => $id]);
-    $category->name = $title;
-    $category->save();
+    $place = VksPlaces::findOne(['id' => $id]);
+    $place->name = $title;
+    $place->save();
     return true;
   }
 
-  public function actionMove($item, $action, $second, $parent)
+  public function actionMove($item, $action, $second, $parentId)
   {
     $item_model = VksPlaces::findOne($item);
     $second_model = VksPlaces::findOne($second);
@@ -73,8 +74,8 @@ class VksPlaceController extends Controller
         $item_model->appendTo($second_model);
         break;
     }
-    $parent = VksPlaces::findOne(['name' => $parent]);
-    $item_model->parent_id = $parent->id;
+    $parent = VksPlaces::findOne($parentId);
+    $item_model->parent_id = $parent->ref;
     if ($item_model->save()) {
       return true;
     }
@@ -86,8 +87,8 @@ class VksPlaceController extends Controller
     if (!empty($_POST)) {
       // TODO: удаление или невидимый !!!!!!!
       $id = $_POST['id'];
-      $category = VksPlaces::findOne(['id' => $id]);
-      $category->delete();
+      $place = VksPlaces::findOne(['id' => $id]);
+      $place->delete();
     }
   }
 

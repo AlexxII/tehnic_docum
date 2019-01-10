@@ -2,10 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\helpers\Url;
-use yii\helpers\ArrayHelper;
-use app\modules\vks\assets\FormAsset;
-
+use app\modules\vks\assets\VksFormAsset;
+use app\modules\tehdoc\modules\equipment\asset\EquipmentAsset;
 ?>
 
 <style>
@@ -33,7 +31,9 @@ use app\modules\vks\assets\FormAsset;
 <?php
 
 \yii\widgets\MaskedInputAsset::register($this);
-FormAsset::register($this);
+VksFormAsset::register($this);
+EquipmentAsset::register($this);
+
 
 $vks_date_hint = 'Обязательное поле! Укажите дату проведения сеанса ВКС';
 $vks_type_hint = 'Обязательное поле! Укажите ТИП сеанса ВКС (Напрмер: ЗВС-ОГВ, КВС и т.д.)';
@@ -178,7 +178,7 @@ $vks_tools_hint = 'Обязательное поле! Укажите обору�
         <?= $form->field($model, 'vks_employee', [
           'template' => '{label} <sup class="h-title fa fa-info-circle req" aria-hidden="true"
                 data-toggle="tooltip" data-placement="top" title="' . $vks_employee_hint . '"></sup>{input}{hint}'])
-          ->dropDownList($model->vksEmployees4List, [
+          ->dropDownList($model->vksEmployees4List, [ 'id' => 'employee', 'data-name' => 'vks_employee',
             'prompt' => ['text' => 'Выберите',
               'options' => [
                 'value' => 'none',

@@ -9,11 +9,11 @@ namespace app\modules\vks\assets;
 
 use yii\web\AssetBundle;
 
-class   FormAsset extends AssetBundle
+class   VksFormAsset extends AssetBundle
 {
     public $sourcePath = '@app/modules/vks/lib';
     public $css = [
-        'css/jquery-ui.min.css'
+        'css/jquery-ui.min.css',
     ];
 
     public $js = [

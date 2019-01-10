@@ -3,7 +3,6 @@
 namespace app\modules\vks\controllers\control;
 
 use app\modules\vks\models\VksTools;
-use app\modules\vks\models\VksTypes;
 use yii\web\Controller;
 
 class VksToolsController extends Controller
@@ -27,13 +26,14 @@ class VksToolsController extends Controller
     return json_encode($roots);
   }
 
-  public function actionVksToolsCreate($parentTitle, $title)
+  public function actionVksToolsCreate($parentId, $title)
   {
     $data = [];
-    $category = VksTools::findOne(['name' => $parentTitle]);
-    $newSubcat = new VksTools(['name' => $title]);
-    $newSubcat->parent_id = $category->id;
-    $newSubcat->appendTo($category);
+    $parentTool = VksTools::findOne($parentId);
+    $newTool = new VksTools(['name' => $title]);
+    $newTool->parent_id = $parentTool->ref;
+    $newTool->ref = mt_rand();
+    $newTool->appendTo($parentTool);
     $data['acceptedTitle'] = $title;
     return json_encode($data);
   }
@@ -53,13 +53,13 @@ class VksToolsController extends Controller
 
   public function actionUpdate($id, $title)
   {
-    $category = VksTools::findOne(['id' => $id]);
-    $category->name = $title;
-    $category->save();
+    $tool = VksTools::findOne(['id' => $id]);
+    $tool->name = $title;
+    $tool->save();
     return true;
   }
 
-  public function actionMove($item, $action, $second, $parent)
+  public function actionMove($item, $action, $second, $parentId)
   {
     $item_model = VksTools::findOne($item);
     $second_model = VksTools::findOne($second);
@@ -74,8 +74,8 @@ class VksToolsController extends Controller
         $item_model->appendTo($second_model);
         break;
     }
-    $parent = VksTools::findOne(['name' => $parent]);
-    $item_model->parent_id = $parent->id;
+    $parent = VksTools::findOne($parentId);
+    $item_model->parent_id = $parent->ref;
     if ($item_model->save()) {
       return true;
     }
@@ -87,8 +87,8 @@ class VksToolsController extends Controller
     if (!empty($_POST)) {
       // TODO: удаление или невидимый !!!!!!!
       $id = $_POST['id'];
-      $category = VksTools::findOne(['id' => $id]);
-      $category->delete();
+      $tool = VksTools::findOne(['id' => $id]);
+      $tool->delete();
     }
   }
 
@@ -123,5 +123,10 @@ class VksToolsController extends Controller
       }
       return false;
     }
+  }
+
+  public function actionTool()
+  {
+    return 1;
   }
 }

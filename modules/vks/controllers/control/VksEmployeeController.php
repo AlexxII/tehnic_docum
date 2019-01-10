@@ -27,13 +27,14 @@ class VksEmployeeController extends Controller
     return json_encode($roots);
   }
 
-  public function actionVksEmployeeCreate($parentTitle, $title)
+  public function actionVksEmployeeCreate($parentId, $title)
   {
     $data = [];
-    $category = VksEmployees::findOne(['name' => $parentTitle]);
-    $newSubcat = new VksEmployees(['name' => $title]);
-    $newSubcat->parent_id = $category->id;
-    $newSubcat->appendTo($category);
+    $parentEmpl = VksEmployees::findOne($parentId);
+    $newEmpl = new VksEmployees(['name' => $title]);
+    $newEmpl->parent_id = $parentEmpl->ref;
+    $newEmpl->ref = mt_rand();
+    $newEmpl->appendTo($parentEmpl);
     $data['acceptedTitle'] = $title;
     return json_encode($data);
   }
@@ -53,13 +54,13 @@ class VksEmployeeController extends Controller
 
   public function actionUpdate($id, $title)
   {
-    $category = VksEmployees::findOne(['id' => $id]);
-    $category->name = $title;
-    $category->save();
+    $empl = VksEmployees::findOne(['id' => $id]);
+    $empl->name = $title;
+    $empl->save();
     return true;
   }
 
-  public function actionMove($item, $action, $second, $parent)
+  public function actionMove($item, $action, $second, $parentId)
   {
     $item_model = VksEmployees::findOne($item);
     $second_model = VksEmployees::findOne($second);
@@ -74,8 +75,8 @@ class VksEmployeeController extends Controller
         $item_model->appendTo($second_model);
         break;
     }
-    $parent = VksEmployees::findOne(['name' => $parent]);
-    $item_model->parent_id = $parent->id;
+    $parent = VksEmployees::findOne($parentId);
+    $item_model->parent_id = $parent->ref;
     if ($item_model->save()) {
       return false;
     }
@@ -87,8 +88,8 @@ class VksEmployeeController extends Controller
     if (!empty($_POST)) {
       // TODO: удаление или невидимый !!!!!!!
       $id = $_POST['id'];
-      $category = VksEmployees::findOne(['id' => $id]);
-      $category->delete();
+      $empl = VksEmployees::findOne(['id' => $id]);
+      $empl->delete();
     }
   }
 

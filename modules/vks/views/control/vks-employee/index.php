@@ -7,18 +7,19 @@ use yii\bootstrap\Modal;
 \wbraganca\fancytree\FancytreeAsset::register($this);
 
 
-$this->title = 'Сотрудники других подразделений';
+$this->title = 'Сотрудники';
 $this->params['breadcrumbs'][] = ['label' => 'ВКС', 'url' => ['/vks']];
 $this->params['breadcrumbs'][] = ['label' => 'Журнал', 'url' => ['/vks/sessions']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$about = "Панель управления сотрудниками других подразделений Центра и сторонних организаций. При сбое, перезапустите форму, воспользовавшись соответствующей клавишей.";
+$about = "Панель управления сотрудниками Центра и сторонних организаций, участвующихы в обеспечении проведения сеансов ВКС. 
+            При сбое перезапустите форму, воспользовавшись соответствующей клавишей";
 $add_hint = 'Добавить новый узел';
 $add_tree_hint = 'Добавить дерево';
 $refresh_hint = 'Перезапустить форму';
-$del_hint = 'Удалить выбранную категорию БЕЗ вложений';
+$del_hint = 'Удалить БЕЗ вложений';
 $del_root_hint = 'Удалить ветку полностью';
-$del_multi_nodes = 'Удвлить выбранную категорию С вложениями';
+$del_multi_nodes = 'Удвлить С вложениями';
 
 ?>
 
@@ -308,11 +309,19 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
           return true;
         },
         dragDrop: function (node, data) {
+          if (data.hitMode == 'over'){
+            if (data.node.data.lvl == 2){             // Ограничение на вложенность
+              return false;
+            }
+            var pId = data.node.data.id;
+          } else {
+            var pId = data.node.parent.data.id;
+          }
           $.get(move_url, {
             item: data.otherNode.data.id,
             action: data.hitMode,
             second: node.data.id,
-            parent: data.node.parent.title
+            parentId: pId
           }, function () {
             data.otherNode.moveTo(node, data.hitMode);
           })
@@ -350,7 +359,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             $.ajax({
               url: create_url,
               data: {
-                parentTitle: node.parent.title,
+                parentId: node.parent.data.id,
                 title: data.input.val()
               }
             }).done(function (result) {

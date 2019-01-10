@@ -26,15 +26,12 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
     font-size: 18px;
     color: #1e6887;
   }
-
   .fa {
     font-size: 15px;
   }
-
   ul.fancytree-container {
     font-size: 16px;
   }
-
   input {
     color: black;
   }
@@ -308,9 +305,16 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
           return true;
         },
         dragDrop: function (node, data) {
+          if (data.hitMode == 'over'){
+            var pId = data.node.data.id;
+          } else {
+            var pId = data.node.parent.data.id;
+          }
           $.get(move_url, {
-            item: data.otherNode.data.id, action: data.hitMode, second:
-            node.data.id
+            item: data.otherNode.data.id,
+            action: data.hitMode,
+            second: node.data.id,
+            parentId: pId
           }, function () {
             data.otherNode.moveTo(node, data.hitMode);
           })
@@ -348,7 +352,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             $.ajax({
               url: create_url,
               data: {
-                parentTitle: node.parent.title,
+                parentId: node.parent.data.id,
                 title: data.input.val()
               }
             }).done(function (result) {

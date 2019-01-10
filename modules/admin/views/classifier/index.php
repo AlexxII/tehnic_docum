@@ -164,7 +164,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                         if (data.isNew){
                             $.ajax({
                               url: "/admin/classifier/create",
-                              data: { parentTitle: node.parent.title, title: data.input.val() }
+                              data: { parentId: node.parent.data.id, title: data.input.val() }
                             }).done(function(result){
                                 node.setTitle(result.acceptedTitle);
                             }).fail(function(result){

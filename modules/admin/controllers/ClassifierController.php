@@ -86,10 +86,10 @@ class ClassifierController extends Controller
         return false;
     }
 
-    public function actionCreate($parentTitle, $title)
+    public function actionCreate($parentId, $title)
     {
         $data = [];
-        $category = Classifier::findOne(['name' => $parentTitle]);
+        $category = Classifier::findOne($parentId);
         $newSubcat = new Classifier(['name' => $title]);
         $newSubcat->root = $category->id;
         $newSubcat->appendTo($category);

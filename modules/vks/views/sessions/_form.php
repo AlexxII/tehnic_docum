@@ -2,10 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\helpers\Url;
-use yii\helpers\ArrayHelper;
-use app\modules\vks\assets\FormAsset;
-
+use app\modules\vks\assets\VksFormAsset;
+use app\modules\tehdoc\modules\equipment\asset\EquipmentAsset;
 ?>
 
 <style>
@@ -13,28 +11,24 @@ use app\modules\vks\assets\FormAsset;
     font-size: 15px;
     color: #FF0000;
   }
-
   .nonreq {
     color: #1e6887;
   }
-
   .select-selected {
     padding-left: 40px;
   }
-
   .form-group {
     margin-bottom: 5px;
   }
-
   .control-label {
     font-size: 14px;
   }
-
 </style>
 
 <?php
 
-FormAsset::register($this);
+VksFormAsset::register($this);
+EquipmentAsset::register($this);
 
 $vks_date_hint = 'Обязательное поле! Укажите дату проведения сеанса ВКС';
 $vks_type_hint = 'Обязательное поле! Укажите ТИП сеанса ВКС. Сеанс ВКС из п.403 => ЗВС-ОГВ, ГФИ => КВС-ГФИ, Приемная Президента => КВС Приемной';

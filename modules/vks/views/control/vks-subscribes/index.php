@@ -15,9 +15,9 @@ $about = "Панель управления абонента ВКС. При сб
 $add_hint = 'Добавить новый узел';
 $add_tree_hint = 'Добавить дерево';
 $refresh_hint = 'Перезапустить форму';
-$del_hint = 'Удалить выбранную категорию БЕЗ вложений';
+$del_hint = 'Удалить БЕЗ вложений';
 $del_root_hint = 'Удалить ветку полностью';
-$del_multi_nodes = 'Удвлить выбранную категорию С вложениями';
+$del_multi_nodes = 'Удвлить С вложениями';
 
 ?>
 
@@ -26,15 +26,12 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
     font-size: 18px;
     color: #1e6887;
   }
-
   .fa {
     font-size: 15px;
   }
-
   ul.fancytree-container {
     font-size: 14px;
   }
-
   input {
     color: black;
   }
@@ -312,12 +309,12 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 
           $('.about-info').hide().html(goodAlert('Записи добавлены в БД.')).fadeIn('slow');
         } else {
-          $('.about-info').hide().html(badAlert('Записи не сохранены в БД. Попробуйте перезагрузить страницу и попробовап' +
+          $('.about-info').hide().html(badAlert('Записи не сохранены в БД. Попробуйте перезагрузить страницу и попробовать' +
             'снова. При повторных ошибках обратитесь к разработчику.')).fadeIn('slow');
         }
       },
       error: function () {
-        $('.about-info').hide().html(badAlert('Записи не сохранены в БД. Попробуйте перезагрузить страницу и попробовап' +
+        $('.about-info').hide().html(badAlert('Записи не сохранены в БД. Попробуйте перезагрузить страницу и попробовать' +
           'снова. При повторных ошибках обратитесь к разработчику.')).fadeIn('slow');
       }
     });
@@ -349,11 +346,19 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
           return true;
         },
         dragDrop: function (node, data) {
+          if (data.hitMode == 'over') {
+            if (data.node.data.lvl == 2) {             // Ограничение на вложенность
+              return false;
+            }
+            var pId = data.node.data.id;
+          } else {
+            var pId = data.node.parent.data.id;
+          }
           $.get(move_url, {
             item: data.otherNode.data.id,
             action: data.hitMode,
             second: node.data.id,
-            parent: data.node.parent.title
+            parentId: pId
           }, function () {
             data.otherNode.moveTo(node, data.hitMode);
           })
@@ -391,7 +396,7 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
             $.ajax({
               url: create_url,
               data: {
-                parentTitle: node.parent.title,
+                parentId: node.parent.data.id,
                 title: data.input.val()
               }
             }).done(function (result) {

@@ -84,7 +84,7 @@ class Tools extends \yii\db\ActiveRecord
 
   public function getCategory()
   {
-    return $this->hasOne(Category::class, ['id' => 'category_id']);
+    return $this->hasOne(Category::class, ['ref' => 'category_id']);
   }
 
   public function getCategoryTitle()
@@ -107,7 +107,7 @@ class Tools extends \yii\db\ActiveRecord
 
   public function getPlacement()
   {
-    return $this->hasOne(Placement::class, ['id' => 'place_id']);
+    return $this->hasOne(Placement::class, ['ref' => 'place_id']);
   }
 
   public function getPlacementTitle()
@@ -183,16 +183,16 @@ class Tools extends \yii\db\ActiveRecord
   // DropDown lists
   public function getToolPlacesList()
   {
-    $sql = "SELECT C1.id, C1.name, C2.name as gr from " . self::PLACEMENT_TABLE . " C1 LEFT JOIN "
-      . self::PLACEMENT_TABLE . " C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 ORDER BY C1.lft";
-    return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
+    $sql = "SELECT C1.ref, C1.name, C2.name as gr from " . self::PLACEMENT_TABLE . " C1 LEFT JOIN "
+      . self::PLACEMENT_TABLE . " C2 on C1.parent_id = C2.ref WHERE C1.lvl > 1 ORDER BY C1.lft";
+    return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'ref', 'name', 'gr');
   }
 
   public function getToolCategoryList()
   {
-    $sql = "SELECT C1.id, C1.name, C2.name as gr from " . self::CATEGORY_TABLE . " C1 LEFT JOIN "
-      . self::CATEGORY_TABLE . " C2 on C1.parent_id = C2.id WHERE C1.lvl > 1 AND C1.root = 1 ORDER BY C1.lft";
-    return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'id', 'name', 'gr');
+    $sql = "SELECT C1.ref, C1.name, C2.name as gr from " . self::CATEGORY_TABLE . " C1 LEFT JOIN "
+      . self::CATEGORY_TABLE . " C2 on C1.parent_id = C2.ref WHERE C1.lvl > 1 AND C1.root = 1 ORDER BY C1.lft";
+    return ArrayHelper::map($this->findBySql($sql)->asArray()->all(), 'ref', 'name', 'gr');
   }
 
 //======================================================================================================================

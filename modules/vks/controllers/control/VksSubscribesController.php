@@ -26,13 +26,14 @@ class VksSubscribesController extends Controller
     return json_encode($roots);
   }
 
-  public function actionVksSubscribesCreate($parentTitle, $title)
+  public function actionVksSubscribesCreate($parentId, $title)
   {
     $data = [];
-    $category = VksSubscribes::findOne(['name' => $parentTitle]);
-    $newSubcat = new VksSubscribes(['name' => $title]);
-    $newSubcat->parent_id = $category->id;
-    $newSubcat->appendTo($category);
+    $parentSubscr = VksSubscribes::findOne($parentId);
+    $newSubscr = new VksSubscribes(['name' => $title]);
+    $newSubscr->parent_id = $parentSubscr->ref;
+    $newSubscr->ref = mt_rand();
+    $newSubscr->appendTo($parentSubscr);
     $data['acceptedTitle'] = $title;
     return json_encode($data);
   }
@@ -52,13 +53,13 @@ class VksSubscribesController extends Controller
 
   public function actionUpdate($id, $title)
   {
-    $category = VksSubscribes::findOne(['id' => $id]);
-    $category->name = $title;
-    $category->save();
+    $subscr = VksSubscribes::findOne(['id' => $id]);
+    $subscr->name = $title;
+    $subscr->save();
     return true;
   }
 
-  public function actionMove($item, $action, $second, $parent)
+  public function actionMove($item, $action, $second, $parentId)
   {
     $item_model = VksSubscribes::findOne($item);
     $second_model = VksSubscribes::findOne($second);
@@ -73,8 +74,8 @@ class VksSubscribesController extends Controller
         $item_model->appendTo($second_model);
         break;
     }
-    $parent = VksSubscribes::findOne(['name' => $parent]);
-    $item_model->parent_id = $parent->id;
+    $parent = VksSubscribes::findOne($parentId);
+    $item_model->parent_id = $parent->ref;
     if ($item_model->save()) {
       return true;
     }
@@ -86,8 +87,8 @@ class VksSubscribesController extends Controller
     if (!empty($_POST)) {
       // TODO: удаление или невидимый !!!!!!!
       $id = $_POST['id'];
-      $category = VksSubscribes::findOne(['id' => $id]);
-      $category->delete();
+      $subscr = VksSubscribes::findOne(['id' => $id]);
+      $subscr->delete();
     }
   }
 

@@ -1,6 +1,6 @@
 <?php
 
-//TehdocAsset for DataTables tables;
+//EquipmentAsset for DataTables tables;
 
 namespace app\modules\tehdoc\asset;
 

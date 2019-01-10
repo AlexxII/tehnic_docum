@@ -29,7 +29,8 @@ class ToolsController extends Controller
     $model->quantity = 1;                             // По умолчанию, кол-во оборудования - 1.php
 
     if ($model->load(Yii::$app->request->post())) {
-      $model->id_eq = rand();
+      $model->id_eq = mt_rand();
+      $model->parent_id = 0;
       if ($model->save()) {
         if ($fUpload->load(Yii::$app->request->post())) {
           $fUpload->imageFiles = UploadedFile::getInstances($fUpload, 'imageFiles');
@@ -161,7 +162,7 @@ class ToolsController extends Controller
         $root = (int)$_GET['root'];
         $table_ex = (string)$_GET['db_tbl'];
         $identifier = (string)$_GET['identifier'];
-        $where = ' ' . $identifier . ' in (SELECT id
+        $where = ' ' . $identifier . ' in (SELECT ref
     FROM ' . $table_ex . '
       WHERE ' . $table_ex . '.lft >= ' . $lft .
           ' AND ' . $table_ex . '.rgt <= ' . $rgt .

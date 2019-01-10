@@ -27,7 +27,6 @@ class AppAsset extends AssetBundle
   public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
 
   public $js = [
-      'js/jQuery_mini.js',
       'js/tether.min.js'
   ];
 

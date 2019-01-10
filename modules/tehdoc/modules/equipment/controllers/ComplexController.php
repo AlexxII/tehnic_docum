@@ -33,7 +33,7 @@ class ComplexController extends Controller
       $modelsTool = Model::createMultiple(Tools::class);
       Model::loadMultiple($modelsTool, Yii::$app->request->post());
       $modelComplex->parent_id = 0;
-      $modelComplex->id_complex = rand();
+      $modelComplex->id_complex = mt_rand();
       $valid = $modelComplex->validate();
       $valid = Model::loadRandom($modelsTool);
 //      return var_dump($valid);
@@ -275,7 +275,7 @@ class ComplexController extends Controller
     $newTool = new ComplexEx(['name' => $title]);
     $newTool->parent_id = $category->id;
     $newTool->complex_title = $title;
-    $newTool->id_complex = rand();
+    $newTool->id_complex = mt_rand();
     $newTool->category_id = 0;
     $newTool->place_id = 0;
     $newTool->appendTo($category);

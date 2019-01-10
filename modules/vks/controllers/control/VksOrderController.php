@@ -26,13 +26,14 @@ class VksOrderController extends Controller
     return json_encode($roots);
   }
 
-  public function actionVksOrderCreate($parentTitle, $title)
+  public function actionVksOrderCreate($parentId, $title)
   {
     $data = [];
-    $category = VksOrders::findOne(['name' => $parentTitle]);
-    $newSubcat = new VksOrders(['name' => $title]);
-    $newSubcat->parent_id = $category->id;
-    $newSubcat->appendTo($category);
+    $parentOrder = VksOrders::findOne($parentId);
+    $newOrder = new VksOrders(['name' => $title]);
+    $newOrder->parent_id = $parentOrder->ref;
+    $newOrder->ref = mt_rand();
+    $newOrder->appendTo($parentOrder);
     $data['acceptedTitle'] = $title;
     return json_encode($data);
   }
@@ -52,13 +53,13 @@ class VksOrderController extends Controller
 
   public function actionUpdate($id, $title)
   {
-    $category = VksOrders::findOne(['id' => $id]);
-    $category->name = $title;
-    $category->save();
+    $order = VksOrders::findOne(['id' => $id]);
+    $order->name = $title;
+    $order->save();
     return true;
   }
 
-  public function actionMove($item, $action, $second, $parent)
+  public function actionMove($item, $action, $second, $parentId)
   {
     $item_model = VksOrders::findOne($item);
     $second_model = VksOrders::findOne($second);
@@ -73,8 +74,8 @@ class VksOrderController extends Controller
         $item_model->appendTo($second_model);
         break;
     }
-    $parent = VksOrders::findOne(['name' => $parent]);
-    $item_model->parent_id = $parent->id;
+    $parent = VksOrders::findOne($parentId);
+    $item_model->parent_id = $parent->ref;
     if ($item_model->save()) {
       return true;
     }
@@ -86,8 +87,8 @@ class VksOrderController extends Controller
     if (!empty($_POST)) {
       // TODO: удаление или невидимый !!!!!!!
       $id = $_POST['id'];
-      $category = VksOrders::findOne(['id' => $id]);
-      $category->delete();
+      $order = VksOrders::findOne(['id' => $id]);
+      $order->delete();
     }
   }
 

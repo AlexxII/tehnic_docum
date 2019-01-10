@@ -17,6 +17,7 @@ class m190103_192828_vks_tools_tbl extends Migration
     }
     $this->createTable(self::TABLE_NAME, [
       'id' => $this->bigPrimaryKey(),
+      'ref' => $this->integer(),
       'root' => $this->integer(),
       'lft' => $this->integer()->notNull(),
       'rgt' => $this->integer()->notNull(),
@@ -24,11 +25,14 @@ class m190103_192828_vks_tools_tbl extends Migration
       'name' => $this->string(120)->notNull(),
       'parent_id' => $this->integer(),
       'complex_id' => $this->integer(),
-      'service_time' => $this->float()
+      'service_time' => $this->float(),
+      'valid' => $this->boolean()->defaultValue(1),
+      'del_reason' => $this->string(255)
     ], $tableOptions);
 
-    $sql = 'INSERT INTO' . self::TABLE_NAME . '(id, root, lft, rgt, lvl, name, parent_id, complex_id, service_time) 
-                VALUES (1, 1, 1, 2, 0, "Оборудование ВКС", 1, NULL, NULL)';
+    $rand = mt_rand();
+    $sql = 'INSERT INTO' . self::TABLE_NAME . '(id, ref, root, lft, rgt, lvl, name, parent_id, complex_id, service_time) 
+                VALUES (1, ' . $rand . ', 1, 1, 2, 0, "Оборудование ВКС", ' . $rand . ', NULL, NULL)';
     \Yii::$app->db->createCommand($sql)->execute();
   }
 

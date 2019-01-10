@@ -11,12 +11,10 @@ class TehdocAsset extends AssetBundle
 
   public $css = [
       'css/tehdoc.css',
-      'css/bootstrap-datepicker.min.css',
+      'css/fotorama.css'
   ];
 
   public $js = [
-      'js/bootstrap-datepicker.min.js',
-      'js/bootstrap-datepicker.ru.min.js',
       'js/moment-with-locales.min.js',
       'js/fotorama.js',
   ];

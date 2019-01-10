@@ -25,15 +25,12 @@ $del_multi_nodes = 'Удвлить С вложениями';
     font-size: 18px;
     color: #1e6887;
   }
-
   .fa {
     font-size: 15px;
   }
-
   ul.fancytree-container {
     font-size: 14px;
   }
-
   input {
     color: black;
   }
@@ -165,23 +162,23 @@ $del_multi_nodes = 'Удвлить С вложениями';
         });
     });
 
-    $.ajax({
-      url: "/vks/control/vks-tools/",
-      dataType: "json",
-      type: "GET",
-      async: true,
-      success: function (data) {
-        console.log(data);
-        var options = '';
-        $.each(data, function (key, value) {
-          options += '<option>' + value + '</option>';
-        });
-        $('#ddlNumbers').append(options);
-      },
-      error(jqXHR, textStatus, errorThrown) {
-        alert('Something wrong happened because: ' + errorThrown)
-      }
-    });
+    // $.ajax({
+    //   url: "/vks/control/vks-tools/",
+    //   dataType: "json",
+    //   type: "GET",
+    //   async: true,
+    //   success: function (data) {
+    //     var options = '';
+    //     $.each(data, function (key, value) {
+    //       options += '<option>' + value + '</option>';
+    //     });
+    //     $('#ddlNumbers').append(options);
+    //   },
+    //   error(jqXHR, textStatus, errorThrown) {
+    //     alert('Something wrong happened because: ' + errorThrown)
+    //   }
+    // });
+
   });
 
   $(document).ready(function () {
@@ -350,7 +347,7 @@ $del_multi_nodes = 'Удвлить С вложениями';
     var move_url = '/vks/control/vks-tools/move';
     var create_url = '/vks/control/vks-tools/vks-tools-create';
     var update_url = '/vks/control/vks-tools/update';
-    var tools_url = '/vks/control/vks-tools/tools';
+    var tools_url = '/vks/control/vks-tools/tool';
 
     $("#fancyree_w0").fancytree({
       source: {
@@ -370,11 +367,19 @@ $del_multi_nodes = 'Удвлить С вложениями';
           return true;
         },
         dragDrop: function (node, data) {
+          if (data.hitMode == 'over') {
+            if (data.node.data.lvl == 2) {             // Ограничение на вложенность
+              return false;
+            }
+            var pId = data.node.data.id;
+          } else {
+            var pId = data.node.parent.data.id;
+          }
           $.get(move_url, {
             item: data.otherNode.data.id,
             action: data.hitMode,
             second: node.data.id,
-            parent: data.node.parent.title
+            parentId: pId
           }, function () {
             data.otherNode.moveTo(node, data.hitMode);
           })
@@ -412,7 +417,7 @@ $del_multi_nodes = 'Удвлить С вложениями';
             $.ajax({
               url: create_url,
               data: {
-                parentTitle: node.parent.title,
+                parentId: node.parent.data.id,
                 title: data.input.val()
               }
             }).done(function (result) {
@@ -478,14 +483,6 @@ $del_multi_nodes = 'Удвлить С вложениями';
 
         }
         $(".save-btn").prop("disabled", true);
-        var url = tools_url;
-        $.get(url, {id: id}, function (data) {
-          if (data) {
-            var tools = JSON.parse(data);
-            $("#tools-control").val(tools);
-            window.nodeId = id;
-          }
-        })
       },
       renderNode: function (node, data) {
         if (data.node.key == -999) {

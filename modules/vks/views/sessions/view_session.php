@@ -57,14 +57,14 @@ $this->params['breadcrumbs'][] = $this->title;
         [
           'label' => 'Время:',
           'value' => function ($data) {
-            $duration = $data->vks_duration_teh ?  ' (' . $data->vks_duration_teh . ' мин.)' : '';
+            $duration = $data->vks_duration_teh ? ' (' . $data->vks_duration_teh . ' мин.)' : '';
             return $data->vks_teh_time_start . ' - ' . $data->vks_teh_time_end . $duration;
           },
         ],
         [
           'label' => 'Время:',
           'value' => function ($data) {
-            $duration = $data->vks_duration_work ?  ' (' . $data->vks_duration_work . ' мин.)' : '';
+            $duration = $data->vks_duration_work ? ' (' . $data->vks_duration_work . ' мин.)' : '';
             return $data->vks_work_time_start . ' - ' . $data->vks_work_time_end . $duration;
           },
         ],
@@ -83,6 +83,10 @@ $this->params['breadcrumbs'][] = $this->title;
         [
           'label' => 'Абонент в регионе:',
           'value' => $model->subscriberReg
+        ],
+        [
+          'label' => 'Сотрудник СпецСвязи:',
+          'value' => $model->employee
         ],
         [
           'label' => 'Распоряжение:',
