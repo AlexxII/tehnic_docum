@@ -8,7 +8,7 @@ $this->title = 'Сайт РИАЦе';
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Начало</h1>
+        <h1>Техническая документация</h1>
     </div>
 
     <?php

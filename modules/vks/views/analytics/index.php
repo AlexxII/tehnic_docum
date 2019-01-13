@@ -12,7 +12,7 @@ use app\modules\admin\models\ClassifierTbl;
 
 $this->title = 'Анализ сеансов ВКС';
 $this->params['breadcrumbs'][] = ['label' => 'ВКС', 'url' => ['/vks']];
-$this->params['breadcrumbs'][] = ['label' => 'Журнал', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Журнал', 'url' => ['/vks/sessionss']];
 $this->params['breadcrumbs'][] = $this->title;
 
 
@@ -120,14 +120,6 @@ $send_hint = 'Передать выделенные строки в подроб
           'data-toggle' => "tooltip",
           'data-placement' => "top",
           'title' => $dell_hint,
-        ]) ?>
-      <?= Html::a('Передать->',
-        [''], [
-          'class' => 'btn btn-primary btn-sm sendbtn',
-          'style' => ['margin-top' => '5px', 'display' => 'none'],
-          'data-toggle' => "tooltip",
-          'data-placement' => "top",
-          'title' => $send_hint,
         ]) ?>
       <div style="position: absolute;top:0px;right:30px;width:185px">
         <label class="h-title fa fa-info-circle" data-toggle="tooltip" data-placement="left"
@@ -278,13 +270,11 @@ $send_hint = 'Передать выделенные строки в подроб
   $('#main-table').on('length.dt', function (e, settings, len) {
     $('.hiddendel').hide();
     $('.classif').hide();
-    $('.sendbtn').hide();
   });
 
   $('#main-table').on('draw.dt', function (e, settings, len) {
     $('.hiddendel').hide();
     $('.classif').hide();
-    $('.sendbtn').hide();
   });
 
   function restoreSelectedRows(indexes) {
@@ -354,7 +344,6 @@ $send_hint = 'Передать выделенные строки в подроб
       $(".rgt").text('');
       $('.hiddendel').hide();
       $('.classif').hide();
-      $('.sendbtn').hide();
       $("#main-table").DataTable().clearPipeline().draw();
     })
   });
@@ -591,7 +580,6 @@ $send_hint = 'Передать выделенные строки в подроб
       if (type === 'row') {
         $('.hiddendel').show();
         $('.classif').show();
-        $('.sendbtn').show();
       }
     });
     table.on('deselect', function (e, dt, type) {
@@ -599,7 +587,6 @@ $send_hint = 'Передать выделенные строки в подроб
       if (type === 'row' && i.count() == 0) {
         $('.hiddendel').hide();
         $('.classif').hide();
-        $('.sendbtn').hide();
       }
     });
   });
@@ -629,7 +616,6 @@ $send_hint = 'Передать выделенные строки в подроб
             $(".freeztime").modal('hide');
             $('.hiddendel').hide();
             $('.classif').hide();
-            $('.sendbtn').hide();
           },
           error: function () {
             alert('Ошибка! Обратитесь к разработчику.');
@@ -684,7 +670,6 @@ $send_hint = 'Передать выделенные строки в подроб
       activate: function (node, data) {
         $(".hiddendel").hide();
         $(".classif").hide();
-        $(".sendbtn").hide();
         var node = data.node;
         if (node.key == -999) {
           $(".add-subcategory").hide();
