@@ -33,7 +33,7 @@ class Classifier extends ActiveRecord
 
   public static function tableName()
   {
-    return 'classifier_tbl';
+    return 'teh_classifier_tbl';
   }
 
 

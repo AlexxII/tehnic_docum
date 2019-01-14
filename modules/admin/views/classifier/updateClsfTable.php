@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 <div class="clsf-extender">
   <form action="tested" method="post" class="input-add">
     <label style="font-size: 14px">Название классификатора:</label>
-    <input class="form-control node-id" name="node-id" readonly hidden>
+    <input class="form-control node-id" name="node-id" readonly style="display: none">
     <input class="form-control clsf-name" name="clsf-name" disabled
            title="Вводите имя в колонке дерева классификаторов. Клавиша F2 или двойной щелчок мыши"
            data-toggle="tooltip" data-placement="top">

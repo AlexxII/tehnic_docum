@@ -2,24 +2,14 @@
 
 use yii\db\Migration;
 
-/**
- * Class m181108_164549_create_rbac_tabes
- */
 class m181108_164549_create_rbac_tabes extends Migration
 {
-  /**
-   * @throws yii\base\InvalidConfigException
-   * @return DbManager
-   */
   protected function getAuthManager()
   {
     $authManager = Yii::$app->getAuthManager();
     return $authManager;
   }
 
-  /**
-   * @return bool
-   */
   protected function isMSSQL()
   {
     return $this->db->driverName === 'mssql' || $this->db->driverName === 'sqlsrv' || $this->db->driverName === 'dblib';
@@ -30,9 +20,6 @@ class m181108_164549_create_rbac_tabes extends Migration
     return $this->db->driverName === 'oci';
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function up()
   {
     $authManager = $this->getAuthManager();
@@ -40,7 +27,6 @@ class m181108_164549_create_rbac_tabes extends Migration
 
     $tableOptions = null;
     if ($this->db->driverName === 'mysql') {
-      // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
       $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
     }
 
@@ -123,9 +109,6 @@ class m181108_164549_create_rbac_tabes extends Migration
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function down()
   {
     $authManager = $this->getAuthManager();
@@ -150,7 +133,6 @@ class m181108_164549_create_rbac_tabes extends Migration
     if ($this->isOracle()) {
       return ' ' . $delete;
     }
-
     return implode(' ', ['', $delete, $update]);
   }
 }

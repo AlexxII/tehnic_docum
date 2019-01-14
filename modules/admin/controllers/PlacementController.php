@@ -4,7 +4,6 @@ namespace app\modules\admin\controllers;
 
 
 use app\modules\admin\models\Placement;
-use app\modules\tehdoc\modules\kernel\models\Equipment;
 use yii\web\Controller;
 
 class PlacementController extends Controller
@@ -17,7 +16,7 @@ class PlacementController extends Controller
 
   public function actionPlacements()
   {
-    $id = Placement::find()->select('id, lft, rgt')->where(['=', 'lvl', 0])->all();
+    $id = Placement::find()->select('id, lft, rgt, root')->where(['=', 'lvl', 0])->all();
     if (!$id) {
       $data = array();
       $data = [['title' => 'База данных пуста', 'key' => -999]];
@@ -27,11 +26,11 @@ class PlacementController extends Controller
     return json_encode($roots);
   }
 
-  public function actionMove ($item,$action,$second)
+  public function actionMove($item, $action, $second, $parentId)
   {
     $item_model = Placement::findOne($item);
     $second_model = Placement::findOne($second);
-    switch ($action){
+    switch ($action) {
       case 'after':
         $item_model->insertAfter($second_model);
         break;
@@ -42,31 +41,22 @@ class PlacementController extends Controller
         $item_model->appendTo($second_model);
         break;
     }
-    $parent = Placement::findOne($second);
-    if (!$parent->children()->one()){
-      $parent->disabled = 0;
-      $parent->save();
-    } else {
-      $parent->disabled = 1;
-      $parent->save();
-    }
+    $parent = Placement::findOne($parentId);
+    $item_model->parent_id = $parent->ref;
     if ($item_model->save()) {
       return true;
     }
     return false;
   }
 
-  public function actionCreate($parentTitle, $title)
+  public function actionCreate($parentId, $title)
   {
     $data = [];
-    $category = Placement::findOne(['name' => $parentTitle]);
+    $category = Placement::findOne($parentId);
     $newSubcat = new Placement(['name' => $title]);
-    $newSubcat->root = $category->id;
+    $newSubcat->parent_id = $category->ref;
+    $newSubcat->ref = mt_rand();
     $newSubcat->appendTo($category);
-    if ($parent = $newSubcat->parents(1)->one()){
-      $parent->disabled = 1;
-      $parent->save();
-    }
     $data['acceptedTitle'] = $title;
     return json_encode($data);
   }
@@ -87,39 +77,24 @@ class PlacementController extends Controller
     return true;
   }
 
-  public function actionDelete($id)
+  public function actionDelete()
   {
-    // TODO: удаление или невидимый !!!!!!!
-    $category = Placement::findOne(['id' => $id]);
-    $parent = $category->parents(1)->one();
-    $category->delete();
-    if (!$parent->children()->one()){
-      $parent->disabled = 0;
-      $parent->save();
-    } else {
-      $parent->disabled = 1;
-      $parent->save();
+    if (!empty($_POST)) {
+      // TODO: удаление или невидимый !!!!!!!
+      $id = $_POST['id'];
+      $category = Placement::findOne(['id' => $id]);
+      $category->delete();
     }
   }
 
-  public function actionDeleteRoot($id)
+  public function actionDeleteRoot()
   {
-    $root = Placement::findOne(['id' => $id]);
+    if (!empty($_POST)) {
+      $id = $_POST['id'];
+      $root = Placement::findOne(['id' => $id]);
+    }
     $root->deleteWithChildren();
   }
-
-  public function actionTests()
-  {
-    $array = array();
-    $leaves = Placement::find()->select('id')->leaves()->orderBy('lft')->asArray()->all();
-    $categories = Placement::find()->select('id')->where(['!=', 'lvl', '0'])->orderBy('lft')->asArray()->all();
-    $array['leaves'] = $leaves;
-    $array['cat'] = $categories;
-    return $this->render('tests', [
-        'model' => json_encode($array)
-    ]);
-  }
-
 
   public function actionGetLeaves()
   {

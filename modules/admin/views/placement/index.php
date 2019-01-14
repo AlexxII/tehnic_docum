@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
 
+\wbraganca\fancytree\FancytreeAsset::register($this);
+
 
 $this->title = 'Места размещения';
 $this->params['breadcrumbs'][] = ['label' => 'Админ панель', 'url' => ['/admin']];
@@ -24,15 +26,12 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
     font-size: 18px;
     color: #1e6887;
   }
-
   .fa {
     font-size: 15px;
   }
-
   ul.fancytree-container {
     font-size: 16px;
   }
-
   input {
     color: black;
   }
@@ -49,40 +48,34 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
   <div class="">
     <div class="container-fluid" style="margin-bottom: 10px">
       <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm add-subcategory',
-          'style' => ['margin-top' => '5px'],
-          'title' => $add_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
-      ]) ?>
-      <?= Html::a('<i class="fa fa-tree" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm add-category',
-          'style' => ['margin-top' => '5px' , 'display' => 'none'],
-          'title' => $add_tree_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
+        'style' => ['margin-top' => '5px'],
+        'title' => $add_hint,
+        'data-toggle' => 'tooltip',
+        'data-placement' => 'top'
       ]) ?>
       <?= Html::a('<i class="fa fa-refresh" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-success btn-sm refresh',
-          'style' => ['margin-top' => '5px'],
-          'title' => $refresh_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
+        'style' => ['margin-top' => '5px'],
+        'title' => $refresh_hint,
+        'data-toggle' => 'tooltip',
+        'data-placement' => 'top'
       ]) ?>
       <?= Html::a('<i class="fa fa-trash" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-node',
-          'style' => ['margin-top' => '5px', 'display' => 'none'],
-          'title' => $del_hint,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
+        'style' => ['margin-top' => '5px', 'display' => 'none'],
+        'title' => $del_hint,
+        'data-toggle' => 'tooltip',
+        'data-placement' => 'top'
       ]) ?>
       <?= Html::a('<i class="fa fa-object-group" aria-hidden="true"></i>', ['#'], ['class' => 'btn btn-danger btn-sm del-multi-nodes',
-          'style' => ['margin-top' => '5px', 'display' => 'none'],
-          'title' => $del_multi_nodes,
-          'data-toggle' => 'tooltip',
-          'data-placement' => 'top'
+        'style' => ['margin-top' => '5px', 'display' => 'none'],
+        'title' => $del_multi_nodes,
+        'data-toggle' => 'tooltip',
+        'data-placement' => 'top'
       ]) ?>
     </div>
 
   </div>
 
-  <div class="col-lg-7 col-md-7">
+  <div class="col-lg-7 col-md-7" style="padding-bottom: 10px">
     <div class="">
       <div style="position: relative">
         <div class="container-fuid" style="float:left; width: 100%">
@@ -97,276 +90,336 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
 
     <div class="row" style="padding: 0 15px">
       <div class="" style="border-radius:2px;padding-top:40px">
-
-        <?php
-        echo \wbraganca\fancytree\FancytreeWidget::widget([
-            'options' => [
-                'source' => [
-                    'url' => '/admin/placement/placements',
-                ],
-                'extensions' => ['dnd', 'edit', 'filter'],
-                'quicksearch' => true,
-                'minExpandLevel' => 2,
-                'dnd' => [
-                    'preventVoidMoves' => true,
-                    'preventRecursiveMoves' => true,
-                    'autoCollapse' => true,
-                    'dragStart' => new \yii\web\JsExpression('function(node, data) {
-                    return true;
-                }'),
-                    'dragEnter' => new \yii\web\JsExpression('function(node, data) {
-                    return true;
-                }'),
-                    'dragDrop' => new \yii\web\JsExpression('function(node, data) {
-                    $.get("/admin/placement/move", {item: data.otherNode.data.id, action: data.hitMode, second:
-                    node.data.id},function(){
-                    data.otherNode.moveTo(node, data.hitMode);
-                    })
-                }'),
-                ],
-                'filter' => [
-                    'autoApply' => true,   // Re-apply last filter if lazy data is loaded
-                    'autoExpand' => false, // Expand all branches that contain matches while filtered
-                    'counter' => true,     // Show a badge with number of matching child nodes near parent icons
-                    'fuzzy' => false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
-                    'hideExpandedCounter' => true,  // Hide counter badge if parent is expanded
-                    'hideExpanders' => false,       // Hide expanders if all child nodes are hidden by filter
-                    'highlight' => true,   // Highlight matches by wrapping inside <mark> tags
-                    'leavesOnly' => true, // Match end nodes only
-                    'nodata' => true,      // Display a 'no data' status node if result is empty
-                    'mode' => "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-                ],
-
-                'edit' => [
-                    'inputCss' => [
-                        'minWidth' => "10em"
-                    ],
-                    'triggerStart' => ["clickActive", "dblclick", "f2", "mac+enter", "shift+click"],
-                    'beforeEdit' => new \yii\web\JsExpression('function(event, data){
-                      // Return false to prevent edit mode
-        }'),
-                    'edit' => new \yii\web\JsExpression('function(event, data){
-                      // Editor was opened (available as data.input)
-        }'),
-                    'beforeClose' => new \yii\web\JsExpression('function(event, data){
-                      data.save;
-        }'),
-                    'save' => new \yii\web\JsExpression('function(event, data){
-                        var node = data.node;
-                        if (data.isNew){
-                            $.ajax({
-                              url: "/admin/placement/create",
-                              data: { parentTitle: node.parent.title, title: data.input.val() }
-                            }).done(function(result){
-      //                          node.setTitle(result.acceptedTitle);
-                            }).fail(function(result){
-                                node.setTitle(data.orgTitle);
-                            }).always(function(){
-                                data.input.removeClass("pending");
-                            });
-                        } else {
-                            $.ajax({
-                              url: "/admin/placement/update",
-                              data: { id: node.data.id, title: data.input.val() }
-                            }).done(function(result){
-      //                          node.setTitle(result.acceptedTitle);
-                            }).fail(function(result){
-                                node.setTitle(data.orgTitle);
-                            }).always(function(){
-                                data.input.removeClass("pending");
-                            });
-                        }
-                        return true;
-        }'),
-                    'close' => new \yii\web\JsExpression('function(event, data){
-                        // Editor was removed
-                        if( data.save ) {
-                          // Since we started an async request, mark the node as preliminary
-                          $(data.node.span).addClass("pending");
-                        }
-        }')
-                ],
-                'activate' => new \yii\web\JsExpression('function(node, data) {
-                        var node = data.node;
-                        if (node.key == -999){
-                            $(".add-subcategory").hide();
-                            return;
-                        } else {
-                            $(".add-subcategory").show();
-                        }
-                        if (node.data.lvl == 0){
-                            $(".del-node").hide();
-                            $(".del-multi-nodes").hide();
-                        } else {
-                            if (node.hasChildren()){
-                                $(".del-multi-nodes").show();
-                            } else {
-                                $(".del-multi-nodes").hide();
-                            }
-                            $(".del-node").show();
-                        }
-                        
-                        if (node.data.url) {
-                            window.location=(node.data.url);
-                        }
-        }'),
-                'renderNode' => new \yii\web\JsExpression('function(node, data) {
-                        if (data.node.key == -999){
-                            $(".add-category").show();
-                            $(".add-subcategory").hide();
-                        } else {
-                            $(".add-category").hide();
-                        }
-            }'),
-            ]
-        ]); ?>
+        <div id="fancyree_w0" class="ui-draggable-handle"></div>
       </div>
     </div>
   </div>
 
 
-  <div class="col-lg-6 col-md-6" style="border-radius:2px;padding-top:10px">
-    <?php
-    //        print_r($model);
-    ?>
-
+  <div class="col-lg-5 col-md-5">
+    <div class="alert alert-warning">
+      <a href="#" class="close" data-dismiss="alert">&times;</a>
+      <strong>Внимание!</strong> Будьте внимательны!
+    </div>
   </div>
 
 </div>
 
 
 <script>
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
 
-    $(document).ready(function () {
-        $('.add-subcategory').click(function (event) {
-            event.preventDefault();
-            var node = $(".ui-draggable-handle").fancytree("getActiveNode");
-            if (!node) {
-                alert("Выберите родительскую категорию");
-                return;
-            }
-            node.editCreateNode("child", " ");
+  $(document).ready(function () {
+    $('.add-subcategory').click(function (event) {
+      event.preventDefault();
+      var node = $(".ui-draggable-handle").fancytree("getActiveNode");
+      if (!node) {
+        alert("Выберите родительскую категорию");
+        return;
+      }
+      if (node.data.lvl <= 1) {                                       // ограничение на вложенность
+        node.editCreateNode("child", " ");
+      } else {
+        alert("Нельзя создавать вложенность более 3х");
+        return;
+      }
+    })
+  });
+
+  $(document).ready(function () {
+    $('.add-category').click(function (event) {
+      var tree = $(".ui-draggable-handle").fancytree("getTree");
+      $.ajax({
+        url: "/admin/placement/create-root",
+        data: {title: 'Дерево'}
+      })
+        .done(function () {
+          tree.reload();
         })
-    });
-
-    $(document).ready(function () {
-        $('.add-category').click(function (event) {
-            var tree = $(".ui-draggable-handle").fancytree("getTree");
-            $.ajax({
-                url: "/admin/placement/create-root",
-                data: {title: 'Дерево'}
-            })
-                .done(function () {
-                    tree.reload();
-                })
-                .fail(function () {
-                    alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
-                });
+        .fail(function () {
+          alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
         });
     });
+  });
 
-    $(document).ready(function () {
-        $('.refresh').click(function (event) {
-            event.preventDefault();
-            var tree = $(".ui-draggable-handle").fancytree("getTree");
-            tree.reload();
-            $(".del-node").hide();
-            $(".del-multi-nodes").hide();
+  $(document).ready(function () {
+    $('.refresh').click(function (event) {
+      event.preventDefault();
+      var tree = $(".ui-draggable-handle").fancytree("getTree");
+      tree.reload();
+      $(".del-root").hide();
+      $(".del-node").hide();
+      $(".del-multi-nodes").hide();
+    })
+  });
+
+  $(document).ready(function () {
+    $('.del-root').click(function (event) {
+      var csrf = $('meta[name=csrf-token]').attr("content");
+      if (confirm('Вы уверены, что хотите удалить выбранный классификатор вместе с вложениями?')) {
+        event.preventDefault();
+        var node = $(".ui-draggable-handle").fancytree("getActiveNode");
+        if (!node) {
+          alert('Выберите родительский классификатор');
+          return;
+        }
+        $.ajax({
+          url: "/admin/placement/delete-root",
+          type: "post",
+          data: {id: node.data.id, _csrf: csrf}
         })
+          .done(function () {
+            node.remove();
+            restoreInputs(false, false);
+            $('.about-info').html('');
+            $('.del-root').hide();
+          })
+          .fail(function () {
+            alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
+          });
+      }
+    });
+    $('.del-node').click(function (event) {
+      if (confirm('Вы уверены, что хотите удалить выбранный классификатор?')) {
+        event.preventDefault();
+        var csrf = $('meta[name=csrf-token]').attr("content");
+        var node = $(".ui-draggable-handle").fancytree("getActiveNode");
+        $.ajax({
+          url: "/admin/placement/delete",
+          type: "post",
+          data: {id: node.data.id, _csrf: csrf}
+        })
+          .done(function () {
+            node.remove();
+            restoreInputs(false, false);
+            $('.about-info').html('');
+            $('.del-node').hide();
+          })
+          .fail(function () {
+            alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
+          });
+      }
     });
 
-    $(document).ready(function () {
-        $('.del-node').click(function (event) {
-            if (confirm('Вы уверены, что хотите удалить выбранную категорию?')) {
-                event.preventDefault();
-                var node = $(".ui-draggable-handle").fancytree("getActiveNode");
-                $.ajax({
-                    url: "/admin/placement/delete",
-                    data: {id: node.data.id}
-                })
-                    .done(function () {
-                        node.remove();
-                    })
-                    .fail(function () {
-                        alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
-                    });
-            }
+    $('.del-multi-nodes').click(function (event) {
+      if (confirm('Вы уверены, что хотите удалить выбранный классификатор вместе с вложениями?')) {
+        event.preventDefault();
+        var csrf = $('meta[name=csrf-token]').attr("content");
+        var node = $(".ui-draggable-handle").fancytree("getActiveNode");
+        if (!node) {
+          alert('Выберите узел');
+          return;
+        }
+        $.ajax({
+          url: "/admin/placement/delete-root",
+          type: "post",
+          data: {id: node.data.id, _csrf: csrf}
         })
+          .done(function () {
+            node.remove();
+            restoreInputs(false, false);
+            $('.about-info').html('');
+            $('.del-multi-nodes').hide();
+            $('.del-node').hide();
+
+          })
+          .fail(function () {
+            alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
+          });
+      }
+    })
+  });
+
+  $("input[name=search]").keyup(function (e) {
+    var n,
+      tree = $.ui.fancytree.getTree(),
+      args = "autoApply autoExpand fuzzy hideExpanders highlight leavesOnly nodata".split(" "),
+      opts = {},
+      filterFunc = $("#branchMode").is(":checked") ? tree.filterBranches : tree.filterNodes,
+      match = $(this).val();
+
+    $.each(args, function (i, o) {
+      opts[o] = $("#" + o).is(":checked");
     });
+    opts.mode = $("#hideMode").is(":checked") ? "hide" : "dimm";
 
-    $(document).ready(function () {
-        $('.del-multi-nodes').click(function (event) {
-            if (confirm('Вы уверены, что хотите удалить узел вместе с вложенниями?')) {
-                event.preventDefault();
-                var node = $(".ui-draggable-handle").fancytree("getActiveNode");
-                if (!node){
-                    alert('Выберите узел');
-                    return;
-                }
-                $.ajax({
-                    url: "/admin/placement/delete-root",
-                    data: {id: node.data.id}
-                })
-                    .done(function () {
-                        node.remove();
-                    })
-                    .fail(function () {
-                        alert("Что-то пошло не так. Перезагрузите форму с помошью клавиши.");
-                    });
-            }
-        })
-    });
+    if (e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === "") {
+      $("button#btnResetSearch").click();
+      return;
+    }
+    if ($("#regex").is(":checked")) {
+      // Pass function to perform match
+      n = filterFunc.call(tree, function (node) {
+        return new RegExp(match, "i").test(node.title);
+      }, opts);
+    } else {
+      // Pass a string to perform case insensitive matching
+      n = filterFunc.call(tree, match, opts);
+    }
+    $("#btnResetSearch").attr("disabled", false);
+  }).focus();
 
 
+  $("#btnResetSearch").click(function (e) {
+    e.preventDefault();
+    $("input[name=search]").val("");
+    $("span#matches").text("");
+    var tree = $(".ui-draggable-handle").fancytree("getTree");
+    tree.clearFilter();
+  }).attr("disabled", true);
+
+  $(document).ready(function () {
     $("input[name=search]").keyup(function (e) {
-        var n,
-            tree = $.ui.fancytree.getTree(),
-            args = "autoApply autoExpand fuzzy hideExpanders highlight leavesOnly nodata".split(" "),
-            opts = {},
-            filterFunc = $("#branchMode").is(":checked") ? tree.filterBranches : tree.filterNodes,
-            match = $(this).val();
-
-        $.each(args, function (i, o) {
-            opts[o] = $("#" + o).is(":checked");
-        });
-        opts.mode = $("#hideMode").is(":checked") ? "hide" : "dimm";
-
-        if (e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === "") {
-            $("button#btnResetSearch").click();
-            return;
-        }
-        if ($("#regex").is(":checked")) {
-            // Pass function to perform match
-            n = filterFunc.call(tree, function (node) {
-                return new RegExp(match, "i").test(node.title);
-            }, opts);
-        } else {
-            // Pass a string to perform case insensitive matching
-            n = filterFunc.call(tree, match, opts);
-        }
-        $("#btnResetSearch").attr("disabled", false);
-    }).focus();
-
-
-    $("#btnResetSearch").click(function (e) {
-        e.preventDefault();
-        $("input[name=search]").val("");
-        $("span#matches").text("");
+      if ($(this).val() == '') {
         var tree = $(".ui-draggable-handle").fancytree("getTree");
         tree.clearFilter();
-    }).attr("disabled", true);
+      }
+    })
+  });
 
-    $(document).ready(function () {
-        $("input[name=search]").keyup(function (e) {
-            if ($(this).val() == '') {
-                var tree = $(".ui-draggable-handle").fancytree("getTree");
-                tree.clearFilter();
-            }
-        })
+
+  // отображение и логика работа дерева
+  jQuery(function ($) {
+    var main_url = '/admin/placement/placements';
+    var move_url = '/admin/placement/move';
+    var create_url = '/admin/placement/create';
+    var update_url = '/admin/placement/update';
+
+    $("#fancyree_w0").fancytree({
+      source: {
+        url: main_url,
+      },
+      extensions: ['dnd', 'edit', 'filter'],
+      quicksearch: true,
+      minExpandLevel: 2,
+      dnd: {
+        preventVoidMoves: true,
+        preventRecursiveMoves: true,
+        autoCollapse: true,
+        dragStart: function (node, data) {
+          return true;
+        },
+        dragEnter: function (node, data) {
+          return true;
+        },
+        dragDrop: function (node, data) {
+          if (data.hitMode == 'over'){
+            var pId = data.node.data.id;
+          } else {
+            var pId = data.node.parent.data.id;
+          }
+          $.get(move_url, {
+            item: data.otherNode.data.id,
+            action: data.hitMode,
+            second: node.data.id,
+            parentId: pId
+          }, function () {
+            data.otherNode.moveTo(node, data.hitMode);
+          })
+        }
+      },
+      filter: {
+        autoApply: true,                                    // Re-apply last filter if lazy data is loaded
+        autoExpand: true,                                   // Expand all branches that contain matches while filtered
+        counter: true,                                      // Show a badge with number of matching child nodes near parent icons
+        fuzzy: false,                                       // Match single characters in order, e.g. 'fb' will match 'FooBar'
+        hideExpandedCounter: true,                          // Hide counter badge if parent is expanded
+        hideExpanders: true,                                // Hide expanders if all child nodes are hidden by filter
+        highlight: true,                                    // Highlight matches by wrapping inside <mark> tags
+        leavesOnly: true,                                   // Match end nodes only
+        nodata: true,                                       // Display a 'no data' status node if result is empty
+        mode: 'hide'                                        // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+      },
+      edit: {
+        inputCss: {
+          minWidth: '10em'
+        },
+        triggerStart: ['clickActive', 'dbclick', 'f2', 'mac+enter', 'shift+click'],
+        beforeEdit: function (event, data) {
+          return true;
+        },
+        edit: function (event, data) {
+          return true;
+        },
+        beforeClose: function (event, data) {
+          data.save
+        },
+        save: function (event, data) {
+          var node = data.node;
+          if (data.isNew) {
+            $.ajax({
+              url: create_url,
+              data: {
+                parentId: node.parent.data.id,
+                title: data.input.val()
+              }
+            }).done(function (result) {
+//                           node.setTitle(result.acceptedTitle);
+            }).fail(function (result) {
+              node.setTitle(data.orgTitle);
+            }).always(function () {
+              // data.input.removeClass("pending")
+            });
+          } else {
+            console.log(data);
+            $.ajax({
+              url: update_url,
+              data: {
+                id: node.data.id,
+                title: data.input.val()
+              }
+            }).done(function (result) {
+//                           node.setTitle(result.acceptedTitle);
+            }).fail(function (result) {
+              node.setTitle(data.orgTitle);
+            }).always(function () {
+              // data.input.removeClass("pending")
+            });
+          }
+          return true;
+        },
+        close: function (event, data) {
+          if (data.save) {
+            // Since we started an async request, mark the node as preliminary
+            $(data.node.span).addClass("pending")
+          }
+        }
+      },
+      activate: function (node, data) {
+        var node = data.node;
+        var lvl = node.data.lvl;
+        if (node.key == -999) {
+          $(".add-subcategory").hide();
+          return;
+        } else {
+          $(".add-subcategory").show();
+        }
+        if (lvl > 1) {                                                  // ограничение на вложенность
+          $(".add-subcategory").hide();
+        }
+        if (lvl == 0) {
+          $(".del-root").show();
+          $(".del-node").hide();
+          $(".del-multi-nodes").hide();
+        } else {
+          if (node.hasChildren()) {
+            $(".del-multi-nodes").show();
+          } else {
+            $(".del-multi-nodes").hide();
+          }
+          $(".del-root").hide();
+          $(".del-node").show();
+        }
+      },
+      renderNode: function (node, data) {
+        if (data.node.key == -999) {
+          $(".add-category").show();
+          $(".add-subcategory").hide();
+        }
+      }
     });
-
+  })
 
 </script>

@@ -14,9 +14,10 @@ $about = "Панель управления классификаторами и�
             Позволяет произвольно задавать параметры отображения информации";
 $add_hint = 'Добавить дочерний классификатор';
 $add_tree_hint = 'Добавить родительский классификатор';
-$refresh_hint = 'Перезапустить форму';
+$refresh_hint = 'Перезапустить дерево классификаторов';
 $del_hint = 'Удалить выбранный классификатор БЕЗ вложений';
-$del_root_hint = 'Удалить ветку полностью';
+$del_root_hint = 'Удалить ветку полностью. ВНИМАНИЕ! Удаление распространяется 
+                  на вложенные классификаторы. В том числе будут удалены таблицы в базе данных.';
 $del_multi_nodes = 'Удалить классификатор С вложениями';
 
 ?>
@@ -141,7 +142,6 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                     'nodata' => true,      // Display a 'no data' status node if result is empty
                     'mode' => "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
                 ],
-
                 'edit' => [
                     'inputCss' => [
                         'minWidth' => "10em"
@@ -152,19 +152,19 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                         if (node.key == -999){
                             return false;
                         }
-        }'),
+                }'),
                     'edit' => new \yii\web\JsExpression('function(event, data){
                       // Editor was opened (available as data.input)
-        }'),
+                }'),
                     'beforeClose' => new \yii\web\JsExpression('function(event, data){
-        }'),
+                }'),
                     'save' => new \yii\web\JsExpression('function(event, data){
                         var node = data.node;
                         var tree = $(".ui-draggable-handle").fancytree("getTree");
                         if (data.isNew){
                             $.ajax({
                               url: "/admin/classifier/create",
-                              data: { parentTitle: node.parent.title, title: data.input.val() }
+                              data: { parentId: node.parent.data.id, title: data.input.val() }
                             }).done(function(result){
                                 node.setTitle(result.acceptedTitle);
                             }).fail(function(result){
@@ -185,7 +185,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                             });
                         }
                         return true;
-        }'),
+                }'),
                     'close' => new \yii\web\JsExpression('function(event, data){
                         // Editor was removed
                         if( data.save ) {
@@ -193,7 +193,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                           $(data.node.span).addClass("pending");
                           $(".clsf-name").val(data.node.title);
                         }
-        }')
+                }')
                 ],
                 'activate' => new \yii\web\JsExpression('function(node, data) {
                         var node = data.node;
@@ -232,7 +232,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                           $(".node-id").val(id);
                           $(\'[data-toggle="tooltip"]\').tooltip();
                         })                        
-        }'),
+                }'),
                 'renderNode' => new \yii\web\JsExpression('function(node, data) {
                         if (data.node.key == -999){
                             $(".add-category").show();
@@ -506,7 +506,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
 
     var headerInput = ''+
         '<label style="font-size: 14px">Название классификатора:</label>'+
-        '<input class="form-control node-id" name="node-id" readonly hidden>'+
+        '<input class="form-control node-id" name="node-id" readonly style="display:none">'+
         '<input class="form-control clsf-name" disabled name="clsf-name"'+
         'title="Вводите имя в колонке дерева классификаторов. Клавиша F2 или двойной щелчок мыши"'+
         'data-toggle="tooltip" data-placement="top">';
@@ -518,12 +518,13 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
           '>'+
             '<option selected disabled value="0">Выберите</option>'+
             '<option value="1">input</option>'+
-            '<option value="2">dateInput</option>'+
-            '<option value="3">select</option>'+
-            '<option value="4">textarea</option>'+
-            '<option value="5">radioButton</option>'+
-            '<option value="6">checkBox</option>'+
-            '<option value="7">fileInput</option>'+
+            '<option value="2">floatInput</option>'+
+            '<option value="3">dateInput</option>'+
+            '<option value="4">select</option>'+
+            '<option value="5">textarea</option>'+
+            '<option value="6">radioButton</option>'+
+            '<option value="7">checkBox</option>'+
+            '<option value="8">fileInput</option>'+
           '</select></p>';
 
     var saveButton = ''+
@@ -559,6 +560,28 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
           '<p></p>'+
           '<label style="font-size: 16px;color: #000;" class="label"></label>'+
           '<input class="form-control" disabled value="Текст (max: 255 симв.)">'+
+        '</div>';
+    var floatInput = ''+
+        '<div class="add-wrap" style="padding: 20px 20px;border: dashed 1px lightgrey;margin-bottom: 10px;position: relative">'+
+          '<a class="fa fa-angle-up move-up"' +
+            'style="position: absolute;top:0;right:10px;font-size:20px;cursor:pointer;" ' +
+            'aria-hidden="true" title="Переместить наверх"' +
+            'data-toggle="tooltip" data-placement="left"></a>'+
+          '<a class="fa fa-angle-down move-down" ' +
+            'style="position: absolute;top:20px;right:10px;font-size:20px;cursor:pointer;" ' +
+            'aria-hidden="true" title="Переместить вниз"' +
+            'data-toggle="tooltip" data-placement="left"></a>'+
+          '<div class="col-lg-11 col-md-11 col-xs-11" style="padding: 0px 0px">'+
+          '<label style="font-size: 14px">Название поля ввода:</label>'+
+          '<input class="form-control input-name-ex" id="input" data-order="" data-id="" data-condition="" name="floatinput">'+
+          '<p></p>'+
+          '</div>'+
+          '<div class="col-lg-1 col-md-1 col-xs-1" style="padding: 30px 0px 20px 0px;text-align: right;margin">'+
+          '<i class="fa fa-minus-square delete-input" aria-hidden="true" style="color:red;cursor: pointer;font-size:24px;opacity: 0.7"></i>'+
+          '</div>'+
+          '<p></p>'+
+          '<label style="font-size: 16px;color: #000;" class="label"></label>'+
+          '<input class="form-control" disabled value="Вещественные числа">'+
         '</div>';
     var dateInput = ''+
         '<div class="add-wrap" style="padding: 20px 20px;border: dashed 1px lightgrey;margin-bottom: 10px; position: relative">'+
@@ -626,6 +649,30 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
           '<input type="radio" disabled >' +
           '<label style="font-size: 16px;color: #000" class="label"></label>'+
         '</div>';
+
+    var select = ''+
+        '<div class="add-wrap" style="padding: 20px 20px;border: dashed 1px lightgrey;margin-bottom: 10px; position: relative">'+
+          '<i class="fa fa-angle-up move-up"' +
+            'style="position: absolute;top:0;right:10px;font-size:20px;cursor:pointer;" ' +
+            'aria-hidden="true" title="Переместить наверх"' +
+            'data-toggle="tooltip" data-placement="left"></i>'+
+          '<i class="fa fa-angle-down move-down"' +
+            'style="position: absolute;top:20px;right:10px;font-size:20px;cursor:pointer;" ' +
+            'aria-hidden="true" title="Переместить вниз"' +
+            'data-toggle="tooltip" data-placement="left"></i>'+
+          '<div class="col-lg-11 col-md-11 col-xs-11" style="padding: 0px 0px">'+
+          '<label style="font-size: 14px">Название флажка:</label>'+
+          '<input class="form-control input-name-ex" id="radio" data-order="" data-id="" data-condition="" name="radio">'+
+          '<p></p>'+
+          '</div>'+
+          '<div style="padding: 30px 0px 20px 0px;text-align: right;margin">'+
+          '<i class="fa fa-minus-square delete-input" aria-hidden="true" style="color:red;cursor: pointer;font-size:24px;opacity: 0.7"></i>'+
+          '</div>'+
+          '<p></p>'+
+          '<label style="font-size: 16px;color: #000" class="label"></label>'+
+          '<span class="select-input-place"></span>'
+        '</div>';
+
     var checkBox = ''+
         '<div class="add-wrap" style="padding: 20px 20px;border: dashed 1px lightgrey;margin-bottom: 10px; position: relative">'+
         '<i class="fa fa-angle-up move-up"' +
@@ -668,9 +715,10 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
         '</div>'+
         '<p></p>'+
         '<label style="font-size: 16px;color: #000;" class="label"></label>'+
+        // '<span class="file-input-place"></span>' +
         '<input class="form-control" disabled placeholder="Добавить файл..." style="max-width: 170px">'+
         '</div>';
-    
+
     function goodAlert(text) {
         var div = ''+
             '<div id="w3-success-0" class="alert-success alert fade in">'+
@@ -679,7 +727,7 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
             '</div>';
         return div;
     }
-    
+
     function badAlert(text) {
         var div = ''+
             '<div id="w3-success-0" class="alert-danger alert fade in">'+
@@ -706,10 +754,12 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
             columns.sort(function(a, b){                      // сортировка отображения
                 return a.order - b.order;                     // форм
             });
-            console.log(columns);
             columns.forEach(function (item, i, arr) {
                 switch (item.typeName){
                     case 'input':
+                        divMain.append(window.nameInput);
+                        break;
+                    case 'floatinput':
                         divMain.append(window.nameInput);
                         break;
                     case 'dateinput':
@@ -717,6 +767,9 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
                         break;
                     case 'textarea':
                         divMain.append(window.textArea);
+                        break;
+                    case 'select':
+                        divMain.append(window.select);
                         break;
                     case 'radio':
                         divMain.append(window.radioButton);
@@ -779,22 +832,48 @@ $del_multi_nodes = 'Удалить классификатор С вложени�
             return false;
         })
     }
-    
+
     function addInput(div) {
         $('#clsf-form-add').change(function () {
             var val = $(this).val();
             if (val == 1) {
                 div.append(window.nameInput);
             } else if (val == 2) {
+                div.append(window.floatInput);
+            } else if (val == 3) {
                 div.append(window.dateInput);
             } else if (val == 4) {
-                div.append(window.textArea);
+                div.append(window.select);
+                $.ajax({
+                    url: "/admin/user/test",
+                    type: "get",
+                    success: function (result) {
+                        $('.select-input-place').append(result);
+                    },
+                    error: function () {
+                        alert('Ошибка! Обратитесь к разработчику.');
+                    }
+                });
             } else if (val == 5) {
-                div.append(window.radioButton);
+                div.append(window.textArea);
             } else if (val == 6) {
-                div.append(window.checkBox);
+                div.append(window.radioButton);
             } else if (val == 7) {
+                div.append(window.checkBox);
+            } else if (val == 8) {
                 div.append(window.fileInput);
+/*
+                $.ajax({
+                    url: "/admin/user/test2",
+                    type: "get",
+                    success: function (result) {
+                        $('.file-input-place').append(result);
+                    },
+                    error: function () {
+                        alert('Ошибка! Обратитесь к разработчику.');
+                    }
+                });
+*/
             }
             var lastIn = $(div).children().last();
             lastIn.find('.input-name-ex').data("id", Date.now());

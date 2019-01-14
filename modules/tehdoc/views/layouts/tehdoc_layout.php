@@ -10,13 +10,13 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-use app\modules\tehdoc\asset\Asset;
+use app\modules\tehdoc\asset\TehdocAsset;
 
 ?>
 <?php
 
 AppAsset::register($this);    // регистрация ресурсов всего приложения
-Asset::register($this);       // регистрация ресурсов модуля
+TehdocAsset::register($this);       // регистрация ресурсов модуля
 
 ?>
 <?php $this->beginPage() ?>
@@ -36,31 +36,36 @@ Asset::register($this);       // регистрация ресурсов мод�
   .fa {
     font-size: 18px;
   }
-   .navbar-inverse .navbar-nav > .active > a {
-       background-color: #0000aa;
-   }
+  .navbar-inverse .navbar-nav > .active > a {
+    background-color: #0000aa;
+  }
   .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
-      background-color: #0000aa;
-      color: white;
+    background-color: #0000aa;
+    color: white;
   }
   .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
-      background-color: #0000aa;
-      color: white;
+    background-color: #0000aa;
+    color: white;
+  }
+  .navbar-inverse .btn-link:hover, .navbar-inverse .btn-link:focus {
+    text-decoration: none;
   }
   .navbar-nav > li > .dropdown-menu {
-      background-color: #014993;
-      color: white;
+    background-color: #014993;
+    color: white;
   }
   .dropdown-menu > li > a {
-
-      color: white;
+    color: white;
   }
   .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
-      background-color: #05226f;
-      color: white;
+    background-color: #05226f;
+    color: white;
   }
   .dropdown-header {
-      color: white;
+    color: white;
+  }
+  a:hover {
+    text-decoration: none;
   }
 </style>
 
@@ -72,127 +77,125 @@ Asset::register($this);       // регистрация ресурсов мод�
 <div class="wrap">
   <?php
   NavBar::begin([
-      'brandLabel' => '<img src="/images/logo.jpg" style="display:inline">',
-      'brandUrl' => Yii::$app->homeUrl,
-      'options' => [
-          'class' => 'navbar-inverse',
-      ],
+    'brandLabel' => '<img src="/images/logo.jpg" style="display:inline">',
+    'brandUrl' => Yii::$app->homeUrl,
+    'options' => [
+      'class' => 'navbar-inverse',
+    ],
   ]);
   echo Nav::widget([
-      'options' => ['class' => 'navbar-nav navbar-right'],
-      'encodeLabels' => false,
-      'items' => [
-          ['label' => 'Списание', 'url' => ['/tehdoc/']],
-          ['label' => 'Приемка', 'url' => ['/tehdoc/']],
-          [
-              'label' => 'Представления',
-              'items' => [
-                  '<li class="dropdown-header" style="font-size: 10px">Системные</li>',
-                  ['label' => 'По категориям', 'url' => ['/tehdoc/equipment/categories']],
-                  ['label' => 'По месту размещения', 'url' => ['/tehdoc/equipment/placement']],
-                  '<li class="divider"></li>',
-                  '<li class="dropdown-header" style="font-size: 10px">Пользовательские</li>',
-                  ['label' => 'Классификатор', 'url' => ['/tehdoc/equipment/classifiers']],
-              ],
-          ],
-          Yii::$app->user->isGuest ? (
-          ['label' => 'Войти', 'url' => ['/site/login']]
-          ) : ([
-            'label' => '<i class="fa fa-user" aria-hidden="true" style="font-size: 18px"></i>',
-              'items' => [
-                  '<li class="dropdown-header" style="font-size: 10px">' . Yii::$app->user->identity->username . '</li>',
-                  '<li>'
-                  . Html::beginForm(['/site/logout'], 'post')
-                  . Html::submitButton(
-                      '<i class="fa fa-sign-out" aria-hidden="true"> Выход</i>',
-                      [
-                          'class' => 'btn btn-link logout',
-                          'data-toggle' => "tooltip",
-                          'data-placement' => "bottom",
-                          'title' => 'Выход ' . Yii::$app->user->identity->username,
-                      ]
-                  )
-                  . Html::endForm()
-                  . '</li>'
-              ]
-          ])
+    'options' => ['class' => 'navbar-nav navbar-right'],
+    'encodeLabels' => false,
+    'items' => [
+      [
+        'label' => 'Оборудование и ТО',
+        'items' => [
+          '<li class="dropdown-header" style="font-size: 10px">Оборудование</li>',
+          ['label' => 'Комплекты', 'url' => ['/tehdoc/equipment/complex']],
+          ['label' => 'Перечень техники', 'url' => ['/tehdoc/equipment/tools']],
+          '<li class="divider"></li>',
+          '<li class="dropdown-header" style="font-size: 10px">Тех.обслуживание</li>',
+          ['label' => 'График ТО', 'url' => ['/tehdoc/']],
+          ['label' => 'Документация по ТО', 'url' => ['/tehdoc/']],
+        ],
       ],
+      [
+        'label' => 'Документация',
+        'items' => [
+          '<li class="dropdown-header" style="font-size: 10px">Системные</li>',
+          ['label' => 'По категориям', 'url' => ['/tehdoc/tools/categories']],
+          ['label' => 'По месту размещения', 'url' => ['/tehdoc/tools/placement']],
+          '<li class="divider"></li>',
+          '<li class="dropdown-header" style="font-size: 10px">Пользовательские</li>',
+          ['label' => 'Классификатор', 'url' => ['/tehdoc/tools/classifiers']],
+        ],
+      ],
+      Yii::$app->user->isGuest ? (
+      ['label' => 'Войти', 'url' => ['/site/login']]
+      ) : ([
+        'label' => '<i class="fa fa-user" aria-hidden="true" style="font-size: 18px"></i>',
+        'items' => [
+          '<li class="dropdown-header" style="font-size: 10px">' . Yii::$app->user->identity->username . '</li>',
+          ['label' => '<i class="fa fa-cogs" aria-hidden="true" style="font-size: 16px"></i> Профиль',
+            'url' => ['/admin/user/profile']
+          ],
+          ['label' => ''
+            . Html::beginForm(['/site/logout'], 'post')
+            . Html::submitButton(
+              '<span style="cursor: default"><i class="fa fa-sign-out" aria-hidden="true"></i> Выход</span>',
+              [
+                'class' => 'btn btn-link logout',
+                'data-toggle' => "tooltip",
+                'data-placement' => "bottom",
+                'style' => [
+                  'padding' => '0px',
+                ]
+              ]
+            )
+            . Html::endForm()
+          ]
+        ]
+      ])
+    ],
   ]);
   NavBar::end();
   ?>
 
-  <div class="container">
-        <?= Breadcrumbs::widget([
-        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        'options' => [
-            'class' => 'breadcrumb'
-        ],
-        'tag' => 'ol',
+  <div class="container"s>
+    <?= Breadcrumbs::widget([
+      'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+      'options' => [
+        'class' => 'breadcrumb'
+      ],
+      'tag' => 'ol',
     ]) ?>
     <?= Alert::widget() ?>
-      <div class="modal fade freeztime" id="Modal" tabindex="-1" role="dialog"
-           data-backdrop="static" data-keyboard="false" aria-labelledby="ModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="ModalLabel">Ожидание ответа от сервера.</h5>
-                  </div>
-                  <div class="modal-body">
-                      Подождите пожалуйста. Ваш запрос обрабатывается.
-                  </div>
-                  <div class="modal-footer">
-                  </div>
-              </div>
+    <div class="modal fade freeztime" id="Modal" tabindex="-1" role="dialog"
+         data-backdrop="static" data-keyboard="false" aria-labelledby="ModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ModalLabel">Ожидание ответа от сервера.</h5>
           </div>
-      </div>
-
-      <div class="modal fade" id="classifier-modal" tabindex="-1" role="dialog"
-           data-backdrop="static" data-keyboard="false" aria-labelledby="ModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="form">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                      <h5 class="modal-title" id="ModalLabel">Присвоение классификатора.</h5>
-                      <div class="modal-header-select-place">
-                          <hr>
-                          <?= \kartik\tree\TreeViewInput::widget([
-                              'query' => \app\modules\admin\models\ClassifierTbl::find()->addOrderBy('root, lft'),
-                              'id' => 'classifier',
-                              'name' => 'id',                  // input name
-                              'asDropdown' => true,            // will render the tree input widget as a dropdown.
-                              'headingOptions' => ['label' => 'Классификаторы'],
-                              'value' => false,
-                              'multiple' => false,              // set to false if you do not need multiple selection
-                              'fontAwesome' => true,           // render font awesome icons
-                              'rootOptions' => [
-                                  'label' => '<i class="fa fa-tree"></i>',
-                              ],
-                              'dropdownConfig' => [
-                                  'input' => [
-                                      'placeholder' => 'Выберите классификатор...'
-                                  ]
-                              ],
-                              'options' => [
-                                  'class' => 'classifier-cl'
-                              ]
-                          ]); ?>
-
-
-                      </div>
-                  </div>
-                  <form action="assign-classifier" id="form-classifier">
-                      <div class="modal-body" id="classifier-body">
-                      </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                          <button type="submit" class="btn btn-primary" id="assign-classifier-btn" disabled>Просвоить</button>
-                      </div>
-                  </form>
-              </div>
+          <div class="modal-body">
+            Подождите пожалуйста. Ваш запрос обрабатывается.
           </div>
+          <div class="modal-footer">
+          </div>
+        </div>
       </div>
+    </div>
 
-      <?= $content ?>
+    <div class="modal fade" id="classifier-modal" tabindex="-1" role="dialog"
+         data-backdrop="static" data-keyboard="false" aria-labelledby="ModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="form">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h5 class="modal-title" id="ModalLabel">Присвоение классификатора.</h5>
+            <div class="modal-header-select-place">
+
+              <hr>
+            </div>
+          </div>
+          <div id="modal-form">
+            <form action="assign-classifier" id="form-classifier" method="POST"
+                  enctype="multipart/form-data">
+              <div class="modal-body" id="classifier-body">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" id="assign-classifier-btn" disabled>
+                  Просвоить
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <?= $content ?>
   </div>
 </div>
 

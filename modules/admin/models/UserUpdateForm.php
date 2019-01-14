@@ -12,8 +12,8 @@ class UserUpdateForm extends Model
   public $username;
   public $login;
   public $social_group;
-
   public $old_social;
+  public $role;
 
   /**
    * @var User
@@ -45,7 +45,8 @@ class UserUpdateForm extends Model
     return [
         'username' => 'Пользователь:',
         'login' => 'Логин:',
-        'social_group' => 'Социальная группа:'
+        'social_group' => 'Социальная группа:',
+        'role' => 'Роль'
     ];
   }
 

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\modules\admin\models\Testmodel;
 use app\modules\admin\models\User;
 use Yii;
 use yii\filters\AccessControl;
@@ -59,7 +60,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $id = 1;
+//        $model = Testmodel("clsf_18353201_tbl");
+//        $model = $model->find()->all();
+
+        return $this->render('index', [
+//                'model' => $model
+            ]);
     }
 
     /**
@@ -97,7 +104,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
++     * Displays contact page.
      *
      * @return Response|string
      */
@@ -175,6 +182,11 @@ class SiteController extends Controller
         $item = $auth->getRole('civilian');
         $item = $item ?: $auth->getPermission('civilian');
         $auth->revoke($item, $user->getId());
+    }
+
+    public function actionJStudy()
+    {
+        return $this->render('study');
     }
 
 }
