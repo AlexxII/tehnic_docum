@@ -94,12 +94,14 @@ $del_multi_nodes = 'Удвлить выбранную категорию С вл
     </div>
   </div>
 
-
-  <div class="col-lg-5 col-md-5">
-    <div class="alert alert-warning">
-      <a href="#" class="close" data-dismiss="alert">&times;</a>
-      <strong>Внимание!</strong> Будьте внимательны!
-    </div>
+  <div class="col-lg-6 col-md-6" style="border-radius:2px;padding-top:10px">
+      <div class="col-lg-5 col-md-5">
+          <div class="alert alert-warning">
+              <a href="#" class="close" data-dismiss="alert">&times;</a>
+              <strong>Внимание!</strong> Не создавайте много категорий 1го уровня. При категорировании
+              оборудования возможны дубли оборудования. Будьте внимательны!
+          </div>
+      </div>
   </div>
 
 </div>
